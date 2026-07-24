@@ -13,6 +13,9 @@
 
 - Put normative rules in `docs/standards`.
 - Put copy-ready examples in `templates/repository`.
+- Keep the family license, source-link requirement, README badge contract, and NuGet
+  license-file rules synchronized across their standards, templates, reusable skill, and
+  validation. Adopting repositories replace only the documented repository metadata.
 - Put cross-repository scripts in a purpose-specific `tools/<area>` folder.
 - Keep repository-owned entry points in the owning repository and document their contract
   here.

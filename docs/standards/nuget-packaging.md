@@ -51,6 +51,23 @@ website from the source repository:
 - Inspect at least one packed `.nuspec` during adoption to prove that `projectUrl` and
   repository metadata are distinct and correct.
 
+## Package License
+
+Public CanDoItAll packages use the repository-owned
+[MIT-derived license with source-link requirement](licensing.md). Because the extra
+redistribution condition is not the unmodified SPDX `MIT` license:
+
+- set `PackageLicenseFile` to `LICENSE`;
+- pack the adapted repository-root `LICENSE` at the package root;
+- do not set `PackageLicenseExpression` to `MIT`;
+- require `<license type="file">LICENSE</license>` in the packed `.nuspec`;
+- verify that the package contains the license and that its source link matches
+  `RepositoryUrl`.
+
+Start from
+[`templates/repository/dotnet/Directory.Build.targets`](../../templates/repository/dotnet/Directory.Build.targets)
+when centralizing license-file packing.
+
 ## Central Orchestration
 
 [`Invoke-CanDoItAllNuGetBuilds.ps1`](../../tools/deployment/nugets/Invoke-CanDoItAllNuGetBuilds.ps1)
@@ -72,6 +89,7 @@ guesses about legacy scripts. Use `-FailOnMissing` during a future standards-ado
 
 - Default output is `artifacts/packages/<repository>` in SharedInfo.
 - Package and symbol files are generated and ignored.
-- A repository decides its package IDs, versions, symbols, readme, license metadata, and
-  any deliberate package-specific project-page override.
+- A repository decides its package IDs, versions, symbols, readme, and any deliberate
+  package-specific project-page override. License metadata follows the shared licensing
+  standard unless an owner-approved legal exception is documented.
 - Publishing is a separate tool and requires explicit destination and authorization.

@@ -1,6 +1,6 @@
 ---
 name: apply-candoitall-shared-standards
-description: Use whenever planning, creating, changing, or reviewing a CanDoItAll repository's root layout, documentation, Git files, .NET defaults, Docker assets, shared tooling, NuGet packaging, or reusable Codex assets. Locates CanDoItAll.SharedInfo, loads only the relevant reviewed standards and templates, preserves repository-owned exceptions, and runs the applicable validation without silently changing sibling repositories.
+description: Use whenever planning, creating, changing, or reviewing a CanDoItAll repository's root layout, documentation, README badges, licensing, Git files, .NET defaults, Docker assets, shared tooling, NuGet packaging, or reusable Codex assets. Locates CanDoItAll.SharedInfo, loads only the relevant reviewed standards and templates, preserves repository-owned exceptions, and runs the applicable validation without silently changing sibling repositories.
 ---
 
 # Apply CanDoItAll Shared Standards
@@ -55,6 +55,8 @@ exception explicitly.
 - Put normative shared rules in `SharedInfo/docs/standards`.
 - Put copy-ready shared examples in `SharedInfo/templates/repository`.
 - Put cross-repository coordination in `SharedInfo/tools/<area>`.
+- Keep the family license text, badge contract, and NuGet license-file rules in
+  SharedInfo; adapt the copyright and canonical source URL in each adopting repository.
 - Keep product code, product configuration, repository-specific entry points, data,
   secrets, task bundles, proof, logs, and generated output in their owning repository.
 - Copy and adapt templates; do not make product repositories depend on filesystem links

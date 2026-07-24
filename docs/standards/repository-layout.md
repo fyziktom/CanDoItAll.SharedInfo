@@ -8,11 +8,13 @@ the root:
 ```text
 <repository>/
   README.md
+  LICENSE
   .editorconfig
   .gitattributes
   .gitignore
   global.json                 # .NET repositories
   Directory.Build.props       # multi-project .NET repositories
+  Directory.Build.targets     # shared build/package items when needed
   compose.yaml                # repositories with a Compose application
   .env.example                # non-secret Compose/configuration contract
   .dockerignore               # at each Docker build-context root

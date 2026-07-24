@@ -13,9 +13,33 @@ the full source:
 6. Where are detailed architecture, operations, and security documents?
 7. How are packages or releases produced, if applicable?
 8. What license and contribution policy applies?
+9. What is the current CI, package, platform, and license status?
 
 Start from [`templates/repository/README.md`](../../templates/repository/README.md).
 Remove irrelevant sections instead of leaving placeholders.
+
+## README Badges
+
+Put applicable status badges immediately below the level-one repository heading. Use this
+stable order:
+
+1. CI status for the primary validation workflow on `main`;
+2. current version of the primary public NuGet package;
+3. total downloads of that primary package;
+4. the supported .NET major version;
+5. the family license.
+
+Start from the badge block in the README template and remove badges that do not apply. A
+repository with no public package omits both NuGet badges; a non-.NET repository omits
+the .NET badge. Do not publish decorative, stale, or guessed status badges.
+
+- CI badges must link to the canonical workflow and identify the workflow file, `main`
+  branch, and intended event.
+- NuGet badges must link to the canonical package page and use a stable primary package,
+  not an arbitrary project.
+- The .NET badge must link to the supported .NET download page.
+- The license badge must link to the repository-owned `LICENSE` file and say
+  `MIT-derived with source link`.
 
 ## Durable Documentation
 
@@ -34,8 +58,9 @@ Repositories distributed outside one private development machine should include:
 - `CONTRIBUTING.md` with setup, validation, architecture constraints, and contribution
   policy.
 - `SECURITY.md` with supported versions and a private reporting path.
-- A license file chosen by the owner. SharedInfo does not impose a license because current
-  repositories use different policies.
+- The family `LICENSE` adapted from
+  [`licensing.md`](licensing.md), unless the owner has documented an explicit legal
+  exception.
 
 The templates deliberately leave owner and reporting details as explicit placeholders.
 

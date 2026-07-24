@@ -1,5 +1,13 @@
 # ${REPOSITORY_NAME}
 
+[![CI](${SOURCE_REPOSITORY_URL}/actions/workflows/${CI_WORKFLOW_FILE}/badge.svg?branch=main&event=push)](${SOURCE_REPOSITORY_URL}/actions/workflows/${CI_WORKFLOW_FILE})
+[![NuGet version](https://img.shields.io/nuget/v/${PRIMARY_PACKAGE_ID}.svg?logo=nuget&label=NuGet)](https://www.nuget.org/packages/${PRIMARY_PACKAGE_ID})
+[![NuGet downloads](https://img.shields.io/nuget/dt/${PRIMARY_PACKAGE_ID}.svg?logo=nuget&label=${PRIMARY_PACKAGE_BADGE_LABEL}%20downloads)](https://www.nuget.org/packages/${PRIMARY_PACKAGE_ID})
+[![.NET ${DOTNET_MAJOR_VERSION}](https://img.shields.io/badge/.NET-${DOTNET_MAJOR_VERSION}.0-512BD4?logo=dotnet)](https://dotnet.microsoft.com/download/dotnet/${DOTNET_MAJOR_VERSION}.0)
+[![License](https://img.shields.io/badge/license-MIT--derived%20with%20source%20link-blue.svg)](LICENSE)
+
+Remove badge lines that do not apply; do not leave unresolved placeholders.
+
 ${ONE_SENTENCE_PURPOSE}
 
 ## Ownership
@@ -68,5 +76,9 @@ NuGet packages.
 
 ## License And Contributions
 
-State the repository's license and contribution policy. Do not assume that every
-CanDoItAll repository uses the same policy.
+This repository uses the
+[MIT-Derived License with Source Link Requirement](LICENSE). Redistributions of the
+software or a substantial portion of it in source or binary form must include the link to
+`${SOURCE_REPOSITORY_URL}` required by the license.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the contribution policy.

@@ -1,5 +1,7 @@
 # CanDoItAll.SharedInfo
 
+[![License](https://img.shields.io/badge/license-MIT--derived%20with%20source%20link-blue.svg)](LICENSE)
+
 The source of truth for conventions and cross-repository developer assets shared by the
 CanDoItAll repository family.
 
@@ -10,7 +12,7 @@ reviewed here first; adoption in sibling repositories is a later, explicit opera
 
 | Area | Purpose |
 |---|---|
-| [`docs/standards`](docs/standards) | Canonical repository, documentation, Git, .NET, Docker, tooling, NuGet, and Codex conventions |
+| [`docs/standards`](docs/standards) | Canonical repository, documentation, licensing, Git, .NET, Docker, tooling, NuGet, and Codex conventions |
 | [`docs/inventory`](docs/inventory) | Evidence-backed snapshots of the repository family |
 | [`templates/repository`](templates/repository) | Copy-ready starting points for repository-owned files |
 | [`tools`](tools) | Cross-repository discovery, installation, packaging orchestration, and validation |
@@ -79,3 +81,10 @@ ownership boundaries and [`docs/inventory/2026-07-24-baseline.md`](docs/inventor
 for the initial consolidation evidence. The
 [`Docker baseline`](docs/inventory/2026-07-24-docker-baseline.md) records current
 container usage and adoption dependencies.
+
+## License
+
+SharedInfo uses the
+[MIT-Derived License with Source Link Requirement](LICENSE). Redistributions of the
+software or a substantial portion of it in source or binary form must include the
+required link to this source repository.

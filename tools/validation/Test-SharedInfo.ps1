@@ -13,6 +13,7 @@ function Add-Failure {
 
 $requiredPaths = @(
     'README.md',
+    'LICENSE',
     'AGENTS.md',
     '.editorconfig',
     '.gitattributes',
@@ -22,6 +23,7 @@ $requiredPaths = @(
     'docs/architecture/source-of-truth.md',
     'docs/standards/repository-layout.md',
     'docs/standards/documentation.md',
+    'docs/standards/licensing.md',
     'docs/standards/git.md',
     'docs/standards/dotnet.md',
     'docs/standards/tooling.md',
@@ -36,7 +38,10 @@ $requiredPaths = @(
     'templates/repository/docker/compose.production.yaml.example',
     'templates/repository/docker/Dockerfile.dotnet',
     'templates/repository/docker/README.md',
+    'templates/repository/LICENSE',
+    'templates/repository/README.md',
     'templates/repository/dotnet/Directory.Build.props',
+    'templates/repository/dotnet/Directory.Build.targets',
     'templates/repository/tools/validation/Test-Docker.ps1',
     'codex/skills/apply-candoitall-shared-standards/SKILL.md',
     'codex/skills/apply-candoitall-shared-standards/agents/openai.yaml',
@@ -68,7 +73,7 @@ foreach ($relativePath in @('config/repositories.json', 'codex/marketplace.json'
     }
 }
 
-$packageHomepageChecks = @(
+$sharedContractChecks = @(
     [pscustomobject]@{
         Path = 'docs/standards/nuget-packaging.md'
         RequiredText = @(
@@ -94,20 +99,98 @@ $packageHomepageChecks = @(
             'PackageProjectUrl',
             'RepositoryUrl'
         )
+    },
+    [pscustomobject]@{
+        Path = 'LICENSE'
+        RequiredText = @(
+            'MIT-Derived License with Source Link Requirement',
+            'Software or a substantial portion of it',
+            'source or binary form',
+            'https://github.com/fyziktom/CanDoItAll.SharedInfo'
+        )
+    },
+    [pscustomobject]@{
+        Path = 'docs/standards/licensing.md'
+        RequiredText = @(
+            'MIT-Derived License with Source Link Requirement',
+            'PackageLicenseFile',
+            'PackageLicenseExpression',
+            'RepositoryUrl'
+        )
+    },
+    [pscustomobject]@{
+        Path = 'docs/standards/documentation.md'
+        RequiredText = @(
+            'README Badges',
+            'NuGet badges',
+            'MIT-derived with source link'
+        )
+    },
+    [pscustomobject]@{
+        Path = 'templates/repository/LICENSE'
+        RequiredText = @(
+            'MIT-Derived License with Source Link Requirement',
+            'Software or a substantial portion of it',
+            'source or binary form',
+            '${SOURCE_REPOSITORY_URL}'
+        )
+    },
+    [pscustomobject]@{
+        Path = 'templates/repository/README.md'
+        RequiredText = @(
+            'actions/workflows/${CI_WORKFLOW_FILE}/badge.svg',
+            'img.shields.io/nuget/v/${PRIMARY_PACKAGE_ID}',
+            'MIT--derived%20with%20source%20link'
+        )
+    },
+    [pscustomobject]@{
+        Path = 'templates/repository/dotnet/Directory.Build.targets'
+        RequiredText = @(
+            'PackageLicenseFile',
+            'PackageLicenseExpression',
+            'LICENSE'
+        )
+    },
+    [pscustomobject]@{
+        Path = (
+            'codex/skills/apply-candoitall-shared-standards/' +
+            'references/standards-map.md'
+        )
+        RequiredText = @(
+            'docs/standards/licensing.md',
+            'MIT-derived license with source-link',
+            'PackageLicenseFile'
+        )
+    },
+    [pscustomobject]@{
+        Path = 'README.md'
+        RequiredText = @(
+            'MIT--derived%20with%20source%20link',
+            'MIT-Derived License with Source Link Requirement'
+        )
+    },
+    [pscustomobject]@{
+        Path = 'AGENTS.md'
+        RequiredText = @(
+            'family license',
+            'source-link requirement',
+            'README badge contract',
+            'NuGet'
+        )
     }
 )
-foreach ($packageHomepageCheck in $packageHomepageChecks) {
-    $packageHomepagePath = Join-Path $repositoryRoot $packageHomepageCheck.Path
-    if (-not (Test-Path -LiteralPath $packageHomepagePath -PathType Leaf)) {
+foreach ($sharedContractCheck in $sharedContractChecks) {
+    $sharedContractPath = Join-Path $repositoryRoot $sharedContractCheck.Path
+    if (-not (Test-Path -LiteralPath $sharedContractPath -PathType Leaf)) {
         continue
     }
 
-    $packageHomepageContents = Get-Content -Raw -LiteralPath $packageHomepagePath
-    foreach ($requiredText in $packageHomepageCheck.RequiredText) {
-        if (-not $packageHomepageContents.Contains($requiredText)) {
+    $sharedContractContents = Get-Content -Raw -LiteralPath $sharedContractPath
+    foreach ($requiredText in $sharedContractCheck.RequiredText) {
+        if (-not $sharedContractContents.Contains($requiredText)) {
             Add-Failure (
-                "NuGet homepage contract text '$requiredText' is missing from " +
-                "$($packageHomepageCheck.Path)."
+                "Shared contract text '$requiredText' is missing from " +
+                "$($sharedContractCheck.Path)."
             )
         }
     }
