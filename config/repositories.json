@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "repositoryNamePattern": "CanDoItAll*",
+  "contracts": {
+    "nugetBuildEntryPoint": "tools/deployment/nugets/Build-NuGets.ps1",
+    "repositoryValidationEntryPoint": "tools/validation/Test-Repository.ps1"
+  },
+  "repositories": [
+    {
+      "name": "CanDoItAll",
+      "cloneUrl": "https://github.com/fyziktom/CanDoItAll.git"
+    },
+    {
+      "name": "CanDoItAll.AgentFramework",
+      "cloneUrl": "https://github.com/fyziktom/CanDoItAll.AgentFramework.git"
+    },
+    {
+      "name": "CanDoItAll.AgentFramework.Rag",
+      "cloneUrl": "https://github.com/fyziktom/CanDoItAll.AgentFramework.Rag.git"
+    },
+    {
+      "name": "CanDoItAll.AgentFramework.SemanticCompletion",
+      "cloneUrl": "https://github.com/fyziktom/CanDoItAll.AgentFramework.SemanticCompletion.git"
+    },
+    {
+      "name": "CanDoItAll.CodeAnalysis",
+      "cloneUrl": "https://github.com/fyziktom/CanDoItAll.CodeAnalysis.git"
+    },
+    {
+      "name": "CanDoItAll.Components",
+      "cloneUrl": "https://github.com/fyziktom/CanDoItAll.Components.git"
+    },
+    {
+      "name": "CanDoItAll.Economy",
+      "cloneUrl": "https://github.com/fyziktom/CanDoItAll.Economy.git"
+    },
+    {
+      "name": "CanDoItAll.FileTools",
+      "cloneUrl": "https://github.com/fyziktom/CanDoItAll.FileTools.git"
+    },
+    {
+      "name": "CanDoItAll.IPFS",
+      "cloneUrl": "https://github.com/fyziktom/CanDoItAll.IPFS.git"
+    },
+    {
+      "name": "CanDoItAll.Ledger",
+      "cloneUrl": "https://github.com/fyziktom/CanDoItAll.Ledger.git"
+    },
+    {
+      "name": "CanDoItAll.Mcp",
+      "cloneUrl": "https://github.com/fyziktom/CanDoItAll.Mcp.git"
+    },
+    {
+      "name": "CanDoItAll.SharedInfo",
+      "cloneUrl": "https://github.com/fyziktom/CanDoItAll.SharedInfo.git"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "externalities": [
+    {"name": "Energy price volatility", "stakeholder_impact": 3, "financial_impact": 5, "probability": 4, "time_horizon": 2, "controllability": 2},
+    {"name": "Supplier labor compliance issue", "stakeholder_impact": 5, "financial_impact": 3, "probability": 3, "time_horizon": 3, "controllability": 3},
+    {"name": "Flood risk at warehouse", "stakeholder_impact": 4, "financial_impact": 4, "probability": 2, "time_horizon": 4, "controllability": 2}
+  ]
+}

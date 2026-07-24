@@ -1,0 +1,7 @@
+{
+  "entities": [
+    {"name": "Parent", "cash": 50000, "min_cash": 40000, "overdraft": 0, "trapped_cash": 0, "borrowing_rate": 0.08, "deposit_rate": 0.01},
+    {"name": "Subsidiary A", "cash": 180000, "min_cash": 30000, "overdraft": 0, "trapped_cash": 20000, "borrowing_rate": 0.07, "deposit_rate": 0.01},
+    {"name": "Subsidiary B", "cash": 10000, "min_cash": 25000, "overdraft": 70000, "trapped_cash": 0, "borrowing_rate": 0.11, "deposit_rate": 0.005}
+  ]
+}

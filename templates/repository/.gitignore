@@ -1,0 +1,62 @@
+# IDE and user state
+.vs/
+.vscode/*.user
+*.suo
+*.user
+*.userosscache
+
+# Build and package output
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+artifacts/
+.artifacts/
+output/
+outputs/
+*.nupkg
+*.snupkg
+*.binlog
+
+# Test and coverage output
+[Tt]est[Rr]esult*/
+coverage/
+CodeCoverage/
+playwright-report/
+test-results/
+
+# Node and Python caches
+node_modules/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Codex, MCP, and browser transient state
+.codex/live-targets/
+.codex/live-runner/
+.codex/runlogs/
+.codex/run-logs/
+.codex/long-runs/
+.codex/tmp/
+.codex/temp/
+.codex-artifacts/
+.codex-tmp/
+.codex-temp/
+.codex-obj/
+.mcp-state/
+.playwright/
+.playwright-cli/
+.playwright-mcp/
+
+# Logs, secrets, and local overrides
+*.log
+*.local.json
+.env
+.env.*
+!.env.example
+
+# Editor and OS noise
+~$*
+*~
+.DS_Store
+Thumbs.db

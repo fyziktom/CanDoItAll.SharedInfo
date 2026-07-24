@@ -1,0 +1,6 @@
+risk,category,likelihood,impact,velocity,control_effectiveness,owner,externality
+Key supplier failure,supply_chain,4,5,4,0.35,COO,true
+Customer concentration,strategic,3,5,3,0.25,CRO,false
+Cloud outage,technology,3,4,5,0.55,CTO,true
+Duplicate invoice fraud,financial_control,2,3,2,0.70,CFO,false
+Carbon reporting requirement,regulatory,3,3,2,0.20,CFO,true

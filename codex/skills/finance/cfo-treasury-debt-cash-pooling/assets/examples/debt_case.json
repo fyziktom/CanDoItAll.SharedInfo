@@ -1,0 +1,13 @@
+{
+  "ebitda": 420000,
+  "cash": 150000,
+  "covenants": {
+    "max_net_debt_to_ebitda": 2.5,
+    "min_interest_cover": 4.0,
+    "min_debt_service_cover": 1.2
+  },
+  "debt": [
+    {"name": "Bank term loan", "principal": 850000, "interest_rate": 0.065, "annual_amortization": 120000, "covenant_included": true},
+    {"name": "Equipment lease", "principal": 120000, "interest_rate": 0.08, "annual_amortization": 40000, "covenant_included": true}
+  ]
+}

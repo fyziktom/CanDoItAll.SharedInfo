@@ -1,0 +1,7 @@
+from_entity,to_entity,currency,amount,description
+Parent,Subsidiary A,EUR,45000,management fee
+Subsidiary A,Parent,EUR,12000,expense recharge
+Subsidiary B,Parent,EUR,20000,short-term loan repayment
+Parent,Subsidiary B,EUR,55000,inventory funding
+Subsidiary A,Subsidiary B,USD,9000,license recharge
+Subsidiary B,Subsidiary A,USD,3000,support recharge

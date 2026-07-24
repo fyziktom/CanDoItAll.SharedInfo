@@ -1,0 +1,14 @@
+{
+  "starting_cash": 180000,
+  "minimum_cash": 50000,
+  "restricted_cash": 10000,
+  "undrawn_facilities": 25000,
+  "weeks": [
+    {"week": "2026-05-18", "inflows": 35000, "outflows": 62000, "notes": "normal payroll week"},
+    {"week": "2026-05-25", "inflows": 42000, "outflows": 30000, "notes": "customer collection"},
+    {"week": "2026-06-01", "inflows": 18000, "outflows": 70000, "notes": "supplier batch payment"},
+    {"week": "2026-06-08", "inflows": 26000, "outflows": 41000, "notes": "normal week"},
+    {"week": "2026-06-15", "inflows": 22000, "outflows": 46000, "notes": "normal week"},
+    {"week": "2026-06-22", "inflows": 30000, "outflows": 39000, "notes": "normal week"}
+  ]
+}

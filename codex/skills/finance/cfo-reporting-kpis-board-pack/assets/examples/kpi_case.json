@@ -1,0 +1,22 @@
+{
+  "period": "2026-04",
+  "revenue": 520000,
+  "prior_revenue": 480000,
+  "budget_revenue": 550000,
+  "cogs": 275000,
+  "opex": 210000,
+  "cash": 180000,
+  "restricted_cash": 10000,
+  "debt": 650000,
+  "accounts_receivable": 160000,
+  "inventory": 220000,
+  "accounts_payable": 125000,
+  "period_days": 30,
+  "annualized_cogs": 3300000,
+  "annualized_revenue": 6240000,
+  "customers": 240,
+  "new_customers": 18,
+  "lost_customers": 7,
+  "gross_margin_target": 0.48,
+  "ebitda_target": 50000
+}

@@ -1,0 +1,12 @@
+{
+  "departments": [
+    {"name": "Product", "revenue": 600000, "direct_costs": 280000, "headcount": 12, "transactions": 300, "storage_gb": 900},
+    {"name": "Sales", "revenue": 850000, "direct_costs": 390000, "headcount": 9, "transactions": 700, "storage_gb": 120},
+    {"name": "Support", "revenue": 150000, "direct_costs": 160000, "headcount": 7, "transactions": 500, "storage_gb": 80}
+  ],
+  "shared_costs": [
+    {"name": "Office", "amount": 90000, "driver": "headcount"},
+    {"name": "Finance Ops", "amount": 45000, "driver": "transactions"},
+    {"name": "Cloud Platform", "amount": 120000, "driver": "storage_gb"}
+  ]
+}

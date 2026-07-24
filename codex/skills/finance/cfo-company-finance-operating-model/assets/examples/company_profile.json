@@ -1,0 +1,14 @@
+{
+  "industry": "IoT hardware and SaaS",
+  "stage": "scaleup",
+  "ownership": "founder-owned",
+  "revenue_model": "mixed",
+  "inventory_intensity": "medium",
+  "capex_intensity": "medium",
+  "people_intensity": "medium",
+  "gross_margin_profile": "medium",
+  "regulated": false,
+  "countries": ["CZ", "US"],
+  "group_complexity": "medium",
+  "decision_required": "Design a finance operating model for growth and investor readiness"
+}

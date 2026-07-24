@@ -1,0 +1,11 @@
+{
+  "name": "Production automation cell",
+  "initial_investment": 250000,
+  "discount_rate": 0.12,
+  "cash_flows": [65000, 82000, 95000, 105000, 90000],
+  "terminal_value": 30000,
+  "sensitivity": {
+    "cash_flow_multipliers": [0.75, 1.0, 1.25],
+    "discount_rates": [0.08, 0.12, 0.18]
+  }
+}

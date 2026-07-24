@@ -1,0 +1,32 @@
+{
+  "name": "candoitall-components-mcp",
+  "version": "0.2.0",
+  "description": "Attach the CanDoItAll Components MCP from its owning sibling repositories.",
+  "author": {
+    "name": "CanDoItAll"
+  },
+  "license": "Proprietary",
+  "keywords": [
+    "candoitall",
+    "components",
+    "layout",
+    "mcp",
+    "blazor"
+  ],
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "CanDoItAll Components MCP",
+    "shortDescription": "Shared component guidance and layout examples",
+    "longDescription": "Inspect CanDoItAll component libraries, retrieve layout guidance, review sandbox routes, and mirror real product usage before adding custom structural CSS.",
+    "developerName": "CanDoItAll",
+    "category": "Coding",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Choose CanDoItAll shared components and layout primitives before adding custom structural CSS."
+    ],
+    "brandColor": "#0F766E"
+  }
+}
