@@ -16,6 +16,14 @@ The goal is to answer:
 3. Which drift is acceptable for the moment?
 4. Is the next feature wave likely to amplify existing fragility?
 
+# Bundled resource paths
+
+Treat the directory containing this active `SKILL.md` as `<skill-root>`. Resolve every
+`scripts/`, `assets/`, and `references/` path below from `<skill-root>`, never from the
+target repository or the SharedInfo source tree. Replace `<skill-root>` with that absolute
+directory before running a command. This keeps the workflow valid after the skill is
+installed as `$CODEX_HOME/skills/architecture-drift-audit`.
+
 # Workflow
 
 ## 1. Establish baseline
@@ -29,7 +37,7 @@ If no prior review exists, use the current codebase as the baseline.
 You may use:
 
 - CanDoItAll CodeAnalytics MCP
-- `python codex/skills/architecture-reviews/architecture-drift-audit/scripts/solution_inventory.py --root . --output architecture/reviews/_inventory.json`
+- `python "<skill-root>/scripts/solution_inventory.py" --root . --output architecture/reviews/_inventory.json`
 
 Use SharpTools only as a backup if CodeAnalytics has a real unresolved capability gap. Do not switch to SharpTools merely because CodeAnalytics transport needs a restart or reinstall.
 
@@ -67,7 +75,7 @@ Run the smallest safe build/test checks that confirm whether the drift is alread
 
 Use the template in:
 
-- `codex/skills/architecture-reviews/architecture-drift-audit/assets/review-report-template.md`
+- `<skill-root>/assets/review-report-template.md`
 
 Always include:
 
@@ -107,6 +115,6 @@ A drift issue is higher priority when it is:
 
 Read these before synthesis if needed:
 
-- `references/drift-signals.md`
-- `references/drift-audit-checklist.md`
-- `references/priority-lens.md`
+- `<skill-root>/references/drift-signals.md`
+- `<skill-root>/references/drift-audit-checklist.md`
+- `<skill-root>/references/priority-lens.md`

@@ -2,8 +2,12 @@
 
 ## Shared Standards
 
-Follow the reviewed standards in `CanDoItAll.SharedInfo/docs/standards`. This repository
-owns its local implementation and any documented exceptions.
+Follow the reviewed standards in a resolved `CanDoItAll.SharedInfo` clone. This
+repository owns its local implementation and any documented exceptions.
+
+Use `$apply-candoitall-shared-standards` when available. It checks an explicit
+`CANDOITALL_SHAREDINFO_ROOT` and nearby sibling locations without assuming that
+SharedInfo is a child of this repository or that every machine uses the same root.
 
 ## Repository Scope
 

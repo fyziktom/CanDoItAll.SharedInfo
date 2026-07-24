@@ -14,6 +14,7 @@ source code, local configuration, release logic, and domain-specific automation.
 | README and policies | Required sections and templates | Product content and contacts |
 | Git hygiene | Baseline ignore/attributes templates | Deliberate product-specific exceptions |
 | .NET defaults | Baseline properties and SDK policy | Target frameworks, versions, package metadata |
+| Docker and Compose | Naming, storage, exposure, image, runtime, and validation baseline | Images, service configuration, secrets, data, operations, and recovery |
 | NuGet packaging | Entry-point contract and orchestrator | Package selection and build implementation |
 | Installation/cloning | Safe cross-repository helpers | Product bootstrap after clone |
 | Codex skills | Reusable maintained skill source | Repo-only skills tied to one product |

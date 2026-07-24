@@ -44,6 +44,14 @@ Always treat the following as different categories until proven otherwise:
 - execution or tooling metadata
 - policy / authorization model
 
+# Bundled resource paths
+
+Treat the directory containing this active `SKILL.md` as `<skill-root>`. Resolve every
+`scripts/`, `assets/`, and `references/` path below from `<skill-root>`, never from the
+target repository or the SharedInfo source tree. Replace `<skill-root>` with that absolute
+directory before running a command. This keeps the workflow valid after the skill is
+installed as `$CODEX_HOME/skills/canonical-model-review`.
+
 # Prefer these tools
 
 If available, prefer **CanDoItAll CodeAnalytics MCP** for:
@@ -85,7 +93,7 @@ If the repository has `architecture/reviews/`, create a new timestamped review f
 
 You may use:
 
-- `python codex/skills/architecture-reviews/canonical-model-review/scripts/new_review.py canonical-model-review --scope "<scope>" --template codex/skills/architecture-reviews/canonical-model-review/assets/review-report-template.md`
+- `python "<skill-root>/scripts/new_review.py" canonical-model-review --scope "<scope>" --template "<skill-root>/assets/review-report-template.md"`
 
 If the repo does not use review folders yet, continue without blocking.
 
@@ -110,7 +118,7 @@ Collect evidence for:
 You may use:
 
 - CanDoItAll CodeAnalytics MCP
-- `python codex/skills/architecture-reviews/canonical-model-review/scripts/solution_inventory.py --root . --output architecture/reviews/_inventory.json`
+- `python "<skill-root>/scripts/solution_inventory.py" --root . --output architecture/reviews/_inventory.json`
 
 Do not trust the inventory script as the source of truth. It is a heuristic helper only.
 
@@ -220,7 +228,7 @@ Do **not** edit code during the review unless the user explicitly asks for fixes
 
 Use the template in:
 
-- `codex/skills/architecture-reviews/canonical-model-review/assets/review-report-template.md`
+- `<skill-root>/assets/review-report-template.md`
 
 Always include:
 
@@ -240,7 +248,7 @@ Always include:
 
 Use the scorecard from:
 
-- `codex/skills/architecture-reviews/canonical-model-review/assets/scorecard-template.yaml`
+- `<skill-root>/assets/scorecard-template.yaml`
 
 Score from 1 to 5:
 
@@ -279,6 +287,6 @@ Every finding must include:
 
 Read these before final synthesis if the task is deep enough:
 
-- `references/canonical-model-glossary.md`
-- `references/deep-review-checklist.md`
-- `references/candoitall-specific-lens.md`
+- `<skill-root>/references/canonical-model-glossary.md`
+- `<skill-root>/references/deep-review-checklist.md`
+- `<skill-root>/references/candoitall-specific-lens.md`

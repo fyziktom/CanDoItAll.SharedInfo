@@ -19,6 +19,9 @@ Add local entries only for real repository-specific output or secrets.
 - Do not ignore source folders broadly and then recover them with fragile exception chains.
 - Do not commit `.env`, `*.local.json`, account keys, access tokens, or generated
   certificates.
+- Ignore developer-specific Compose overrides, local secret directories, and
+  repository-local container data. Keep `.env.example` and reviewed production overlays
+  visible.
 - Keep prepared durable Codex bundles visible to Git; ignore their transient logs,
   archives, and runner state.
 

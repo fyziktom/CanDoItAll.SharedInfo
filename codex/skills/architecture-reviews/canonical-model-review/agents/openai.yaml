@@ -1,4 +1,6 @@
 interface:
-  short_description: "Focused architecture review workflow for canonical model integrity and stabilization."
+  display_name: "Canonical Model Review"
+  short_description: "Review canonical model integrity and boundaries"
+  default_prompt: "Use $canonical-model-review to review canonical truth, boundaries, and stabilization priorities."
 policy:
   allow_implicit_invocation: false

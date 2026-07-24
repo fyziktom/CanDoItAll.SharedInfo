@@ -39,6 +39,21 @@ dotnet test ${SOLUTION_FILE} --configuration Release --no-build
 ${SMALLEST_USEFUL_RUN_COMMAND}
 ```
 
+## Containers
+
+Remove this section when the repository owns no Docker assets.
+
+```powershell
+Copy-Item .env.example .env
+docker compose config --quiet
+docker compose up -d --wait --wait-timeout 120
+docker compose down
+```
+
+Document which services publish host ports, which volumes are authoritative, how secrets
+are supplied, and where backup/restore procedures live. Normal teardown must preserve
+volumes.
+
 ## Documentation
 
 - [Architecture](docs/${ARCHITECTURE_DOCUMENT})

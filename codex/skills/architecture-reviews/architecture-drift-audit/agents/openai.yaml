@@ -1,4 +1,6 @@
 interface:
-  short_description: "Focused architecture review workflow for canonical model integrity and stabilization."
+  display_name: "Architecture Drift Audit"
+  short_description: "Audit recurring architecture drift and hotspots"
+  default_prompt: "Use $architecture-drift-audit to assess architecture drift and prioritize stabilization work."
 policy:
   allow_implicit_invocation: false

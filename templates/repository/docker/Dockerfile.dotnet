@@ -1,0 +1,41 @@
+# syntax=docker/dockerfile:1
+
+ARG DOTNET_VERSION=10.0
+
+FROM mcr.microsoft.com/dotnet/sdk:${DOTNET_VERSION} AS build
+WORKDIR /source
+
+# Rename Sample.Api. This conservative template copies the complete project graph so
+# Directory.Build.*, Directory.Packages.props, global.json, NuGet.config, and referenced
+# projects participate in restore. After the image builds correctly, this may be replaced
+# by an explicit manifest-first COPY set that includes every restore input.
+COPY . .
+RUN --mount=type=cache,id=nuget,target=/root/.nuget/packages \
+    dotnet restore "src/Sample.Api/Sample.Api.csproj"
+
+RUN --mount=type=cache,id=nuget,target=/root/.nuget/packages \
+    dotnet publish "src/Sample.Api/Sample.Api.csproj" \
+    --configuration Release \
+    --output /app/publish \
+    --no-restore \
+    /p:UseAppHost=false
+
+FROM mcr.microsoft.com/dotnet/aspnet:${DOTNET_VERSION} AS runtime
+ARG BUILD_DATE
+ARG BUILD_REVISION
+ARG BUILD_VERSION
+
+LABEL org.opencontainers.image.created="${BUILD_DATE}" \
+      org.opencontainers.image.revision="${BUILD_REVISION}" \
+      org.opencontainers.image.version="${BUILD_VERSION}" \
+      org.opencontainers.image.source="https://github.com/<owner>/<repository>" \
+      org.opencontainers.image.vendor="CanDoItAll"
+
+WORKDIR /app
+ENV ASPNETCORE_HTTP_PORTS=8080
+EXPOSE 8080
+
+COPY --from=build /app/publish .
+USER $APP_UID
+
+ENTRYPOINT ["dotnet", "Sample.Api.dll"]

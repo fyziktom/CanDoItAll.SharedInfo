@@ -16,6 +16,14 @@ The goal is **not** to redesign the whole system. The goal is to answer:
 
 This skill is optimized for **wave-based development** where features land quickly and the architecture is periodically stabilized.
 
+# Bundled resource paths
+
+Treat the directory containing this active `SKILL.md` as `<skill-root>`. Resolve every
+`scripts/`, `assets/`, and `references/` path below from `<skill-root>`, never from the
+target repository or the SharedInfo source tree. Replace `<skill-root>` with that absolute
+directory before running a command. This keeps the workflow valid after the skill is
+installed as `$CODEX_HOME/skills/feature-block-architecture-review`.
+
 # Output contract
 
 Produce a concise but deep review with:
@@ -46,7 +54,7 @@ Write a short scope statement.
 
 You may use:
 
-- `python codex/skills/architecture-reviews/feature-block-architecture-review/scripts/new_review.py feature-block-review --scope "<scope>" --template codex/skills/architecture-reviews/feature-block-architecture-review/assets/review-report-template.md`
+- `python "<skill-root>/scripts/new_review.py" feature-block-review --scope "<scope>" --template "<skill-root>/assets/review-report-template.md"`
 
 ## 3. Inventory the changed types and files
 
@@ -144,6 +152,6 @@ Raise findings when you see:
 
 Read these before final synthesis if the block is substantial:
 
-- `references/feature-block-checklist.md`
-- `references/layer-classification.md`
-- `references/wave-stabilization-heuristics.md`
+- `<skill-root>/references/feature-block-checklist.md`
+- `<skill-root>/references/layer-classification.md`
+- `<skill-root>/references/wave-stabilization-heuristics.md`

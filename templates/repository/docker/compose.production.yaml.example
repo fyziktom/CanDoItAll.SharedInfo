@@ -1,0 +1,21 @@
+services:
+  api:
+    image: ${PRODUCTION_API_IMAGE:?Set PRODUCTION_API_IMAGE to an immutable registry reference with a digest}
+    build: !reset null
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+    ports: !reset []
+    restart: unless-stopped
+
+  db:
+    image: ${PRODUCTION_POSTGRES_IMAGE:?Set PRODUCTION_POSTGRES_IMAGE to a versioned PostgreSQL image with a digest}
+    restart: unless-stopped
+
+secrets:
+  db-password: !override
+    file: ${DB_PASSWORD_FILE:?Set DB_PASSWORD_FILE to the provisioned secret path}
+
+volumes:
+  db-data:
+    external: true
+    name: ${DB_VOLUME_NAME:?Set DB_VOLUME_NAME to the managed production volume}

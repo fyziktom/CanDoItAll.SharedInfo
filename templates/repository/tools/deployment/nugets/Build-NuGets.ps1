@@ -1,4 +1,4 @@
-[CmdletBinding()]
+[CmdletBinding(SupportsShouldProcess, ConfirmImpact = 'Medium')]
 param(
     [ValidateSet('Debug', 'Release')]
     [string]$Configuration = 'Release',
@@ -29,6 +29,26 @@ if ($solutions.Count -ne 1) {
     throw "Expected one canonical root solution, found $($solutions.Count). Customize this adapter to select the repository's packaging solution."
 }
 
+$operation = if ($NoRestore) {
+    'Pack'
+}
+else {
+    'Restore and pack'
+}
+if (-not $PSCmdlet.ShouldProcess(
+        $OutputDirectory,
+        "$operation NuGet packages from '$($solutions[0].FullName)'"
+    )) {
+    [pscustomobject]@{
+        Repository = Split-Path $repositoryRoot -Leaf
+        Solution = $solutions[0].Name
+        Configuration = $Configuration
+        OutputDirectory = $OutputDirectory
+        Status = 'Preview'
+    }
+    return
+}
+
 New-Item -ItemType Directory -Path $OutputDirectory -Force | Out-Null
 
 if (-not $NoRestore) {
@@ -53,4 +73,5 @@ if ($LASTEXITCODE -ne 0) {
     Solution = $solutions[0].Name
     Configuration = $Configuration
     OutputDirectory = $OutputDirectory
+    Status = 'Succeeded'
 }

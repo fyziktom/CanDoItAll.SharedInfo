@@ -52,6 +52,20 @@ The adapter owns package selection and any repository-specific preparation. The
 orchestrator owns discovery, selection, output isolation, failure aggregation, and
 reporting.
 
+The same boundary applies to Docker validation:
+
+```text
+SharedInfo:
+  tools/validation/Test-DockerConventions.ps1
+
+Each Docker-owning repository:
+  tools/validation/Test-Docker.ps1
+```
+
+The shared validator owns portable policy checks. The local entry point selects the
+repository's Compose overlays, Dockerfiles, build contexts, required services, smoke
+tests, and documented exceptions.
+
 ## Safety
 
 - Inspection is the default.

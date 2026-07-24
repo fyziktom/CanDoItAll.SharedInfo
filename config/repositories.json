@@ -3,7 +3,8 @@
   "repositoryNamePattern": "CanDoItAll*",
   "contracts": {
     "nugetBuildEntryPoint": "tools/deployment/nugets/Build-NuGets.ps1",
-    "repositoryValidationEntryPoint": "tools/validation/Test-Repository.ps1"
+    "repositoryValidationEntryPoint": "tools/validation/Test-Repository.ps1",
+    "dockerValidationEntryPoint": "tools/validation/Test-Docker.ps1"
   },
   "repositories": [
     {

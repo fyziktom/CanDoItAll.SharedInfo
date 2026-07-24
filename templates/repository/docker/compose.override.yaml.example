@@ -1,0 +1,12 @@
+services:
+  api:
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+    volumes:
+      - type: bind
+        source: ./src/Sample.Api
+        target: /workspace/src/Sample.Api
+        read_only: true
+        bind:
+          create_host_path: false
+

@@ -13,6 +13,9 @@ the root:
   .gitignore
   global.json                 # .NET repositories
   Directory.Build.props       # multi-project .NET repositories
+  compose.yaml                # repositories with a Compose application
+  .env.example                # non-secret Compose/configuration contract
+  .dockerignore               # at each Docker build-context root
   src/
   tests/
   docs/
@@ -34,6 +37,8 @@ make ownership harder to understand.
 - Keep runnable teaching or integration examples under `samples`; do not hide product
   projects there.
 - Keep durable documentation under `docs`.
+- Keep the canonical Compose model at `compose.yaml`; keep Dockerfiles beside their
+  owning service unless the repository has one unambiguous root image.
 - Keep repository-specific engineering automation under `tools/<area>`.
 - Use `scripts` only while migrating legacy automation; new scripts belong under
   `tools/<area>`.
@@ -68,3 +73,6 @@ Product-specific compiled tools may use PascalCase project folders below a categ
   `Build-NuGets.ps1` or `Test-Repository.ps1`.
 - Markdown file names use lower-case hyphenated names except conventional root files.
 - Prefer one canonical `.slnx` at the root for .NET repositories.
+
+Docker-owning repositories also follow
+[`docker.md`](docker.md) and expose `tools/validation/Test-Docker.ps1`.

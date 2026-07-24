@@ -1,4 +1,6 @@
 interface:
-  short_description: "Focused architecture review workflow for canonical model integrity and stabilization."
+  display_name: "Feature Block Architecture Review"
+  short_description: "Review architecture fit after a major feature block"
+  default_prompt: "Use $feature-block-architecture-review to assess a changed feature block before the next development wave."
 policy:
   allow_implicit_invocation: false

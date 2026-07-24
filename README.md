@@ -10,7 +10,7 @@ reviewed here first; adoption in sibling repositories is a later, explicit opera
 
 | Area | Purpose |
 |---|---|
-| [`docs/standards`](docs/standards) | Canonical repository, documentation, Git, .NET, tooling, NuGet, and Codex conventions |
+| [`docs/standards`](docs/standards) | Canonical repository, documentation, Git, .NET, Docker, tooling, NuGet, and Codex conventions |
 | [`docs/inventory`](docs/inventory) | Evidence-backed snapshots of the repository family |
 | [`templates/repository`](templates/repository) | Copy-ready starting points for repository-owned files |
 | [`tools`](tools) | Cross-repository discovery, installation, packaging orchestration, and validation |
@@ -60,6 +60,22 @@ Preview installation of the maintained Codex skills:
 .\tools\install\codex\Install-CodexSkills.ps1 -WhatIf
 ```
 
+Preview one exact package without touching unrelated installed skills:
+
+```powershell
+.\tools\install\codex\Install-CodexSkills.ps1 `
+    -PackageName apply-candoitall-shared-standards `
+    -WhatIf
+```
+
+Validate a repository's Docker/Compose baseline without starting containers:
+
+```powershell
+.\tools\validation\Test-DockerConventions.ps1 -RepositoryPath ..\CanDoItAll.Ledger
+```
+
 See [`docs/architecture/source-of-truth.md`](docs/architecture/source-of-truth.md) for
 ownership boundaries and [`docs/inventory/2026-07-24-baseline.md`](docs/inventory/2026-07-24-baseline.md)
-for the initial consolidation evidence.
+for the initial consolidation evidence. The
+[`Docker baseline`](docs/inventory/2026-07-24-docker-baseline.md) records current
+container usage and adoption dependencies.

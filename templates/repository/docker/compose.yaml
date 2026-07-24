@@ -1,0 +1,89 @@
+name: ${COMPOSE_PROJECT_NAME:-candoitall-sample}
+
+x-bounded-logging: &bounded-logging
+  driver: local
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  api:
+    image: ${API_IMAGE:-candoitall-sample-api:dev}
+    build:
+      context: .
+      dockerfile: Dockerfile.dotnet
+    environment:
+      ASPNETCORE_HTTP_PORTS: "8080"
+      ConnectionStrings__DatabaseHost: db
+      DB_PASSWORD_FILE: /run/secrets/db-password
+    secrets:
+      - db-password
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "${CDA_BIND_ADDRESS:-127.0.0.1}:${API_PORT:-8080}:8080"
+    networks:
+      - frontend
+      - backend
+    healthcheck:
+      test:
+        - CMD
+        - /app/healthcheck
+      start_period: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 6
+    init: true
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: ${API_MEMORY_LIMIT:-512m}
+    cpus: ${API_CPU_LIMIT:-1.0}
+    pids_limit: ${API_PID_LIMIT:-256}
+    stop_grace_period: 30s
+    restart: "no"
+    logging: *bounded-logging
+
+  db:
+    image: postgres:${POSTGRES_IMAGE_TAG:-17-alpine}
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-sample}
+      POSTGRES_USER: ${POSTGRES_USER:-sample}
+      POSTGRES_PASSWORD_FILE: /run/secrets/db-password
+    secrets:
+      - db-password
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - backend
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U "$${POSTGRES_USER}" -d "$${POSTGRES_DB}"
+      start_period: 10s
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    mem_limit: ${DB_MEMORY_LIMIT:-1g}
+    cpus: ${DB_CPU_LIMIT:-1.0}
+    pids_limit: ${DB_PID_LIMIT:-256}
+    stop_grace_period: 60s
+    restart: "no"
+    logging: *bounded-logging
+
+secrets:
+  db-password:
+    environment: POSTGRES_PASSWORD
+
+volumes:
+  db-data:
+
+networks:
+  frontend:
+  backend:
+    internal: true

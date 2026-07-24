@@ -28,7 +28,13 @@ repositories.
 
 The installer discovers nested source groups but installs each skill by its package name.
 It refuses duplicate names and does not overwrite existing installations without
-`-Force`.
+`-Force`. Use `-PackageName` for an exact, reviewable subset; include any underscore
+support package required by a selected skill.
+
+Use `apply-candoitall-shared-standards` as the entry skill when working in a CanDoItAll
+repository. It locates SharedInfo without a fixed machine path and routes the task to the
+smallest relevant set of canonical documents and templates. The skill summarizes
+invariants but does not replace the repository documents.
 
 ## Agents
 
