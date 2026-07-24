@@ -54,15 +54,17 @@ website from the source repository:
 ## Package License
 
 Public CanDoItAll packages use the repository-owned
-[MIT-derived license with source-link requirement](licensing.md). Because the extra
+[MIT-derived license with CanDoItAll website-link requirement](licensing.md). Because the extra
 redistribution condition is not the unmodified SPDX `MIT` license:
 
 - set `PackageLicenseFile` to `LICENSE`;
 - pack the adapted repository-root `LICENSE` at the package root;
 - do not set `PackageLicenseExpression` to `MIT`;
 - require `<license type="file">LICENSE</license>` in the packed `.nuspec`;
-- verify that the package contains the license and that its source link matches
-  `RepositoryUrl`.
+- verify that the package contains the license and its fixed link to
+  `https://aicandoitall.com`;
+- keep `PackageProjectUrl` on that shared website while `RepositoryUrl` continues to
+  identify the package's canonical source repository.
 
 Start from
 [`templates/repository/dotnet/Directory.Build.targets`](../../templates/repository/dotnet/Directory.Build.targets)

@@ -56,7 +56,8 @@ exception explicitly.
 - Put copy-ready shared examples in `SharedInfo/templates/repository`.
 - Put cross-repository coordination in `SharedInfo/tools/<area>`.
 - Keep the family license text, badge contract, and NuGet license-file rules in
-  SharedInfo; adapt the copyright and canonical source URL in each adopting repository.
+  SharedInfo. Adapt only the documented repository fields; keep the shared
+  `https://aicandoitall.com` license link fixed.
 - Keep product code, product configuration, repository-specific entry points, data,
   secrets, task bundles, proof, logs, and generated output in their owning repository.
 - Copy and adapt templates; do not make product repositories depend on filesystem links

@@ -17,12 +17,15 @@ Apply these even before loading a task-specific document:
   validate exact recursive targets.
 - Do not commit secrets, local overrides, generated output, Codex runtime state, browser
   artifacts, task proof, or logs.
-- Maintained CanDoItAll repositories use the MIT-derived license with source-link
-  requirement and display the applicable CI, package, .NET, and license badges.
+- Maintained CanDoItAll repositories use the MIT-derived license with the fixed
+  `https://aicandoitall.com` website-link requirement and display applicable CI,
+  user-facing package, .NET, and license badges.
 - Public CanDoItAll NuGet packages use `https://aicandoitall.com` as the default
   `PackageProjectUrl`; keep `RepositoryUrl` pointed at the canonical source repository.
 - NuGet packages embed the repository `LICENSE` through `PackageLicenseFile`; do not
-  mislabel the added source-link condition as the unmodified SPDX `MIT` expression.
+  mislabel the added website-link condition as the unmodified SPDX `MIT` expression.
+- Select NuGet badges from the one or two packages users are most expected to install.
+  Prefer user-facing entry packages over Abstractions, Core, or provider packages.
 - When a shared contract changes, update its standard, copy-ready template, tooling, and
   validation together.
 
@@ -35,7 +38,7 @@ Paths are relative to the resolved `CanDoItAll.SharedInfo` root.
 | Ownership or source-of-truth decision | `docs/architecture/source-of-truth.md` | target repository ownership docs |
 | Root folders and names | `docs/standards/repository-layout.md` | `templates/repository` |
 | README, contributing, security, durable docs | `docs/standards/documentation.md` | matching root templates |
-| License text, source link, badge, or package license metadata | `docs/standards/licensing.md` | `templates/repository/LICENSE`; README and .NET targets templates |
+| License text, website link, badge, or package license metadata | `docs/standards/licensing.md` | `templates/repository/LICENSE`; README and .NET targets templates |
 | Git attributes, ignores, local/generated state | `docs/standards/git.md` | `.gitignore`, `.gitattributes` templates |
 | SDK pinning, MSBuild defaults, solution layout | `docs/standards/dotnet.md` | `templates/repository/dotnet` |
 | Dockerfile, Compose, ports, networks, volumes, secrets, health, runtime | `docs/standards/docker.md` | `templates/repository/docker`; `tools/validation/Test-DockerConventions.ps1` |

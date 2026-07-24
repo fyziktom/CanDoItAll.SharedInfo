@@ -103,18 +103,21 @@ $sharedContractChecks = @(
     [pscustomobject]@{
         Path = 'LICENSE'
         RequiredText = @(
-            'MIT-Derived License with Source Link Requirement',
+            'MIT-Derived License with CanDoItAll Website Link Requirement',
             'Software or a substantial portion of it',
             'source or binary form',
-            'https://github.com/fyziktom/CanDoItAll.SharedInfo'
+            'https://aicandoitall.com',
+            'One such link satisfies this condition'
         )
     },
     [pscustomobject]@{
         Path = 'docs/standards/licensing.md'
         RequiredText = @(
-            'MIT-Derived License with Source Link Requirement',
+            'MIT-Derived License with CanDoItAll Website Link Requirement',
+            'https://aicandoitall.com',
             'PackageLicenseFile',
             'PackageLicenseExpression',
+            'PackageProjectUrl',
             'RepositoryUrl'
         )
     },
@@ -122,25 +125,30 @@ $sharedContractChecks = @(
         Path = 'docs/standards/documentation.md'
         RequiredText = @(
             'README Badges',
-            'NuGet badges',
-            'MIT-derived with source link'
+            'one or, at most, two NuGet packages',
+            'Abstractions',
+            'MIT-derived with website link'
         )
     },
     [pscustomobject]@{
         Path = 'templates/repository/LICENSE'
         RequiredText = @(
-            'MIT-Derived License with Source Link Requirement',
+            'MIT-Derived License with CanDoItAll Website Link Requirement',
             'Software or a substantial portion of it',
             'source or binary form',
-            '${SOURCE_REPOSITORY_URL}'
+            'https://aicandoitall.com',
+            'One such link satisfies this condition'
         )
     },
     [pscustomobject]@{
         Path = 'templates/repository/README.md'
         RequiredText = @(
             'actions/workflows/${CI_WORKFLOW_FILE}/badge.svg',
-            'img.shields.io/nuget/v/${PRIMARY_PACKAGE_ID}',
-            'MIT--derived%20with%20source%20link'
+            'img.shields.io/nuget/v/${PRIMARY_USER_PACKAGE_ID}',
+            'img.shields.io/nuget/dt/${PRIMARY_USER_PACKAGE_ID}',
+            'img.shields.io/nuget/v/${SECONDARY_USER_PACKAGE_ID}',
+            'img.shields.io/nuget/dt/${SECONDARY_USER_PACKAGE_ID}',
+            'MIT--derived%20with%20website%20link'
         )
     },
     [pscustomobject]@{
@@ -158,22 +166,24 @@ $sharedContractChecks = @(
         )
         RequiredText = @(
             'docs/standards/licensing.md',
-            'MIT-derived license with source-link',
+            'user-facing package',
+            'website-link requirement',
             'PackageLicenseFile'
         )
     },
     [pscustomobject]@{
         Path = 'README.md'
         RequiredText = @(
-            'MIT--derived%20with%20source%20link',
-            'MIT-Derived License with Source Link Requirement'
+            'MIT--derived%20with%20website%20link',
+            'MIT-Derived License with CanDoItAll Website Link Requirement',
+            'https://aicandoitall.com'
         )
     },
     [pscustomobject]@{
         Path = 'AGENTS.md'
         RequiredText = @(
             'family license',
-            'source-link requirement',
+            'website-link requirement',
             'README badge contract',
             'NuGet'
         )
@@ -193,6 +203,19 @@ foreach ($sharedContractCheck in $sharedContractChecks) {
                 "$($sharedContractCheck.Path)."
             )
         }
+    }
+}
+
+$licenseContractPaths = @('LICENSE', 'templates/repository/LICENSE')
+foreach ($licenseContractPath in $licenseContractPaths) {
+    $licenseContractContents = Get-Content -Raw -LiteralPath (
+        Join-Path $repositoryRoot $licenseContractPath
+    )
+    if ($licenseContractContents.Contains('github.com') -or
+        $licenseContractContents.Contains('${SOURCE_REPOSITORY_URL}')) {
+        Add-Failure (
+            "$licenseContractPath must use the shared website link, not a repository URL."
+        )
     }
 }
 

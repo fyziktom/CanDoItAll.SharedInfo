@@ -1,12 +1,16 @@
 # ${REPOSITORY_NAME}
 
 [![CI](${SOURCE_REPOSITORY_URL}/actions/workflows/${CI_WORKFLOW_FILE}/badge.svg?branch=main&event=push)](${SOURCE_REPOSITORY_URL}/actions/workflows/${CI_WORKFLOW_FILE})
-[![NuGet version](https://img.shields.io/nuget/v/${PRIMARY_PACKAGE_ID}.svg?logo=nuget&label=NuGet)](https://www.nuget.org/packages/${PRIMARY_PACKAGE_ID})
-[![NuGet downloads](https://img.shields.io/nuget/dt/${PRIMARY_PACKAGE_ID}.svg?logo=nuget&label=${PRIMARY_PACKAGE_BADGE_LABEL}%20downloads)](https://www.nuget.org/packages/${PRIMARY_PACKAGE_ID})
+[![${PRIMARY_USER_PACKAGE_BADGE_LABEL} version](https://img.shields.io/nuget/v/${PRIMARY_USER_PACKAGE_ID}.svg?logo=nuget&label=${PRIMARY_USER_PACKAGE_BADGE_LABEL})](https://www.nuget.org/packages/${PRIMARY_USER_PACKAGE_ID})
+[![${PRIMARY_USER_PACKAGE_BADGE_LABEL} downloads](https://img.shields.io/nuget/dt/${PRIMARY_USER_PACKAGE_ID}.svg?logo=nuget&label=${PRIMARY_USER_PACKAGE_BADGE_LABEL}%20downloads)](https://www.nuget.org/packages/${PRIMARY_USER_PACKAGE_ID})
+[![${SECONDARY_USER_PACKAGE_BADGE_LABEL} version](https://img.shields.io/nuget/v/${SECONDARY_USER_PACKAGE_ID}.svg?logo=nuget&label=${SECONDARY_USER_PACKAGE_BADGE_LABEL})](https://www.nuget.org/packages/${SECONDARY_USER_PACKAGE_ID})
+[![${SECONDARY_USER_PACKAGE_BADGE_LABEL} downloads](https://img.shields.io/nuget/dt/${SECONDARY_USER_PACKAGE_ID}.svg?logo=nuget&label=${SECONDARY_USER_PACKAGE_BADGE_LABEL}%20downloads)](https://www.nuget.org/packages/${SECONDARY_USER_PACKAGE_ID})
 [![.NET ${DOTNET_MAJOR_VERSION}](https://img.shields.io/badge/.NET-${DOTNET_MAJOR_VERSION}.0-512BD4?logo=dotnet)](https://dotnet.microsoft.com/download/dotnet/${DOTNET_MAJOR_VERSION}.0)
-[![License](https://img.shields.io/badge/license-MIT--derived%20with%20source%20link-blue.svg)](LICENSE)
+[![License](https://img.shields.io/badge/license-MIT--derived%20with%20website%20link-blue.svg)](LICENSE)
 
-Remove badge lines that do not apply; do not leave unresolved placeholders.
+Choose packages by expected end-user installation, not dependency centrality. Remove the
+secondary pair unless the repository has two co-equal product entry points. Remove all
+badge lines that do not apply; do not leave unresolved placeholders.
 
 ${ONE_SENTENCE_PURPOSE}
 
@@ -77,8 +81,9 @@ NuGet packages.
 ## License And Contributions
 
 This repository uses the
-[MIT-Derived License with Source Link Requirement](LICENSE). Redistributions of the
-software or a substantial portion of it in source or binary form must include the link to
-`${SOURCE_REPOSITORY_URL}` required by the license.
+[MIT-Derived License with CanDoItAll Website Link Requirement](LICENSE). Redistributions
+of the software or a substantial portion of it in source or binary form must include at
+least one link to [aicandoitall.com](https://aicandoitall.com). One such link satisfies
+the added condition for a distribution containing multiple covered CanDoItAll libraries.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the contribution policy.

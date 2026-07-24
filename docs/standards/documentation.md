@@ -24,22 +24,29 @@ Put applicable status badges immediately below the level-one repository heading.
 stable order:
 
 1. CI status for the primary validation workflow on `main`;
-2. current version of the primary public NuGet package;
-3. total downloads of that primary package;
+2. current version and total downloads for the primary user-facing NuGet package;
+3. when the repository has two co-equal product entry points, the version and total
+   downloads for the second user-facing package;
 4. the supported .NET major version;
 5. the family license.
 
 Start from the badge block in the README template and remove badges that do not apply. A
-repository with no public package omits both NuGet badges; a non-.NET repository omits
-the .NET badge. Do not publish decorative, stale, or guessed status badges.
+repository with no public package omits all NuGet badges; a non-.NET repository omits the
+.NET badge. Do not publish decorative, stale, or guessed status badges.
 
 - CI badges must link to the canonical workflow and identify the workflow file, `main`
   branch, and intended event.
-- NuGet badges must link to the canonical package page and use a stable primary package,
-  not an arbitrary project.
+- Select the one or, at most, two NuGet packages that users are most expected to install
+  to obtain the repository's main capabilities. Prefer user-facing entry or component
+  packages over dependency-layer packages such as `Abstractions`, `Core`, or providers.
+- When two packages represent distinct co-equal product surfaces, show a version/download
+  pair for each. Otherwise show one pair; do not turn the badge block into a package
+  inventory.
+- NuGet badges must link to the canonical package page and use labels that distinguish
+  the selected user-facing packages.
 - The .NET badge must link to the supported .NET download page.
 - The license badge must link to the repository-owned `LICENSE` file and say
-  `MIT-derived with source link`.
+  `MIT-derived with website link`.
 
 ## Durable Documentation
 
