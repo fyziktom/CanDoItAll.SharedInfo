@@ -25,6 +25,32 @@ Start from
 [`templates/repository/tools/deployment/nugets/Build-NuGets.ps1`](../../templates/repository/tools/deployment/nugets/Build-NuGets.ps1)
 and customize package selection inside the owning repository.
 
+## Package Links And Repository Metadata
+
+Publicly distributed CanDoItAll packages must distinguish the user-facing project
+website from the source repository:
+
+```xml
+<PropertyGroup>
+  <PackageProjectUrl>https://aicandoitall.com</PackageProjectUrl>
+  <RepositoryUrl>${REPOSITORY_URL}</RepositoryUrl>
+  <RepositoryType>git</RepositoryType>
+  <PublishRepositoryUrl>true</PublishRepositoryUrl>
+</PropertyGroup>
+```
+
+- Use `https://aicandoitall.com` as the default `PackageProjectUrl`. A package may use a
+  more specific stable public product page when that page is intentionally owned and
+  maintained.
+- Keep `RepositoryUrl` pointed at the canonical source repository; do not replace it
+  with the project website.
+- Set `RepositoryType` and enable repository publishing so package provenance and
+  SourceLink metadata remain available.
+- Include the public project website in the package README when it materially helps
+  consumers discover documentation or related products.
+- Inspect at least one packed `.nuspec` during adoption to prove that `projectUrl` and
+  repository metadata are distinct and correct.
+
 ## Central Orchestration
 
 [`Invoke-CanDoItAllNuGetBuilds.ps1`](../../tools/deployment/nugets/Invoke-CanDoItAllNuGetBuilds.ps1)
@@ -46,5 +72,6 @@ guesses about legacy scripts. Use `-FailOnMissing` during a future standards-ado
 
 - Default output is `artifacts/packages/<repository>` in SharedInfo.
 - Package and symbol files are generated and ignored.
-- A repository decides its package IDs, versions, symbols, readme, and license metadata.
+- A repository decides its package IDs, versions, symbols, readme, license metadata, and
+  any deliberate package-specific project-page override.
 - Publishing is a separate tool and requires explicit destination and authorization.

@@ -36,6 +36,7 @@ $requiredPaths = @(
     'templates/repository/docker/compose.production.yaml.example',
     'templates/repository/docker/Dockerfile.dotnet',
     'templates/repository/docker/README.md',
+    'templates/repository/dotnet/Directory.Build.props',
     'templates/repository/tools/validation/Test-Docker.ps1',
     'codex/skills/apply-candoitall-shared-standards/SKILL.md',
     'codex/skills/apply-candoitall-shared-standards/agents/openai.yaml',
@@ -63,6 +64,51 @@ foreach ($relativePath in @('config/repositories.json', 'codex/marketplace.json'
         }
         catch {
             Add-Failure "Invalid JSON in $relativePath`: $($_.Exception.Message)"
+        }
+    }
+}
+
+$packageHomepageChecks = @(
+    [pscustomobject]@{
+        Path = 'docs/standards/nuget-packaging.md'
+        RequiredText = @(
+            'https://aicandoitall.com',
+            'PackageProjectUrl',
+            'RepositoryUrl'
+        )
+    },
+    [pscustomobject]@{
+        Path = 'templates/repository/dotnet/Directory.Build.props'
+        RequiredText = @(
+            'https://aicandoitall.com',
+            'PackageProjectUrl'
+        )
+    },
+    [pscustomobject]@{
+        Path = (
+            'codex/skills/apply-candoitall-shared-standards/' +
+            'references/standards-map.md'
+        )
+        RequiredText = @(
+            'https://aicandoitall.com',
+            'PackageProjectUrl',
+            'RepositoryUrl'
+        )
+    }
+)
+foreach ($packageHomepageCheck in $packageHomepageChecks) {
+    $packageHomepagePath = Join-Path $repositoryRoot $packageHomepageCheck.Path
+    if (-not (Test-Path -LiteralPath $packageHomepagePath -PathType Leaf)) {
+        continue
+    }
+
+    $packageHomepageContents = Get-Content -Raw -LiteralPath $packageHomepagePath
+    foreach ($requiredText in $packageHomepageCheck.RequiredText) {
+        if (-not $packageHomepageContents.Contains($requiredText)) {
+            Add-Failure (
+                "NuGet homepage contract text '$requiredText' is missing from " +
+                "$($packageHomepageCheck.Path)."
+            )
         }
     }
 }

@@ -5,6 +5,7 @@
     <Deterministic>true</Deterministic>
     <ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <PackageProjectUrl Condition="'$(PackageProjectUrl)' == ''">https://aicandoitall.com</PackageProjectUrl>
     <DefaultItemExcludes>
       $(DefaultItemExcludes);
       .artifacts/**;

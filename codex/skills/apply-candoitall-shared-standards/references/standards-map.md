@@ -17,6 +17,8 @@ Apply these even before loading a task-specific document:
   validate exact recursive targets.
 - Do not commit secrets, local overrides, generated output, Codex runtime state, browser
   artifacts, task proof, or logs.
+- Public CanDoItAll NuGet packages use `https://aicandoitall.com` as the default
+  `PackageProjectUrl`; keep `RepositoryUrl` pointed at the canonical source repository.
 - When a shared contract changes, update its standard, copy-ready template, tooling, and
   validation together.
 
@@ -60,4 +62,3 @@ For Docker work, confirm at least:
 
 Read the full Docker standard before creating or changing Docker assets; this summary is
 only a trigger checklist.
-
