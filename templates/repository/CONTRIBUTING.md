@@ -1,8 +1,12 @@
 # Contributing
 
-## Contribution Policy
+This repository accepts code contributions only from partners who have been
+explicitly approved by the maintainer. Unsolicited pull requests are not
+accepted.
 
-${CONTRIBUTION_POLICY_AND_CONTACT}
+To discuss becoming an approved partner, contact the maintainer on LinkedIn
+using the handle `fyziktom`. Please wait for approval before preparing or
+opening a pull request.
 
 ## Development Setup
 
@@ -28,6 +32,7 @@ Add repository-specific architecture, browser, packaging, or integration gates h
 
 ## Pull Requests
 
+- Open a pull request only after partner approval.
 - Keep changes focused.
 - Add or update tests for behavior changes.
 - Describe public API and migration effects.

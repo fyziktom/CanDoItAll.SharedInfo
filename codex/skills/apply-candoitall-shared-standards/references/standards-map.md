@@ -20,6 +20,10 @@ Apply these even before loading a task-specific document:
 - Maintained CanDoItAll repositories use the MIT-derived license with the fixed
   `https://aicandoitall.com` website-link requirement and display applicable CI,
   user-facing package, .NET, and license badges.
+- Code contributions are accepted only from partners explicitly approved by the
+  maintainer. Unsolicited pull requests are not accepted; prospective partners contact
+  the `fyziktom` account on LinkedIn and wait for approval before preparing or opening a
+  pull request.
 - Public CanDoItAll NuGet packages use `https://aicandoitall.com` as the default
   `PackageProjectUrl`; keep `RepositoryUrl` pointed at the canonical source repository.
 - NuGet packages embed the repository `LICENSE` through `PackageLicenseFile`; do not

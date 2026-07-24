@@ -69,7 +69,19 @@ Repositories distributed outside one private development machine should include:
   [`licensing.md`](licensing.md), unless the owner has documented an explicit legal
   exception.
 
-The templates deliberately leave owner and reporting details as explicit placeholders.
+The contribution policy is family-wide:
+
+- Code contributions are accepted only from partners who have been explicitly approved
+  by the maintainer.
+- Unsolicited pull requests are not accepted.
+- Prospective partners contact the maintainer through the `fyziktom` account on LinkedIn
+  and wait for approval before preparing or opening a pull request.
+- The README states that code contributions are limited to approved partners and links to
+  `CONTRIBUTING.md`.
+
+Repositories may add setup, validation, architecture, and approved-partner pull-request
+guidance, but must not weaken or contradict this policy. Security templates deliberately
+leave reporting details as explicit placeholders.
 
 ## Generated Evidence
 
