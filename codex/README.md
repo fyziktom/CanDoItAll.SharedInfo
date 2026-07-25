@@ -40,6 +40,24 @@ The installer leaves existing skill folders untouched unless `-Force` is supplie
 OpenAI or .NET skills are external dependencies and are not vendored or downloaded by
 this repository.
 
+## API Contract Support
+
+The non-discoverable `_candoitall-api-shared` support package contains the generated
+OpenAPI contract used by the CanDoItAll web API skills. Its
+[`manifest.json`](skills/_candoitall-api-shared/manifest.json) records the source commit,
+runtime endpoints, content hash, document counts, and complete route-family coverage.
+
+The default installer includes underscore support packages. For an exact API-skill
+install, name both the desired skill and `_candoitall-api-shared`:
+
+```powershell
+.\tools\install\codex\Install-CodexSkills.ps1 `
+    -PackageName candoitall-api-agents,_candoitall-api-shared
+```
+
+Use the bundled snapshot when it matches the target source version. Otherwise, use the
+running web host's `/openapi/v1.json` or `/swagger/v1/swagger.json` document.
+
 ## Use Plugins
 
 `marketplace.json` catalogs repository plugins. Add the `codex` directory as a local

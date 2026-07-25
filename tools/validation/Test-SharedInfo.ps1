@@ -31,6 +31,10 @@ $requiredPaths = @(
     'docs/standards/codex.md',
     'docs/standards/docker.md',
     'docs/inventory/2026-07-24-docker-baseline.md',
+    'codex/skills/_candoitall-api-shared/README.md',
+    'codex/skills/_candoitall-api-shared/manifest.json',
+    'codex/skills/_candoitall-api-shared/references/candoitall-web.openapi.json',
+    'codex/skills/candoitall-api-processes/references/durable-run-records.md',
     'templates/repository/docker/.dockerignore',
     'templates/repository/docker/.env.example',
     'templates/repository/docker/compose.yaml',
@@ -53,6 +57,7 @@ $requiredPaths = @(
     'tools/install/codex/Install-CodexSkills.ps1',
     'tools/install/repositories/Clone-CanDoItAllRepositories.ps1',
     'tools/inventory/Get-CanDoItAllRepositoryInventory.ps1',
+    'tools/validation/Test-CanDoItAllWebOpenApi.ps1',
     'tools/validation/Test-DockerConventions.ps1'
 )
 
@@ -71,6 +76,53 @@ foreach ($relativePath in @('config/repositories.json', 'codex/marketplace.json'
         catch {
             Add-Failure "Invalid JSON in $relativePath`: $($_.Exception.Message)"
         }
+    }
+}
+
+$openApiValidatorPath = Join-Path (
+    $repositoryRoot
+) 'tools\validation\Test-CanDoItAllWebOpenApi.ps1'
+if (Test-Path -LiteralPath $openApiValidatorPath -PathType Leaf) {
+    try {
+        $openApiResult = & $openApiValidatorPath
+        if (-not $openApiResult -or
+            $openApiResult.Status -ne 'Passed' -or
+            $openApiResult.FailureCount -ne 0) {
+            Add-Failure 'CanDoItAll web OpenAPI validation did not report a passing result.'
+        }
+    }
+    catch {
+        Add-Failure "CanDoItAll web OpenAPI validation failed: $($_.Exception.Message)"
+    }
+}
+
+$skillInstallerPath = Join-Path (
+    $repositoryRoot
+) 'tools\install\codex\Install-CodexSkills.ps1'
+if (Test-Path -LiteralPath $skillInstallerPath -PathType Leaf) {
+    try {
+        $installerPreview = @(
+            & $skillInstallerPath `
+                -CodexHome (Join-Path $repositoryRoot '.validation\codex-preview') `
+                -PackageName @(
+                    '_candoitall-api-shared',
+                    'candoitall-api-agents'
+                ) `
+                -WhatIf
+        )
+        $previewNames = @($installerPreview | Select-Object -ExpandProperty Name)
+        if ($installerPreview.Count -ne 2 -or
+            '_candoitall-api-shared' -notin $previewNames -or
+            'candoitall-api-agents' -notin $previewNames -or
+            @($installerPreview | Where-Object Status -ne 'Preview').Count -gt 0) {
+            Add-Failure (
+                'Codex installer did not preview the requested API skill and underscore ' +
+                'support package.'
+            )
+        }
+    }
+    catch {
+        Add-Failure "Codex installer support-package preview failed: $($_.Exception.Message)"
     }
 }
 
@@ -338,6 +390,20 @@ if (Test-Path -LiteralPath $skillRoot) {
         }
         else {
             $seenSkillNames[$skillName] = $skillFile.FullName
+        }
+
+        if ($skillName -like 'candoitall-api-*') {
+            foreach ($sharedApiSupportLink in @(
+                '../_candoitall-api-shared/references/candoitall-web.openapi.json',
+                '../_candoitall-api-shared/manifest.json'
+            )) {
+                if (-not $contents.Contains($sharedApiSupportLink)) {
+                    Add-Failure (
+                        "API skill '$skillName' does not reference shared contract support " +
+                        "'$sharedApiSupportLink'."
+                    )
+                }
+            }
         }
 
         if ($contents -match '(?im)^\s*\[TODO(?::|\])') {

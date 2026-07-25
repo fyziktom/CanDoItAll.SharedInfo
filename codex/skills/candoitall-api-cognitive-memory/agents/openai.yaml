@@ -1,4 +1,4 @@
 interface:
   display_name: "CanDoItAll Cognitive Memory API"
-  short_description: "Operate CanDoItAll Cognitive Memory through its HTTP API."
-  default_prompt: "Use $candoitall-api-cognitive-memory to inspect status, configure PostgreSQL, ingest sources, run consolidation, recall memory, and validate Qdrant-backed projections."
+  short_description: "Inspect the retired Cognitive Memory HTTP contract."
+  default_prompt: "Use $candoitall-api-cognitive-memory to inspect the retired base-host contract, verify 410 migration guidance, and avoid calling removed Cognitive Memory routes."

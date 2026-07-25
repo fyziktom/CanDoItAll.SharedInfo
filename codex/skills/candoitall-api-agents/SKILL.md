@@ -13,6 +13,16 @@ Use this skill when a task needs agent catalog, provider, chat, execution, appro
 - Check `/api/access/status` before assuming bearer tokens are required.
 - If JWT is active, send `Authorization: Bearer <token>`.
 
+## Contract Source
+
+- Use the shared
+  [OpenAPI snapshot](../_candoitall-api-shared/references/candoitall-web.openapi.json)
+  for exact schemas when it matches the target source version.
+- Check the snapshot's [provenance manifest](../_candoitall-api-shared/manifest.json)
+  before relying on it.
+- When the target host differs, use its live `/openapi/v1.json` or
+  `/swagger/v1/swagger.json` document.
+
 ## Catalog And Configuration
 
 - Agents: `GET /api/agents`, `GET /api/agents/bootstrap`, `GET /api/agents/{agentId}`, `POST /api/agents`, `DELETE /api/agents/{agentId}`, clone, convert-to-template, export, and import routes.

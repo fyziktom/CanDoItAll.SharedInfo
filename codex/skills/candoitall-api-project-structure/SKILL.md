@@ -14,10 +14,22 @@ Use this skill when a task needs project, hierarchy, project-structure, dependen
 - If JWT is active, create a token from Settings -> API Access or `POST /api/access/tokens`, then send `Authorization: Bearer <token>`.
 - Do not reinstall or use `candoitall_projectstructure`; that MCP server has been removed.
 
+## Contract Source
+
+- Use the shared
+  [OpenAPI snapshot](../_candoitall-api-shared/references/candoitall-web.openapi.json)
+  for exact schemas when it matches the target source version.
+- Check the snapshot's [provenance manifest](../_candoitall-api-shared/manifest.json)
+  before relying on it.
+- When the target host differs, use its live `/openapi/v1.json` or
+  `/swagger/v1/swagger.json` document.
+
 ## Primary Routes
 
 - Project records: `GET /api/projects`, `POST /api/projects`, `GET /api/projects/access-list`, `GET /api/projects/hierarchy-links`, `GET /api/projects/{projectId}`, `DELETE /api/projects/{projectId}`, `GET /api/projects/{projectId}/hierarchy`, `POST /api/projects/{parentProjectId}/subprojects/{childProjectId}`, `DELETE /api/projects/{parentProjectId}/subprojects/{childProjectId}`, and `POST /api/projects/{childProjectId}/reconnect-subproject`.
 - Project hierarchy: `/api/projects/{projectId}/hierarchy`.
+- Planning and tasks: `/api/project-structure/projects/{projectId}/plan/summary`,
+  `/tasks`, `/tasks/{taskId}`, and `/tasks/{taskId}/resource`.
 - Project structure read and focused mutations: `/api/project-structure/projects/{projectId}/structure/read`, `/nodes`, `/nodes/{nodeId}`, `/nodes/{nodeId}/type`, `/nodes/{nodeId}/metadata`, `/nodes/statuses`, `/nodes/{nodeId}/status`, `/nodes/progress`, `/nodes/{nodeId}/progress`, `/nodes/markers`, `/nodes/{nodeId}/markers`, `/nodes/priorities`, `/nodes/{nodeId}/priority`, `/nodes/move`, `/nodes/recompose`, `/nodes/{nodeId}/reparent`, `/nodes/reparent`, `/nodes/move-to-new-subproject`, `/nodes/{nodeId}/move-descendants-to-project`, `/nodes/{nodeId}/command`, `/nodes/{nodeId}/delete`, and `/nodes/delete`.
 - Dependency and link control: `/links`, `/links/unlink`, `/dependencies/link`, `/dependencies/unlink`, `/dependencies/query`.
 - Assets: `/assets`, `/assets/{nodeId}`, `/assets/{nodeId}/content`, `/assets/{nodeId}/revisions`.
@@ -55,7 +67,7 @@ When a process or agent asks for a direct project-structure tool and that tool i
 
 <!-- api-docs-skills-parity:routes:start -->
 
-Project Structure API route appendix. Generated from Minimal API registrations; rerun `.codex/tmp/api-docs-skills-gap-map/update-skill-route-appendices.mjs` when routes change.
+Project and Project Structure routes mirrored by the shared OpenAPI snapshot.
 
 | Method | Route |
 | --- | --- |
@@ -71,6 +83,10 @@ Project Structure API route appendix. Generated from Minimal API registrations; 
 | `POST` | `/api/project-structure/projects` |
 | `POST` | `/api/project-structure/projects/{parentProjectId:guid}/subprojects` |
 | `PUT` | `/api/project-structure/projects/{projectId:guid}` |
+| `POST` | `/api/project-structure/projects/{projectId:guid}/plan/summary` |
+| `POST` | `/api/project-structure/projects/{projectId:guid}/tasks` |
+| `PUT` | `/api/project-structure/projects/{projectId:guid}/tasks/{taskId}` |
+| `POST` | `/api/project-structure/projects/{projectId:guid}/tasks/{taskId}/resource` |
 | `POST` | `/api/project-structure/projects/{projectId:guid}/approvals/request` |
 | `POST` | `/api/project-structure/projects/{projectId:guid}/assets` |
 | `GET` | `/api/project-structure/projects/{projectId:guid}/assets/{nodeId}` |
@@ -111,5 +127,15 @@ Project Structure API route appendix. Generated from Minimal API registrations; 
 | `POST` | `/api/project-structure/projects/{projectId:guid}/nodes/reparent` |
 | `POST` | `/api/project-structure/projects/{projectId:guid}/nodes/statuses` |
 | `POST` | `/api/project-structure/projects/{projectId:guid}/structure/read` |
+| `GET` | `/api/projects` |
+| `POST` | `/api/projects` |
+| `GET` | `/api/projects/access-list` |
+| `GET` | `/api/projects/hierarchy-links` |
+| `GET` | `/api/projects/{projectId:guid}` |
+| `DELETE` | `/api/projects/{projectId:guid}` |
+| `GET` | `/api/projects/{projectId:guid}/hierarchy` |
+| `POST` | `/api/projects/{parentProjectId:guid}/subprojects/{childProjectId:guid}` |
+| `DELETE` | `/api/projects/{parentProjectId:guid}/subprojects/{childProjectId:guid}` |
+| `POST` | `/api/projects/{childProjectId:guid}/reconnect-subproject` |
 
 <!-- api-docs-skills-parity:routes:end -->

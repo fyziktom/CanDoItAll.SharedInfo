@@ -16,6 +16,17 @@ Use this skill for CRM-HR HTTP operations. The CRM-HR application services remai
 
 Use `/swagger/v1/swagger.json` to inspect the running contract when source and host versions may differ.
 
+## Contract Source
+
+- Use the shared
+  [OpenAPI snapshot](../_candoitall-api-shared/references/candoitall-web.openapi.json)
+  for exact schemas when it matches the target source version.
+- Check the snapshot's [provenance manifest](../_candoitall-api-shared/manifest.json)
+  before relying on it.
+- Use the running host's contract when its version differs from the manifest.
+- Read [references/api-contract.md](references/api-contract.md) for CRM-HR-specific
+  request sequencing and DTO guidance.
+
 ## Operating Workflow
 
 1. Read the relevant bounded collection before creating anything.
@@ -25,7 +36,8 @@ Use `/swagger/v1/swagger.json` to inspect the running contract when source and h
 5. Read the resource back and verify relationships, workforce state, or recruiting workspace.
 6. On a non-success response, inspect `errors[].code`, `errors[].message`, and `errors[].severity`. Do not hide the failure with another persistence path.
 
-Read [references/api-contract.md](references/api-contract.md) before constructing request bodies or multi-step scenarios.
+Read the CRM-HR API contract reference before constructing request bodies or multi-step
+scenarios.
 Body enums currently use the Web host's numeric encoding; use the reference mapping or a typed .NET client rather than guessing values.
 
 ## Party And Relationship Rules

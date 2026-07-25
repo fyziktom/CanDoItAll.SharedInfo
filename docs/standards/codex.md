@@ -36,6 +36,23 @@ repository. It locates SharedInfo without a fixed machine path and routes the ta
 smallest relevant set of canonical documents and templates. The skill summarizes
 invariants but does not replace the repository documents.
 
+## Shared API Contracts
+
+- Keep one generated CanDoItAll web OpenAPI snapshot in a non-discoverable underscore
+  support package under `codex/skills`.
+- Generate the snapshot from a clean product-repository commit and record the commit,
+  runtime document paths, environment, SHA-256, OpenAPI version, and path, operation, and
+  schema counts.
+- Capture from the repository's canonical development URL so the OpenAPI `servers` value
+  and content hash do not drift with an arbitrary temporary port.
+- Record route-family counts that account for every documented path and operation.
+- Make every skill that operates the web API link to the shared snapshot and its
+  provenance manifest.
+- Treat a target host's live OpenAPI document as authoritative when its version differs
+  from the recorded snapshot.
+- Update the snapshot, API-skill guidance, provenance, and validation together when the
+  web API contract changes.
+
 ## Agents
 
 Reusable agent profiles are source material. Copy only the profiles a target repository

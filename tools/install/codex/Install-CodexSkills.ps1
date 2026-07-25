@@ -7,7 +7,7 @@ param(
         Join-Path ([Environment]::GetFolderPath('UserProfile')) '.codex'
     }),
 
-    [ValidatePattern('^[a-z0-9][a-z0-9_-]*$')]
+    [ValidatePattern('^_?[a-z0-9][a-z0-9_-]*$')]
     [string[]]$PackageName,
 
     [switch]$Force

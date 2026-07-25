@@ -14,6 +14,16 @@ Operate the canonical prompt and prompt-part library through the CanDoItAll web 
 - If JWT is active, send `Authorization: Bearer <token>`.
 - Before exposing the host outside a trusted local environment, set `Api:Authorization:Enabled` to `true` and provide a secret signing key of at least 32 bytes. The repository's local-first defaults do not protect mutation or projection endpoints.
 
+## Contract Source
+
+- Use the shared
+  [OpenAPI snapshot](../_candoitall-api-shared/references/candoitall-web.openapi.json)
+  for exact schemas when it matches the target source version.
+- Check the snapshot's [provenance manifest](../_candoitall-api-shared/manifest.json)
+  before relying on it.
+- When the target host differs, use its live `/openapi/v1.json` or
+  `/swagger/v1/swagger.json` document.
+
 ## Browse And Read
 
 - Search with `GET /api/prompt-gallery/items`.

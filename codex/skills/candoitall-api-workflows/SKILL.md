@@ -14,6 +14,16 @@ Use this skill when a task needs workflow authoring, lifecycle control, runtime 
 - If JWT is active, create a token from Settings -> API Access or `POST /api/access/tokens`, then send `Authorization: Bearer <token>`.
 - Do not add or reinstall a workflow-specific MCP server; workflow control is through the HTTP API.
 
+## Contract Source
+
+- Use the shared
+  [OpenAPI snapshot](../_candoitall-api-shared/references/candoitall-web.openapi.json)
+  for exact schemas when it matches the target source version.
+- Check the snapshot's [provenance manifest](../_candoitall-api-shared/manifest.json)
+  before relying on it.
+- When the target host differs, use its live `/openapi/v1.json` or
+  `/swagger/v1/swagger.json` document.
+
 ## Definition And Authoring Work
 
 - Contract discovery: `GET /api/workflows/contract`.
