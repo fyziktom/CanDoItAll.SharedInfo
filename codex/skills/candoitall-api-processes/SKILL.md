@@ -7,7 +7,7 @@ description: Use when launching, dispatching, cancelling, reworking, observing, 
 
 Use this skill when a task needs process runtime control through the CanDoItAll web API.
 
-Processes are the durable orchestration layer, but the current HTTP surface is intentionally narrow. Source of truth: `src/App/CanDoItAll.Web/Api/ProcessesApi.cs`.
+Processes are the durable orchestration layer, but the current HTTP surface is intentionally narrow. Sources of truth: `src/App/CanDoItAll.Web/Api/ProcessesApi.cs` and `src/App/CanDoItAll.Web/Api/ProcessRunRecordsApi.cs`.
 
 ## Access
 
@@ -15,7 +15,7 @@ Processes are the durable orchestration layer, but the current HTTP surface is i
 - Check `GET /api/access/status` before assuming bearer tokens are required.
 - If JWT is active, send `Authorization: Bearer <token>`.
 - Do not reinstall or use `candoitall_processes`; that MCP server has been removed.
-- Do not document older process authoring, artifact, assignment, escalation, direct-message, manager-directive, approval, analytics, or template routes as current HTTP commands unless `ProcessesApi.cs` reintroduces them.
+- Do not document older process authoring, artifact, assignment, escalation, direct-message, manager-directive, approval, or template routes as current HTTP commands unless the process API source reintroduces them.
 
 ## Current Commands
 
@@ -28,7 +28,11 @@ The current source-backed process API exposes these commands:
 - `POST /api/processes/runs/{runId}/cancel`
 - `POST /api/processes/runs/{runId}/steps/{stepInstanceId}/rework`
 - `GET /api/processes/live`
+- `GET /api/processes/runs`
+- `GET /api/processes/runs/analytics`
 - `GET /api/processes/runs/{runId}`
+- `GET /api/processes/runs/{runId}/summary`
+- `GET /api/processes/runs/{runId}/graph`
 - `GET /api/processes/runs/{runId}/history`
 
 Use `GET /api/processes/contract` first when building clients or smoke tests. It returns the current endpoint list and boundary summary from the running host.
@@ -152,6 +156,103 @@ Read one run:
 GET /api/processes/runs/{runId}
 ```
 
+This route is the live/deep runtime projection. Prefer the durable record routes below for completed-run lists, dashboards, graphs, analytics, cost history, and manager readback.
+
+List durable process-run records:
+
+```http
+GET /api/processes/runs?projectId={projectId}&definitionId={definitionId}&disposition=Succeeded&fromUtc=2026-06-01T00:00:00Z&toUtc=2026-07-01T00:00:00Z&take=50
+```
+
+Durable-list query fields:
+
+- `projectId`: optional project identifier.
+- `definitionId`: optional process definition identifier.
+- `rootRunId`: optional root process run identifier.
+- `disposition`: optional `Succeeded`, `Failed`, `Cancelled`, or `Escalated`.
+- `participantId`: optional persisted participant/agent identifier.
+- `fromUtc`: optional inclusive terminal timestamp.
+- `toUtc`: optional exclusive terminal timestamp.
+- `take`: 1..200, default `50`.
+- `cursor`: opaque cursor returned as `nextCursor`; pass it unchanged and do not derive offsets from it.
+
+The durable list is deliberately compact. Each row contains identity, disposition,
+completeness, facts/narrative stage status and retry timestamps, aggregate metrics,
+source sequence, schema version, and `recordUpdatedAtUtc`. It does not return participant
+collections, manager narrative text/previews, hard-fact JSON, worker leases, or
+diagnostic references. Follow the summary route only for a selected run.
+
+Read one durable summary and its bounded hard facts:
+
+```http
+GET /api/processes/runs/{runId}/summary?stepOffset=0&stepTake=100&runtimeEventMinuteOffset=0&runtimeEventMinuteTake=200
+```
+
+`stepOffset` defaults to `0`. `stepTake` defaults to `100` and must be `1..200`.
+Use `facts.stepPage.totalCount` and `facts.stepPage.hasMore` to page the step
+collection. Identifier collections are independently capped and include their
+total counts.
+
+`runtimeEventMinuteOffset` defaults to `0`. `runtimeEventMinuteTake` defaults to
+`200` and must be `1..200`. Use `facts.runtimeEventMinuteBucketPage.totalCount`
+and `hasMore` to page the minute buckets independently from step facts.
+
+The response exposes:
+
+- typed run/root/parent, plan, definition/version, and project identifiers;
+- disposition, lifecycle, schema version, source sequences, and freshness;
+- completeness plus available/missing evidence sources and warning codes;
+- facts and narrative stage status, attempt count, and next retry timestamp without worker leases or diagnostic references;
+- step counts, repetitions, timing, token categories, estimated/actual cost, executions, tool calls, artifacts, incidents, escalations, and subprocess totals;
+- bounded participant, workflow, subprocess, execution, artifact, and paged per-step facts;
+- exact total and manager runtime-event counts, paged minute buckets, and bounded category aggregates using `RunLifecycle`, `Step`, `Dispatch`, `Manager`, or `Other`;
+- the manager narrative and its manager agent, execution run, policy, model, and generated-at provenance when generation is complete.
+
+Per-step generated `ResultSummary` text is intentionally neither persisted in
+durable hard facts nor exposed by the HTTP API because it is unclassified model
+output. Live diagnostic surfaces retain their separate access and sensitivity
+policy. The durable manager narrative is the managed readback surface for
+qualitative results.
+
+Runtime-event aggregates expose only minute timestamps, counts, durations, typed
+categories, and category time ranges. Raw event names, payload details, actors,
+and payload hashes are intentionally not part of this API contract.
+
+`factsStatus` and `narrativeStatus` are independent. A record can have complete hard facts while its manager narrative is still pending or has failed. Never treat an absent narrative as an absent run record.
+
+Read the durable step dependency graph:
+
+```http
+GET /api/processes/runs/{runId}/graph?stepOffset=0&stepTake=100
+```
+
+Graph nodes use the same `stepOffset`/`stepTake` bounds. `nodePage` reports the
+total node count and whether another page exists. Dependency edges are emitted
+only when both endpoints are present on the returned node page, so clients must
+not infer that a page-local graph is the entire run.
+
+Read aggregate durable analytics:
+
+```http
+GET /api/processes/runs/analytics?projectId={projectId}&fromUtc=2026-06-01T00:00:00Z&toUtc=2026-07-01T00:00:00Z
+```
+
+Analytics accepts `projectId`, `definitionId`, `rootRunId`, and `participantId`.
+The time window defaults to the last 30 days and cannot exceed 366 days.
+`matchingRunCount` counts every current terminal record matching the filters.
+`factsAvailableRunCount` is the denominator for duration, token, cost,
+repetition, execution, rework, incident, escalation, tool-call, and artifact
+totals. Within that denominator, `evidenceCompleteRunCount` reports complete
+evidence and `evidencePartialRunCount` reports assembled but partial evidence.
+`factsUnavailableRunCount` reports matching records excluded from metric totals.
+Each disposition row uses `matchingRunCount`, so disposition counts cover records
+regardless of facts availability or evidence completeness.
+`dataThroughUtc` is the latest terminal-event time included by the filters and
+`sourceGlobalSequenceWatermark` is the largest included source sequence. These
+are persisted data watermarks; worker claims and narrative retries do not advance
+them. `recordUpdatedAtUtc` on list/summary records is stage-maintenance time and
+must not be interpreted as a canonical source watermark.
+
 Read recent run history:
 
 ```http
@@ -164,7 +265,12 @@ History query fields:
 - `toUtc`: defaults to current UTC.
 - `take`: clamped to 1..1000, default `100`.
 
-Run and history responses expose projection freshness. Treat stale freshness or backlog as an operating signal, not as proof that a run is complete.
+Run and history responses expose live projection freshness. Durable record responses expose source sequence, terminal time, record update time, schema, lifecycle, and stage completeness. Analytics exposes persisted data-through/sequence watermarks. The runtime projector advances in the background; treat stale source watermarks or backlog as an operating signal, not as proof that a run is complete.
+
+For backfilled durable records, `endedAtUtc` remains the canonical terminal-event
+time while `recordUpdatedAtUtc` is the later projection materialization/update
+time. Do not use record update time as the business completion timestamp or data
+watermark.
 
 ## Project-Structure Bridge
 
@@ -190,7 +296,6 @@ These older route families are not currently mapped by `src/App/CanDoItAll.Web/A
 
 - `/api/processes/definitions`
 - `/api/processes/templates`
-- `/api/processes/runs`
 - `/api/processes/runs/start`
 - `/api/processes/runs/stop`
 - step transition or rerun-agent routes
@@ -199,7 +304,6 @@ These older route families are not currently mapped by `src/App/CanDoItAll.Web/A
 - manager directives
 - escalations
 - operator approvals
-- analytics
 - launch-plan HR/provisioning routes
 
 Do not call those routes until they are reintroduced with typed handlers, OpenAPI visibility, tests, and refreshed skill documentation.
@@ -209,6 +313,9 @@ Do not call those routes until they are reintroduced with typed handlers, OpenAP
 - Before launch, call `POST /api/processes/launch/check` when you need readiness diagnostics without creating a run.
 - After launch, read back `GET /api/processes/runs/{runId}` when `runId` is present.
 - After dispatch, cancel, or rework, read the run and history routes.
+- For completed-run lists and dashboards, use `GET /api/processes/runs`; follow `nextCursor` without modifying it.
+- For completion readback, accept hard facts when `factsStatus` is `Completed`, and inspect `narrativeStatus` separately.
+- Use `/summary`, `/graph`, and `/analytics` before loading canonical history or execution details.
 - For node-bound process starts, validate both the project-structure operation result and the process run readback.
 - For docs-only skill updates, run `git diff --check` and regenerate the source route appendix.
 - For runtime behavior changes, add focused tests around `ProcessesApi`, `ProcessLaunchApplicationService`, `ProcessRuntimeDispatchApplicationService`, and `ProcessRuntimeOperatorApplicationService`.
@@ -217,7 +324,7 @@ Do not call those routes until they are reintroduced with typed handlers, OpenAP
 
 <!-- api-docs-skills-parity:routes:start -->
 
-Processes API route appendix. Generated from Minimal API registrations; refresh from `src/App/CanDoItAll.Web/Api/ProcessesApi.cs` when routes change.
+Processes API route appendix. Generated from Minimal API registrations; refresh from `src/App/CanDoItAll.Web/Api/ProcessesApi.cs` and `src/App/CanDoItAll.Web/Api/ProcessRunRecordsApi.cs` when routes change.
 
 | Method | Route |
 | --- | --- |
@@ -225,10 +332,14 @@ Processes API route appendix. Generated from Minimal API registrations; refresh 
 | `POST` | `/api/processes/launch` |
 | `POST` | `/api/processes/launch/check` |
 | `GET` | `/api/processes/live` |
+| `GET` | `/api/processes/runs` |
+| `GET` | `/api/processes/runs/analytics` |
 | `GET` | `/api/processes/runs/{runId:guid}` |
 | `POST` | `/api/processes/runs/{runId:guid}/cancel` |
 | `POST` | `/api/processes/runs/{runId:guid}/dispatch` |
+| `GET` | `/api/processes/runs/{runId:guid}/graph` |
 | `GET` | `/api/processes/runs/{runId:guid}/history` |
+| `GET` | `/api/processes/runs/{runId:guid}/summary` |
 | `POST` | `/api/processes/runs/{runId:guid}/steps/{stepInstanceId:guid}/rework` |
 
 <!-- api-docs-skills-parity:routes:end -->
