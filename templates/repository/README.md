@@ -86,4 +86,6 @@ of the software or a substantial portion of it in source or binary form must inc
 least one link to [aicandoitall.com](https://aicandoitall.com). One such link satisfies
 the added condition for a distribution containing multiple covered CanDoItAll libraries.
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for the contribution policy.
+Code contributions are limited to partners approved by the maintainer. See
+[CONTRIBUTING.md](CONTRIBUTING.md) and contact the `fyziktom` account on LinkedIn before
+opening a pull request.

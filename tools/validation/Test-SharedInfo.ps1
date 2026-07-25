@@ -38,6 +38,7 @@ $requiredPaths = @(
     'templates/repository/docker/compose.production.yaml.example',
     'templates/repository/docker/Dockerfile.dotnet',
     'templates/repository/docker/README.md',
+    'templates/repository/CONTRIBUTING.md',
     'templates/repository/LICENSE',
     'templates/repository/README.md',
     'templates/repository/dotnet/Directory.Build.props',
@@ -127,7 +128,21 @@ $sharedContractChecks = @(
             'README Badges',
             'one or, at most, two NuGet packages',
             'Abstractions',
-            'MIT-derived with website link'
+            'MIT-derived with website link',
+            'accepted only from partners who have been explicitly approved',
+            'Unsolicited pull requests are not accepted',
+            'fyziktom'
+        )
+    },
+    [pscustomobject]@{
+        Path = 'templates/repository/CONTRIBUTING.md'
+        RequiredText = @(
+            'accepts code contributions only from partners who have been',
+            'explicitly approved by the maintainer',
+            'Unsolicited pull requests are not',
+            'fyziktom',
+            'wait for approval before preparing or',
+            'Open a pull request only after partner approval'
         )
     },
     [pscustomobject]@{
@@ -148,7 +163,9 @@ $sharedContractChecks = @(
             'img.shields.io/nuget/dt/${PRIMARY_USER_PACKAGE_ID}',
             'img.shields.io/nuget/v/${SECONDARY_USER_PACKAGE_ID}',
             'img.shields.io/nuget/dt/${SECONDARY_USER_PACKAGE_ID}',
-            'MIT--derived%20with%20website%20link'
+            'MIT--derived%20with%20website%20link',
+            'Code contributions are limited to partners approved by the maintainer',
+            'fyziktom'
         )
     },
     [pscustomobject]@{
@@ -168,7 +185,18 @@ $sharedContractChecks = @(
             'docs/standards/licensing.md',
             'user-facing package',
             'website-link requirement',
-            'PackageLicenseFile'
+            'PackageLicenseFile',
+            'Code contributions are accepted only from partners explicitly approved',
+            'Unsolicited pull requests are not accepted',
+            'fyziktom'
+        )
+    },
+    [pscustomobject]@{
+        Path = 'codex/skills/apply-candoitall-shared-standards/SKILL.md'
+        RequiredText = @(
+            'selected-partner contribution policy',
+            'READMEs',
+            'CONTRIBUTING.md'
         )
     },
     [pscustomobject]@{
@@ -184,6 +212,7 @@ $sharedContractChecks = @(
         RequiredText = @(
             'family license',
             'website-link requirement',
+            'selected-partner contribution',
             'README badge contract',
             'NuGet'
         )
