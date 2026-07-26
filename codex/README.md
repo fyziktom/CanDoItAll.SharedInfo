@@ -45,7 +45,8 @@ this repository.
 The non-discoverable `_candoitall-api-shared` support package contains the generated
 OpenAPI contract used by the CanDoItAll web API skills. Its
 [`manifest.json`](skills/_candoitall-api-shared/manifest.json) records the source commit,
-runtime endpoints, content hash, document counts, and complete route-family coverage.
+source working-tree state, runtime endpoints, content hash, document counts, complete
+route-family coverage, and parity-checked operation sets.
 
 The default installer includes underscore support packages. For an exact API-skill
 install, name both the desired skill and `_candoitall-api-shared`:
@@ -57,6 +58,11 @@ install, name both the desired skill and `_candoitall-api-shared`:
 
 Use the bundled snapshot when it matches the target source version. Otherwise, use the
 running web host's `/openapi/v1.json` or `/swagger/v1/swagger.json` document.
+
+For partner adapters built against the earlier API, start with the support package's
+[migration matrix](skills/_candoitall-api-shared/references/partner-api-migration.md).
+It maps each former workaround to the stable identity, idempotency, portable schema, or
+canonical evidence contract that replaces it.
 
 ## Use Plugins
 

@@ -4,6 +4,13 @@ Source of truth: `src/App/CanDoItAll.Web/Api/CrmHrApi.cs`.
 
 All routes are under `/api/crm-hr`. JSON uses the Web defaults: camel-case property names and numeric body enums. Query-string enums accept their names. Check the running OpenAPI document before operating a different build.
 
+AI-agent recruiting evidence is a separate bounded context under
+`/api/agent-recruiting`. Use the Agent API
+[partner contract](../../candoitall-api-agents/references/partner-api-contracts.md) for
+typed execution targets, challenge/rubric hashes, human authorization, and agent
+readiness. Do not write that evidence into CRM-HR application feedback, and do not treat
+CRM-HR workforce conversion as AI-agent activation.
+
 ## Body enum encoding
 
 The current Web serializer writes and reads body enums as integers. Use the typed client enum when possible. For shell/JSON clients, use these source-ordered values:
@@ -149,6 +156,10 @@ Body: `RecruitmentSupportAssignmentsSaveApiRequest`.
 `POST /recruiting/conversions`
 
 Body: `RecruitmentConversionApiRequest`.
+
+This conversion creates or updates the human workforce profile for the recruitment
+application. It does not mutate an Agent Framework candidate, interview, readiness, or
+activation state.
 
 Stage values: `Applied`, `Screening`, `Interviewing`, `Offer`, `Hired`, `Rejected`, `Withdrawn`.
 

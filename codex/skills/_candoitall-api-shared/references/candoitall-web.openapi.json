@@ -2485,7 +2485,37 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AgentDefinition"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
           }
         }
       },
@@ -2506,7 +2536,45 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -2691,6 +2759,413 @@
         "responses": {
           "200": {
             "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/agents/import-package": {
+      "post": {
+        "tags": [
+          "Agents"
+        ],
+        "operationId": "ImportAgentPackage",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/AgentPackageImportApiForm"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentPackageImportReceipt"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentPackageImportReceipt"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Precondition Failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/agents/by-external-key/{externalNamespace}/{key}": {
+      "get": {
+        "tags": [
+          "Agents"
+        ],
+        "operationId": "GetAgentByExternalKey",
+        "parameters": [
+          {
+            "name": "externalNamespace",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentExternalProvisioningResource"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Agents"
+        ],
+        "operationId": "ProvisionAgentByExternalKey",
+        "parameters": [
+          {
+            "name": "externalNamespace",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AgentEditorModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentExternalProvisioningReceipt"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentExternalProvisioningReceipt"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Precondition Failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Agents"
+        ],
+        "operationId": "ArchiveAgentByExternalKey",
+        "parameters": [
+          {
+            "name": "externalNamespace",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentExternalProvisioningReceipt"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Precondition Failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -2937,7 +3412,37 @@
         "operationId": "ListAgentProviders",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProviderProfile"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
           }
         }
       },
@@ -3565,7 +4070,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ExecutionRunRequest"
+                "$ref": "#/components/schemas/AgentExecutionRunApiRequest"
               }
             }
           },
@@ -3573,7 +4078,44 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExecutionRunResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
           }
         }
       },
@@ -3750,7 +4292,44 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExecutionRunResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
           }
         }
       },
@@ -3960,7 +4539,44 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExecutionRunDetail"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -4319,6 +4935,410 @@
         "responses": {
           "200": {
             "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/agent-recruiting/interviews": {
+      "post": {
+        "tags": [
+          "Agent Recruiting"
+        ],
+        "operationId": "CreateAgentRecruitingInterview",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAgentRecruitingInterviewCommand"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentRecruitingInterview"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/agent-recruiting/interviews/{interviewId}/attempts": {
+      "post": {
+        "tags": [
+          "Agent Recruiting"
+        ],
+        "operationId": "AppendAgentRecruitingAttempt",
+        "parameters": [
+          {
+            "name": "interviewId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AppendAgentRecruitingAttemptCommand"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentRecruitingInterview"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/agent-recruiting/interviews/{interviewId}/reviews": {
+      "post": {
+        "tags": [
+          "Agent Recruiting"
+        ],
+        "operationId": "AppendAgentRecruitingHumanReview",
+        "parameters": [
+          {
+            "name": "interviewId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AppendAgentRecruitingReviewCommand"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentRecruitingInterview"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/agent-recruiting/interviews/{interviewId}": {
+      "get": {
+        "tags": [
+          "Agent Recruiting"
+        ],
+        "operationId": "GetAgentRecruitingInterview",
+        "parameters": [
+          {
+            "name": "interviewId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentRecruitingInterview"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/agent-recruiting/candidates/{agentId}/readiness": {
+      "get": {
+        "tags": [
+          "Agent Recruiting"
+        ],
+        "operationId": "GetAgentRecruitingCandidateReadiness",
+        "parameters": [
+          {
+            "name": "agentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentRecruitingCandidateReadiness"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -4735,6 +5755,13 @@
               "type": "string",
               "format": "uuid"
             }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -4749,7 +5776,64 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkflowRunStartApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -4760,6 +5844,15 @@
           "Workflows"
         ],
         "operationId": "StartWorkflowRun",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -4772,7 +5865,64 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkflowRunStartApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -4831,6 +5981,294 @@
         "responses": {
           "200": {
             "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/workflows/runs/by-idempotency-key/{key}": {
+      "get": {
+        "tags": [
+          "Workflows"
+        ],
+        "operationId": "GetWorkflowRunByIdempotencyKey",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkflowLaunchIdempotencyEvidence"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/workflows/definitions": {
+      "get": {
+        "tags": [
+          "Workflows"
+        ],
+        "operationId": "ListWorkflowDefinitions",
+        "parameters": [
+          {
+            "name": "externalNamespace",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "externalKey",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WorkflowCatalogItem"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Workflows"
+        ],
+        "operationId": "SaveWorkflowDefinition",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WorkflowDefinitionSaveRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/workflows/definitions/by-template-key/{templateKey}": {
+      "get": {
+        "tags": [
+          "Workflows"
+        ],
+        "operationId": "GetWorkflowDefinitionByTemplateKey",
+        "parameters": [
+          {
+            "name": "templateKey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkflowStableIdentityResolution"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/workflows/definitions/by-external-key/{externalNamespace}/{externalKey}": {
+      "get": {
+        "tags": [
+          "Workflows"
+        ],
+        "operationId": "GetWorkflowDefinitionByExternalKey",
+        "parameters": [
+          {
+            "name": "externalNamespace",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "externalKey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkflowStableIdentityResolution"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -4901,40 +6339,6 @@
           "Workflows"
         ],
         "operationId": "ListWorkflowExecutorCatalog",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/workflows/definitions": {
-      "get": {
-        "tags": [
-          "Workflows"
-        ],
-        "operationId": "ListWorkflowDefinitions",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "Workflows"
-        ],
-        "operationId": "SaveWorkflowDefinition",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/WorkflowDefinitionSaveRequest"
-              }
-            }
-          },
-          "required": true
-        },
         "responses": {
           "200": {
             "description": "OK"
@@ -5538,7 +6942,44 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkflowRunDetailApiResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -5758,276 +7199,6 @@
           },
           {
             "name": "Take",
-            "in": "query",
-            "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "type": [
-                "integer",
-                "string"
-              ],
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/processes/runs": {
-      "get": {
-        "tags": [
-          "Processes"
-        ],
-        "operationId": "ListProcessRunRecords",
-        "parameters": [
-          {
-            "name": "projectId",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "definitionId",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "rootRunId",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "disposition",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "participantId",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "fromUtc",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "toUtc",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "take",
-            "in": "query",
-            "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "type": [
-                "integer",
-                "string"
-              ],
-              "format": "int32"
-            }
-          },
-          {
-            "name": "cursor",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/processes/runs/analytics": {
-      "get": {
-        "tags": [
-          "Processes"
-        ],
-        "operationId": "GetProcessRunRecordAnalytics",
-        "parameters": [
-          {
-            "name": "projectId",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "definitionId",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "rootRunId",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "participantId",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "fromUtc",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "toUtc",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/processes/runs/{runId}/summary": {
-      "get": {
-        "tags": [
-          "Processes"
-        ],
-        "operationId": "GetProcessRunRecordSummary",
-        "parameters": [
-          {
-            "name": "runId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "stepOffset",
-            "in": "query",
-            "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "type": [
-                "integer",
-                "string"
-              ],
-              "format": "int32"
-            }
-          },
-          {
-            "name": "stepTake",
-            "in": "query",
-            "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "type": [
-                "integer",
-                "string"
-              ],
-              "format": "int32"
-            }
-          },
-          {
-            "name": "runtimeEventMinuteOffset",
-            "in": "query",
-            "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "type": [
-                "integer",
-                "string"
-              ],
-              "format": "int32"
-            }
-          },
-          {
-            "name": "runtimeEventMinuteTake",
-            "in": "query",
-            "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "type": [
-                "integer",
-                "string"
-              ],
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/processes/runs/{runId}/graph": {
-      "get": {
-        "tags": [
-          "Processes"
-        ],
-        "operationId": "GetProcessRunRecordGraph",
-        "parameters": [
-          {
-            "name": "runId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "stepOffset",
-            "in": "query",
-            "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "type": [
-                "integer",
-                "string"
-              ],
-              "format": "int32"
-            }
-          },
-          {
-            "name": "stepTake",
             "in": "query",
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -7714,6 +8885,42 @@
           }
         }
       },
+      "AgentCapabilityAssignment": {
+        "required": [
+          "capabilityId",
+          "capabilityKey",
+          "kind",
+          "proofStatus",
+          "lastVerifiedAtUtc",
+          "proofNotes"
+        ],
+        "type": "object",
+        "properties": {
+          "capabilityId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "capabilityKey": {
+            "type": "string"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/CapabilityKind"
+          },
+          "proofStatus": {
+            "$ref": "#/components/schemas/CapabilityProofStatus"
+          },
+          "lastVerifiedAtUtc": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "proofNotes": {
+            "type": "string"
+          }
+        }
+      },
       "AgentChatApiRequest": {
         "required": [
           "chatSessionId",
@@ -7753,6 +8960,121 @@
         "properties": {
           "cloneName": {
             "type": "string"
+          }
+        }
+      },
+      "AgentDefinition": {
+        "required": [
+          "id",
+          "name",
+          "roleTitle",
+          "summary",
+          "instructions",
+          "status",
+          "providerProfileId",
+          "model",
+          "workload",
+          "chatHistoryMode",
+          "temperature",
+          "requirePerServiceCallChatHistoryPersistence",
+          "enableBackgroundResponses",
+          "configurationJson",
+          "isTemplate",
+          "templateKey",
+          "permissions",
+          "capabilities",
+          "tags",
+          "createdAtUtc",
+          "updatedAtUtc"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "roleTitle": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "instructions": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/AgentLifecycleStatus"
+          },
+          "providerProfileId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
+          },
+          "model": {
+            "type": "string"
+          },
+          "workload": {
+            "$ref": "#/components/schemas/AgentWorkloadKind"
+          },
+          "chatHistoryMode": {
+            "$ref": "#/components/schemas/AgentChatHistoryMode"
+          },
+          "temperature": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "requirePerServiceCallChatHistoryPersistence": {
+            "type": "boolean"
+          },
+          "enableBackgroundResponses": {
+            "type": "boolean"
+          },
+          "configurationJson": {
+            "type": "string"
+          },
+          "isTemplate": {
+            "type": "boolean"
+          },
+          "templateKey": {
+            "type": "string"
+          },
+          "permissions": {
+            "$ref": "#/components/schemas/AgentPermissionsPolicy"
+          },
+          "capabilities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AgentCapabilityAssignment"
+            }
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "avatarImageUrl": {
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
@@ -7872,6 +9194,62 @@
           }
         }
       },
+      "AgentExecutionRunApiRequest": {
+        "required": [
+          "agentId",
+          "prompt"
+        ],
+        "type": "object",
+        "properties": {
+          "agentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "prompt": {
+            "type": "string"
+          },
+          "chatSessionId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
+          },
+          "context": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ExecutionInvocationContext"
+              }
+            ]
+          },
+          "autoApprovePendingToolCalls": {
+            "type": "boolean",
+            "default": false
+          },
+          "structuredOutput": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/AgentJsonSchemaOutputContract"
+              }
+            ]
+          },
+          "inputAttachmentPaths": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
       "AgentExecutionRunStartApiRequest": {
         "required": [
           "prompt"
@@ -7908,7 +9286,7 @@
                 "type": "null"
               },
               {
-                "$ref": "#/components/schemas/AgentStructuredOutputContract"
+                "$ref": "#/components/schemas/AgentJsonSchemaOutputContract"
               }
             ]
           },
@@ -7920,6 +9298,82 @@
             "items": {
               "type": "string"
             }
+          }
+        }
+      },
+      "AgentExternalProvisioningReceipt": {
+        "required": [
+          "namespace",
+          "key",
+          "agentId",
+          "configurationVersion",
+          "created",
+          "replayed",
+          "archived",
+          "warnings"
+        ],
+        "type": "object",
+        "properties": {
+          "namespace": {
+            "type": "string"
+          },
+          "key": {
+            "type": "string"
+          },
+          "agentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "configurationVersion": {
+            "type": "string"
+          },
+          "created": {
+            "type": "boolean"
+          },
+          "replayed": {
+            "type": "boolean"
+          },
+          "archived": {
+            "type": "boolean"
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "AgentExternalProvisioningResource": {
+        "required": [
+          "namespace",
+          "key",
+          "agentId",
+          "configurationVersion",
+          "isArchived",
+          "updatedAtUtc"
+        ],
+        "type": "object",
+        "properties": {
+          "namespace": {
+            "type": "string"
+          },
+          "key": {
+            "type": "string"
+          },
+          "agentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "configurationVersion": {
+            "type": "string"
+          },
+          "isArchived": {
+            "type": "boolean"
+          },
+          "updatedAtUtc": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
@@ -7962,6 +9416,101 @@
             "type": "string"
           }
         }
+      },
+      "AgentJsonSchemaOutputContract": {
+        "required": [
+          "kind",
+          "version",
+          "name",
+          "schema"
+        ],
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "schema": {
+            "$ref": "#/components/schemas/JsonElement"
+          },
+          "strict": {
+            "type": "boolean",
+            "default": true
+          }
+        }
+      },
+      "AgentJsonSchemaOutputResult": {
+        "required": [
+          "data",
+          "rawOutput",
+          "schema",
+          "schemaHash",
+          "validationStatus",
+          "validationErrors"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/JsonElement"
+              }
+            ]
+          },
+          "rawOutput": {
+            "type": "string"
+          },
+          "schema": {
+            "type": "string"
+          },
+          "schemaHash": {
+            "type": "string"
+          },
+          "validationStatus": {
+            "$ref": "#/components/schemas/AgentJsonSchemaOutputValidationStatus"
+          },
+          "validationErrors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AgentJsonSchemaOutputValidationError"
+            }
+          }
+        }
+      },
+      "AgentJsonSchemaOutputValidationError": {
+        "required": [
+          "code",
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string",
+            "default": "$"
+          }
+        }
+      },
+      "AgentJsonSchemaOutputValidationStatus": {
+        "enum": [
+          "Valid",
+          "ProviderRefusal",
+          "MalformedJson",
+          "SchemaValidationFailed"
+        ]
       },
       "AgentLifecycleStatus": {
         "type": "integer"
@@ -8104,6 +9653,112 @@
         "type": "integer",
         "default": 0
       },
+      "AgentPackageImportApiForm": {
+        "type": "object",
+        "properties": {
+          "package": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/IFormFile"
+              }
+            ]
+          },
+          "mode": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "externalKey": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "externalNamespace": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "expectedPackageSha256": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "expectedAgentVersion": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          }
+        }
+      },
+      "AgentPackageImportMode": {
+        "type": "integer"
+      },
+      "AgentPackageImportReceipt": {
+        "required": [
+          "agentId",
+          "mode",
+          "externalKey",
+          "packageSha256",
+          "packageSchemaVersion",
+          "importedVersion",
+          "configurationSha256",
+          "unresolvedPrerequisites",
+          "warnings",
+          "replayed"
+        ],
+        "type": "object",
+        "properties": {
+          "agentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "mode": {
+            "$ref": "#/components/schemas/AgentPackageImportMode"
+          },
+          "externalKey": {
+            "type": "string"
+          },
+          "packageSha256": {
+            "type": "string"
+          },
+          "packageSchemaVersion": {
+            "type": "string"
+          },
+          "importedVersion": {
+            "type": "string"
+          },
+          "configurationSha256": {
+            "type": "string"
+          },
+          "unresolvedPrerequisites": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "replayed": {
+            "type": "boolean"
+          },
+          "externalNamespace": {
+            "type": "string"
+          }
+        }
+      },
       "AgentPermissionsPolicy": {
         "required": [
           "canUseTools",
@@ -8202,6 +9857,563 @@
           }
         }
       },
+      "AgentRecruitingAttempt": {
+        "required": [
+          "id",
+          "interviewId",
+          "sequence",
+          "target",
+          "challengeKey",
+          "challengeVersion",
+          "rubricVersion",
+          "inputHash",
+          "outputHash",
+          "structuredOutputContractKey",
+          "structuredOutputSchemaHash",
+          "structuredOutputValidationStatus",
+          "automatedEvaluation",
+          "completeness",
+          "missingEvidence",
+          "createdAtUtc"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "interviewId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sequence": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "target": {
+            "$ref": "#/components/schemas/AgentRecruitingExecutionTarget"
+          },
+          "challengeKey": {
+            "type": "string"
+          },
+          "challengeVersion": {
+            "type": "string"
+          },
+          "rubricVersion": {
+            "type": "string"
+          },
+          "inputHash": {
+            "type": "string"
+          },
+          "outputHash": {
+            "type": "string"
+          },
+          "structuredOutputContractKey": {
+            "type": "string"
+          },
+          "structuredOutputSchemaHash": {
+            "type": "string"
+          },
+          "structuredOutputValidationStatus": {
+            "type": "string"
+          },
+          "automatedEvaluation": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/AgentRecruitingAutomatedEvaluation"
+              }
+            ]
+          },
+          "completeness": {
+            "$ref": "#/components/schemas/AgentRecruitingEvidenceCompleteness"
+          },
+          "missingEvidence": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "AgentRecruitingAttemptComparison": {
+        "required": [
+          "attemptId",
+          "sequence",
+          "createdAtUtc",
+          "completeness",
+          "automatedDecision",
+          "score",
+          "humanDecision"
+        ],
+        "type": "object",
+        "properties": {
+          "attemptId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sequence": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "completeness": {
+            "$ref": "#/components/schemas/AgentRecruitingEvidenceCompleteness"
+          },
+          "automatedDecision": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/AgentRecruitingAutomatedDecision"
+              }
+            ]
+          },
+          "score": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "humanDecision": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/AgentRecruitingHumanDecision"
+              }
+            ]
+          }
+        }
+      },
+      "AgentRecruitingAutomatedDecision": {
+        "enum": [
+          "Passed",
+          "Failed",
+          "NeedsHumanReview"
+        ]
+      },
+      "AgentRecruitingAutomatedEvaluation": {
+        "required": [
+          "decision",
+          "score",
+          "evaluatorAgentId",
+          "providerProfileId",
+          "model",
+          "rubricVersion",
+          "findings",
+          "evaluatedAtUtc"
+        ],
+        "type": "object",
+        "properties": {
+          "decision": {
+            "$ref": "#/components/schemas/AgentRecruitingAutomatedDecision"
+          },
+          "score": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "evaluatorAgentId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
+          },
+          "providerProfileId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
+          },
+          "model": {
+            "type": "string"
+          },
+          "rubricVersion": {
+            "type": "string"
+          },
+          "findings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "evaluatedAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "AgentRecruitingCandidateReadiness": {
+        "required": [
+          "candidateAgentId",
+          "currentConfigurationVersion",
+          "status",
+          "readyForProduction",
+          "activatesAgent",
+          "requiresSeparateActivationAuthorization",
+          "qualifyingInterviewId",
+          "qualifyingAttemptId",
+          "qualifyingReviewId",
+          "humanAuthorizationReference",
+          "humanAuthorizationEvidenceHash",
+          "reasons",
+          "attemptHistory"
+        ],
+        "type": "object",
+        "properties": {
+          "candidateAgentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "currentConfigurationVersion": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/AgentRecruitingReadinessStatus"
+          },
+          "readyForProduction": {
+            "type": "boolean"
+          },
+          "activatesAgent": {
+            "type": "boolean"
+          },
+          "requiresSeparateActivationAuthorization": {
+            "type": "boolean"
+          },
+          "qualifyingInterviewId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
+          },
+          "qualifyingAttemptId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
+          },
+          "qualifyingReviewId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
+          },
+          "humanAuthorizationReference": {
+            "type": "string"
+          },
+          "humanAuthorizationEvidenceHash": {
+            "type": "string"
+          },
+          "reasons": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "attemptHistory": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AgentRecruitingAttemptComparison"
+            }
+          }
+        }
+      },
+      "AgentRecruitingEvidenceCompleteness": {
+        "enum": [
+          "Complete",
+          "Incomplete"
+        ]
+      },
+      "AgentRecruitingExecutionTarget": {
+        "required": [
+          "kind",
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "kind": {
+            "$ref": "#/components/schemas/AgentRecruitingTargetKind"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "AgentRecruitingHumanDecision": {
+        "enum": [
+          "Approved",
+          "Rejected"
+        ]
+      },
+      "AgentRecruitingHumanReview": {
+        "required": [
+          "id",
+          "interviewId",
+          "attemptId",
+          "decision",
+          "reviewerActorId",
+          "reviewerDisplayName",
+          "authorizationReference",
+          "authorizationEvidenceHash",
+          "notes",
+          "qualifiesForReadiness",
+          "missingEvidence",
+          "reviewedAtUtc"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "interviewId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "attemptId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "decision": {
+            "$ref": "#/components/schemas/AgentRecruitingHumanDecision"
+          },
+          "reviewerActorId": {
+            "type": "string"
+          },
+          "reviewerDisplayName": {
+            "type": "string"
+          },
+          "authorizationReference": {
+            "type": "string"
+          },
+          "authorizationEvidenceHash": {
+            "type": "string"
+          },
+          "notes": {
+            "type": "string"
+          },
+          "qualifiesForReadiness": {
+            "type": "boolean"
+          },
+          "missingEvidence": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "reviewedAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "AgentRecruitingInterview": {
+        "required": [
+          "id",
+          "candidateAgentId",
+          "candidateConfigurationVersion",
+          "candidateNameSnapshot",
+          "candidateModelSnapshot",
+          "purpose",
+          "createdAtUtc",
+          "attempts",
+          "reviews"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "candidateAgentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "candidateConfigurationVersion": {
+            "type": "string"
+          },
+          "candidateNameSnapshot": {
+            "type": "string"
+          },
+          "candidateModelSnapshot": {
+            "type": "string"
+          },
+          "purpose": {
+            "type": "string"
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "attempts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AgentRecruitingAttempt"
+            }
+          },
+          "reviews": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AgentRecruitingHumanReview"
+            }
+          }
+        }
+      },
+      "AgentRecruitingReadinessStatus": {
+        "enum": [
+          "Ready",
+          "NoInterviews",
+          "IncompleteEvidence",
+          "AwaitingHumanApproval",
+          "Rejected"
+        ]
+      },
+      "AgentRecruitingTargetKind": {
+        "enum": [
+          "agent-execution-run",
+          "workflow-run",
+          "process-run"
+        ]
+      },
+      "AgentRunMetric": {
+        "required": [
+          "id",
+          "agentId",
+          "chatSessionId",
+          "createdAtUtc",
+          "outcome",
+          "providerName",
+          "model",
+          "durationMs",
+          "inputTokens",
+          "outputTokens",
+          "toolCalls"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "agentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "chatSessionId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "outcome": {
+            "$ref": "#/components/schemas/RunOutcome"
+          },
+          "providerName": {
+            "type": "string"
+          },
+          "model": {
+            "type": "string"
+          },
+          "durationMs": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int64"
+          },
+          "inputTokens": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "outputTokens": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "toolCalls": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "executionRunId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "cachedInputTokens": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "cacheWriteTokens": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "costUsd": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
+            "format": "double"
+          }
+        }
+      },
       "AgentSpeechToTextSettings": {
         "type": "object",
         "properties": {
@@ -8226,31 +10438,6 @@
           },
           "prompt": {
             "type": "string"
-          }
-        }
-      },
-      "AgentStructuredOutputContract": {
-        "required": [
-          "outputType"
-        ],
-        "type": "object",
-        "properties": {
-          "outputType": {
-            "$ref": "#/components/schemas/Type"
-          },
-          "schemaName": {
-            "type": "string",
-            "default": ""
-          },
-          "schemaDescription": {
-            "type": "string",
-            "default": ""
-          },
-          "contractKey": {
-            "type": [
-              "null",
-              "string"
-            ]
           }
         }
       },
@@ -8426,6 +10613,39 @@
       "AgentWorkspaceToolProfileKind": {
         "type": "integer"
       },
+      "ApiErrorItem": {
+        "required": [
+          "code",
+          "message",
+          "severity"
+        ],
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "severity": {
+            "$ref": "#/components/schemas/ErrorSeverity"
+          }
+        }
+      },
+      "ApiErrorResponse": {
+        "required": [
+          "errors"
+        ],
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ApiErrorItem"
+            }
+          }
+        }
+      },
       "ApiTokenIssueRequest": {
         "type": "object",
         "properties": {
@@ -8449,6 +10669,96 @@
             "items": {
               "type": "string"
             }
+          }
+        }
+      },
+      "AppendAgentRecruitingAttemptCommand": {
+        "required": [
+          "target",
+          "challengeKey",
+          "challengeVersion",
+          "rubricVersion",
+          "inputHash",
+          "outputHash",
+          "structuredOutputContractKey",
+          "structuredOutputSchemaHash",
+          "structuredOutputValidationStatus",
+          "automatedEvaluation"
+        ],
+        "type": "object",
+        "properties": {
+          "target": {
+            "$ref": "#/components/schemas/AgentRecruitingExecutionTarget"
+          },
+          "challengeKey": {
+            "type": "string"
+          },
+          "challengeVersion": {
+            "type": "string"
+          },
+          "rubricVersion": {
+            "type": "string"
+          },
+          "inputHash": {
+            "type": "string"
+          },
+          "outputHash": {
+            "type": "string"
+          },
+          "structuredOutputContractKey": {
+            "type": "string"
+          },
+          "structuredOutputSchemaHash": {
+            "type": "string"
+          },
+          "structuredOutputValidationStatus": {
+            "type": "string"
+          },
+          "automatedEvaluation": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/AgentRecruitingAutomatedEvaluation"
+              }
+            ]
+          }
+        }
+      },
+      "AppendAgentRecruitingReviewCommand": {
+        "required": [
+          "attemptId",
+          "decision",
+          "reviewerActorId",
+          "reviewerDisplayName",
+          "authorizationReference",
+          "authorizationEvidenceHash",
+          "notes"
+        ],
+        "type": "object",
+        "properties": {
+          "attemptId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "decision": {
+            "$ref": "#/components/schemas/AgentRecruitingHumanDecision"
+          },
+          "reviewerActorId": {
+            "type": "string"
+          },
+          "reviewerDisplayName": {
+            "type": "string"
+          },
+          "authorizationReference": {
+            "type": "string"
+          },
+          "authorizationEvidenceHash": {
+            "type": "string"
+          },
+          "notes": {
+            "type": "string"
           }
         }
       },
@@ -8608,6 +10918,9 @@
           }
         }
       },
+      "CapabilityProofStatus": {
+        "type": "integer"
+      },
       "CapabilitySelectorTemplateDto": {
         "type": "object",
         "properties": {
@@ -8699,8 +11012,113 @@
           }
         }
       },
+      "ChatMessageRecord": {
+        "required": [
+          "id",
+          "role",
+          "content",
+          "createdAtUtc",
+          "tokenEstimate"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "role": {
+            "$ref": "#/components/schemas/ChatMessageRole"
+          },
+          "content": {
+            "type": "string"
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "tokenEstimate": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          }
+        }
+      },
       "ChatMessageRole": {
         "type": "integer"
+      },
+      "ChatSessionRecord": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "agentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "messages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ChatMessageRecord"
+            }
+          },
+          "latestExecutionRunId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
+          },
+          "compatibility": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ChatSessionRuntimeCompatibilityRecord"
+              }
+            ]
+          },
+          "RuntimeSessionKey": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "SerializedSessionStateJson": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "PendingApprovals": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/PendingToolApprovalRecord"
+            }
+          },
+          "AutoApprovePendingToolCalls": {
+            "type": "boolean"
+          }
+        }
       },
       "ChatSessionRenameApiRequest": {
         "required": [
@@ -8713,8 +11131,180 @@
           }
         }
       },
+      "ChatSessionRuntimeCompatibilityRecord": {
+        "required": [
+          "runtimeSessionKey",
+          "serializedSessionStateJson",
+          "pendingApprovals"
+        ],
+        "type": "object",
+        "properties": {
+          "runtimeSessionKey": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "serializedSessionStateJson": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "pendingApprovals": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/PendingToolApprovalRecord"
+            }
+          },
+          "autoApprovePendingToolCalls": {
+            "type": "boolean",
+            "default": false
+          },
+          "hasState": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CreateAgentRecruitingInterviewCommand": {
+        "required": [
+          "candidateAgentId",
+          "candidateConfigurationVersion",
+          "purpose"
+        ],
+        "type": "object",
+        "properties": {
+          "candidateAgentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "candidateConfigurationVersion": {
+            "type": "string"
+          },
+          "purpose": {
+            "type": "string"
+          }
+        }
+      },
+      "ErrorSeverity": {
+        "type": "integer"
+      },
+      "ExecutionApprovalRecord": {
+        "required": [
+          "approvalId",
+          "executionRunId",
+          "callId",
+          "toolName",
+          "toolKind",
+          "details",
+          "argumentsJson",
+          "status",
+          "requestedAtUtc",
+          "decidedAtUtc",
+          "decisionSourceKind",
+          "decisionSourceId",
+          "decisionNotes"
+        ],
+        "type": "object",
+        "properties": {
+          "approvalId": {
+            "type": "string"
+          },
+          "executionRunId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "callId": {
+            "type": "string"
+          },
+          "toolName": {
+            "type": "string"
+          },
+          "toolKind": {
+            "type": "string"
+          },
+          "details": {
+            "type": "string"
+          },
+          "argumentsJson": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ExecutionApprovalStatus"
+          },
+          "requestedAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "decidedAtUtc": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "decisionSourceKind": {
+            "type": "string"
+          },
+          "decisionSourceId": {
+            "type": "string"
+          },
+          "decisionNotes": {
+            "type": "string"
+          }
+        }
+      },
       "ExecutionApprovalStatus": {
         "type": "integer"
+      },
+      "ExecutionArtifactRecord": {
+        "required": [
+          "id",
+          "executionRunId",
+          "artifactKind",
+          "displayName",
+          "relativePath",
+          "contentType",
+          "producedBy",
+          "summary",
+          "createdAtUtc"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "executionRunId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "artifactKind": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "relativePath": {
+            "type": "string"
+          },
+          "contentType": {
+            "type": "string"
+          },
+          "producedBy": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
       },
       "ExecutionInvocationContext": {
         "required": [
@@ -8809,19 +11399,25 @@
           }
         }
       },
-      "ExecutionRunRequest": {
+      "ExecutionLogEntry": {
         "required": [
+          "id",
           "agentId",
-          "prompt"
+          "chatSessionId",
+          "createdAtUtc",
+          "state",
+          "phase",
+          "message"
         ],
         "type": "object",
         "properties": {
-          "agentId": {
+          "id": {
             "type": "string",
             "format": "uuid"
           },
-          "prompt": {
-            "type": "string"
+          "agentId": {
+            "type": "string",
+            "format": "uuid"
           },
           "chatSessionId": {
             "type": [
@@ -8830,19 +11426,342 @@
             ],
             "format": "uuid"
           },
-          "context": {
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "state": {
+            "$ref": "#/components/schemas/ExecutionState"
+          },
+          "phase": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "executionRunId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "ExecutionRunDetail": {
+        "required": [
+          "run",
+          "chatSession",
+          "executionLog",
+          "metrics"
+        ],
+        "type": "object",
+        "properties": {
+          "run": {
+            "$ref": "#/components/schemas/ExecutionRunRecord"
+          },
+          "chatSession": {
             "oneOf": [
               {
                 "type": "null"
               },
               {
-                "$ref": "#/components/schemas/ExecutionInvocationContext"
+                "$ref": "#/components/schemas/ChatSessionRecord"
               }
             ]
+          },
+          "executionLog": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExecutionLogEntry"
+            }
+          },
+          "metrics": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AgentRunMetric"
+            }
+          },
+          "approvals": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExecutionApprovalRecord"
+            }
+          },
+          "artifacts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExecutionArtifactRecord"
+            }
+          },
+          "checkpoints": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExecutionWorkflowCheckpointRecord"
+            }
+          },
+          "toolReceipts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ToolExecutionReceiptRecord"
+            }
+          },
+          "usageObservations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProviderUsageObservation"
+            }
+          }
+        }
+      },
+      "ExecutionRunRecord": {
+        "required": [
+          "id",
+          "agentId",
+          "chatSessionId",
+          "title",
+          "sourceKind",
+          "sourceId",
+          "correlationId",
+          "causationId",
+          "requestedBy",
+          "requestedByKind",
+          "metadataJson",
+          "inputSummary",
+          "resultSummary",
+          "providerName",
+          "model",
+          "state",
+          "outcome",
+          "createdAtUtc",
+          "updatedAtUtc",
+          "startedAtUtc",
+          "completedAtUtc",
+          "runtimeSessionKey",
+          "serializedSessionStateJson",
+          "pendingApprovals"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "agentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "chatSessionId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          },
+          "sourceKind": {
+            "type": "string"
+          },
+          "sourceId": {
+            "type": "string"
+          },
+          "correlationId": {
+            "type": "string"
+          },
+          "causationId": {
+            "type": "string"
+          },
+          "requestedBy": {
+            "type": "string"
+          },
+          "requestedByKind": {
+            "type": "string"
+          },
+          "metadataJson": {
+            "type": "string"
+          },
+          "inputSummary": {
+            "type": "string"
+          },
+          "resultSummary": {
+            "type": "string"
+          },
+          "providerName": {
+            "type": "string"
+          },
+          "model": {
+            "type": "string"
+          },
+          "state": {
+            "$ref": "#/components/schemas/ExecutionState"
+          },
+          "outcome": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/RunOutcome"
+              }
+            ]
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "startedAtUtc": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "completedAtUtc": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "runtimeSessionKey": {
+            "type": "string"
+          },
+          "serializedSessionStateJson": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "pendingApprovals": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PendingToolApprovalRecord"
+            }
           },
           "autoApprovePendingToolCalls": {
             "type": "boolean",
             "default": false
+          },
+          "processRunId": {
+            "type": "string",
+            "default": ""
+          },
+          "processStepId": {
+            "type": "string",
+            "default": ""
+          },
+          "schedulerRunId": {
+            "type": "string",
+            "default": ""
+          },
+          "messageId": {
+            "type": "string",
+            "default": ""
+          },
+          "revision": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int64",
+            "default": 1
+          },
+          "structuredOutputContractKey": {
+            "type": "string",
+            "default": ""
+          },
+          "structuredOutputTypeName": {
+            "type": "string",
+            "default": ""
+          },
+          "structuredOutputSchemaName": {
+            "type": "string",
+            "default": ""
+          },
+          "structuredOutputSchemaDescription": {
+            "type": "string",
+            "default": ""
+          },
+          "providerProfileId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
+          },
+          "structuredOutputJsonSchema": {
+            "type": "string",
+            "default": ""
+          },
+          "structuredOutputSchemaHash": {
+            "type": "string",
+            "default": ""
+          },
+          "structuredOutputSchemaVersion": {
+            "type": "string",
+            "default": ""
+          },
+          "structuredOutputSchemaStrict": {
+            "type": "boolean",
+            "default": false
+          },
+          "structuredOutputRawOutput": {
+            "type": "string",
+            "default": ""
+          },
+          "structuredOutputValidationStatus": {
+            "type": "string",
+            "default": ""
+          },
+          "structuredOutputValidationErrorsJson": {
+            "type": "string",
+            "default": "[]"
+          }
+        }
+      },
+      "ExecutionRunResult": {
+        "required": [
+          "executionRunId",
+          "chatSessionId",
+          "responseText",
+          "assistantMessage",
+          "metric"
+        ],
+        "type": "object",
+        "properties": {
+          "executionRunId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "chatSessionId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
+          },
+          "responseText": {
+            "type": "string"
+          },
+          "assistantMessage": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ChatMessageRecord"
+              }
+            ]
+          },
+          "metric": {
+            "$ref": "#/components/schemas/AgentRunMetric"
+          },
+          "state": {
+            "$ref": "#/components/schemas/ExecutionState"
           },
           "structuredOutput": {
             "oneOf": [
@@ -8850,23 +11769,103 @@
                 "type": "null"
               },
               {
-                "$ref": "#/components/schemas/AgentStructuredOutputContract"
+                "$ref": "#/components/schemas/AgentJsonSchemaOutputResult"
               }
             ]
-          },
-          "inputAttachmentPaths": {
-            "type": [
-              "null",
-              "array"
-            ],
-            "items": {
-              "type": "string"
-            }
           }
         }
       },
       "ExecutionState": {
         "type": "integer"
+      },
+      "ExecutionWorkflowCheckpointRecord": {
+        "required": [
+          "id",
+          "executionRunId",
+          "workflowSessionId",
+          "workflowCheckpointId",
+          "checkpointKind",
+          "runState",
+          "pendingApprovalIds",
+          "capturedAtUtc",
+          "resumedAtUtc",
+          "correlationId",
+          "sourceKind",
+          "sourceId",
+          "processRunId",
+          "processStepId",
+          "schedulerRunId",
+          "messageId",
+          "traceId",
+          "spanId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "executionRunId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "workflowSessionId": {
+            "type": "string"
+          },
+          "workflowCheckpointId": {
+            "type": "string"
+          },
+          "checkpointKind": {
+            "type": "string"
+          },
+          "runState": {
+            "$ref": "#/components/schemas/ExecutionState"
+          },
+          "pendingApprovalIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "capturedAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "resumedAtUtc": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "correlationId": {
+            "type": "string"
+          },
+          "sourceKind": {
+            "type": "string"
+          },
+          "sourceId": {
+            "type": "string"
+          },
+          "processRunId": {
+            "type": "string"
+          },
+          "processStepId": {
+            "type": "string"
+          },
+          "schedulerRunId": {
+            "type": "string"
+          },
+          "messageId": {
+            "type": "string"
+          },
+          "traceId": {
+            "type": "string"
+          },
+          "spanId": {
+            "type": "string"
+          }
+        }
       },
       "GanttScheduleGesture": {
         "type": "integer"
@@ -8951,9 +11950,13 @@
         }
       },
       "IFormFile": {
-        "type": "string",
+        "type": [
+          "null",
+          "string"
+        ],
         "format": "binary"
       },
+      "JsonElement": { },
       "LifecycleTaskKind": {
         "type": "integer"
       },
@@ -9413,6 +12416,37 @@
           },
           "autoApprovePendingToolCalls": {
             "type": "boolean"
+          }
+        }
+      },
+      "PendingToolApprovalRecord": {
+        "required": [
+          "approvalId",
+          "callId",
+          "toolName",
+          "toolKind",
+          "details",
+          "argumentsJson"
+        ],
+        "type": "object",
+        "properties": {
+          "approvalId": {
+            "type": "string"
+          },
+          "callId": {
+            "type": "string"
+          },
+          "toolName": {
+            "type": "string"
+          },
+          "toolKind": {
+            "type": "string"
+          },
+          "details": {
+            "type": "string"
+          },
+          "argumentsJson": {
+            "type": "string"
           }
         }
       },
@@ -11910,6 +14944,101 @@
           }
         }
       },
+      "ProviderModelTokenPrice": {
+        "required": [
+          "model",
+          "inputPerMillionTokensUsd",
+          "cachedInputPerMillionTokensUsd",
+          "outputPerMillionTokensUsd"
+        ],
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string"
+          },
+          "inputPerMillionTokensUsd": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "cachedInputPerMillionTokensUsd": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "outputPerMillionTokensUsd": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "cacheWritePerMillionTokensUsd": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "longContextThresholdTokens": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "longContextInputPerMillionTokensUsd": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "longContextCachedInputPerMillionTokensUsd": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "longContextCacheWritePerMillionTokensUsd": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "longContextOutputPerMillionTokensUsd": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "hasConfiguredStandardPrice": {
+            "type": "boolean"
+          }
+        }
+      },
       "ProviderModelTokenPriceEditorModel": {
         "type": "object",
         "properties": {
@@ -11996,6 +15125,107 @@
           }
         }
       },
+      "ProviderProfile": {
+        "required": [
+          "id",
+          "name",
+          "kind",
+          "baseUrl",
+          "apiKeyEnvironmentVariable",
+          "defaultModel",
+          "transport",
+          "isEnabled",
+          "supportsStreaming",
+          "supportsTools",
+          "preferFrameworkManagedChatHistory",
+          "supportsBackgroundResponses",
+          "configurationJson",
+          "notes",
+          "healthStatus",
+          "lastCheckedAtUtc",
+          "suggestedModels"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/ProviderKind"
+          },
+          "baseUrl": {
+            "type": "string"
+          },
+          "apiKeyEnvironmentVariable": {
+            "type": "string"
+          },
+          "defaultModel": {
+            "type": "string"
+          },
+          "transport": {
+            "$ref": "#/components/schemas/ProviderTransportKind"
+          },
+          "isEnabled": {
+            "type": "boolean"
+          },
+          "supportsStreaming": {
+            "type": "boolean"
+          },
+          "supportsTools": {
+            "type": "boolean"
+          },
+          "preferFrameworkManagedChatHistory": {
+            "type": "boolean"
+          },
+          "supportsBackgroundResponses": {
+            "type": "boolean"
+          },
+          "configurationJson": {
+            "type": "string"
+          },
+          "notes": {
+            "type": "string"
+          },
+          "healthStatus": {
+            "type": "string"
+          },
+          "lastCheckedAtUtc": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "suggestedModels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "purpose": {
+            "$ref": "#/components/schemas/ProviderProfilePurpose"
+          },
+          "isPrivateProvider": {
+            "type": "boolean"
+          },
+          "modelPrices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProviderModelTokenPrice"
+            }
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
       "ProviderProfileEditorModel": {
         "type": "object",
         "properties": {
@@ -12072,7 +15302,8 @@
         }
       },
       "ProviderProfilePurpose": {
-        "type": "integer"
+        "type": "integer",
+        "default": 0
       },
       "ProviderTestChatMessage": {
         "required": [
@@ -12121,6 +15352,187 @@
         }
       },
       "ProviderTransportKind": {
+        "type": "integer"
+      },
+      "ProviderUsageObservation": {
+        "required": [
+          "id",
+          "createdAtUtc",
+          "providerName",
+          "providerKind",
+          "model",
+          "transportKind",
+          "sourcePhase",
+          "usageStatus",
+          "inputTokens",
+          "cachedInputTokens",
+          "outputTokens",
+          "reasoningTokens",
+          "totalTokens",
+          "toolCallCount"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "providerName": {
+            "type": "string"
+          },
+          "providerKind": {
+            "$ref": "#/components/schemas/ProviderKind"
+          },
+          "model": {
+            "type": "string"
+          },
+          "transportKind": {
+            "$ref": "#/components/schemas/ProviderTransportKind"
+          },
+          "sourcePhase": {
+            "type": "string"
+          },
+          "usageStatus": {
+            "$ref": "#/components/schemas/ProviderUsageObservationStatus"
+          },
+          "inputTokens": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "cachedInputTokens": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "outputTokens": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "reasoningTokens": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "totalTokens": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "toolCallCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "cacheWriteTokens": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "executionRunId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
+          },
+          "agentId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
+          },
+          "chatSessionId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
+          },
+          "providerResponseId": {
+            "type": "string"
+          },
+          "providerRequestId": {
+            "type": "string"
+          },
+          "runtimeSessionKey": {
+            "type": "string"
+          },
+          "processRunId": {
+            "type": "string"
+          },
+          "processStepId": {
+            "type": "string"
+          },
+          "workflowRunId": {
+            "type": "string"
+          },
+          "workflowNodeId": {
+            "type": "string"
+          },
+          "correlationId": {
+            "type": "string"
+          },
+          "providerCostUsd": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "calculatedCostUsd": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "pricingProfileHash": {
+            "type": "string"
+          },
+          "pricingVersion": {
+            "type": "string"
+          },
+          "rawUsageJson": {
+            "type": "string"
+          },
+          "diagnosticsJson": {
+            "type": "string"
+          }
+        }
+      },
+      "ProviderUsageObservationStatus": {
         "type": "integer"
       },
       "RecruitmentApplicationSaveApiRequest": {
@@ -12379,7 +15791,78 @@
       "SkillProficiencyLevel": {
         "type": "integer"
       },
-      "Type": { },
+      "ToolExecutionReceiptRecord": {
+        "required": [
+          "id",
+          "executionRunId",
+          "toolFamily",
+          "toolName",
+          "riskClass",
+          "approvalMode",
+          "isolationGuarantee",
+          "requestSummary",
+          "workingDirectory",
+          "exitSummary",
+          "startedAtUtc",
+          "completedAtUtc"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "executionRunId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "toolFamily": {
+            "type": "string"
+          },
+          "toolName": {
+            "type": "string"
+          },
+          "riskClass": {
+            "type": "string"
+          },
+          "approvalMode": {
+            "type": "string"
+          },
+          "isolationGuarantee": {
+            "type": "string"
+          },
+          "requestSummary": {
+            "type": "string"
+          },
+          "workingDirectory": {
+            "type": "string"
+          },
+          "exitSummary": {
+            "type": "string"
+          },
+          "startedAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "completedAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "runtimeToolProviderKey": {
+            "type": "string"
+          },
+          "runtimeToolProviderName": {
+            "type": "string"
+          },
+          "declaredSideEffectMode": {
+            "$ref": "#/components/schemas/ToolExecutionSideEffectMode"
+          }
+        }
+      },
+      "ToolExecutionSideEffectMode": {
+        "type": "integer"
+      },
+      "WorkflowArtifactId": { },
       "WorkflowArtifactKind": {
         "type": "integer"
       },
@@ -12409,6 +15892,212 @@
             }
           }
         }
+      },
+      "WorkflowArtifactRecord": {
+        "required": [
+          "id",
+          "runId",
+          "kind",
+          "nodeId",
+          "name",
+          "contentType",
+          "storagePath",
+          "summary",
+          "createdAtUtc"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/WorkflowArtifactId"
+          },
+          "runId": {
+            "$ref": "#/components/schemas/WorkflowRunId"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/WorkflowArtifactKind"
+          },
+          "nodeId": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/WorkflowNodeId"
+              }
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "contentType": {
+            "type": "string"
+          },
+          "storagePath": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "WorkflowCatalogItem": {
+        "required": [
+          "id",
+          "versionId",
+          "name",
+          "description",
+          "status",
+          "preferredBackend",
+          "updatedAtUtc"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/WorkflowId"
+          },
+          "versionId": {
+            "$ref": "#/components/schemas/WorkflowVersionId"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/WorkflowLifecycleStatus"
+          },
+          "preferredBackend": {
+            "$ref": "#/components/schemas/WorkflowRuntimeBackendKind"
+          },
+          "updatedAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "templateKey": {
+            "type": "string"
+          },
+          "templatePackKey": {
+            "type": "string"
+          },
+          "templatePackVersion": {
+            "type": "string"
+          },
+          "sourceHash": {
+            "type": "string"
+          },
+          "externalNamespace": {
+            "type": "string"
+          },
+          "externalKey": {
+            "type": "string"
+          }
+        }
+      },
+      "WorkflowCheckpointId": { },
+      "WorkflowCheckpointKind": {
+        "type": "integer"
+      },
+      "WorkflowCheckpointRecord": {
+        "required": [
+          "id",
+          "runId",
+          "workflowId",
+          "versionId",
+          "backend",
+          "kind",
+          "trustBoundary",
+          "resumeAvailability",
+          "nodeId",
+          "externalRequestId",
+          "backendCheckpointId",
+          "payloadReference",
+          "payloadHash",
+          "summary",
+          "resumeUnavailableReason",
+          "createdAtUtc",
+          "resumedAtUtc"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/WorkflowCheckpointId"
+          },
+          "runId": {
+            "$ref": "#/components/schemas/WorkflowRunId"
+          },
+          "workflowId": {
+            "$ref": "#/components/schemas/WorkflowId"
+          },
+          "versionId": {
+            "$ref": "#/components/schemas/WorkflowVersionId"
+          },
+          "backend": {
+            "$ref": "#/components/schemas/WorkflowRuntimeBackendKind"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/WorkflowCheckpointKind"
+          },
+          "trustBoundary": {
+            "$ref": "#/components/schemas/WorkflowCheckpointTrustBoundary"
+          },
+          "resumeAvailability": {
+            "$ref": "#/components/schemas/WorkflowResumeAvailability"
+          },
+          "nodeId": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/WorkflowNodeId"
+              }
+            ]
+          },
+          "externalRequestId": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/WorkflowExternalRequestId"
+              }
+            ]
+          },
+          "backendCheckpointId": {
+            "type": "string"
+          },
+          "payloadReference": {
+            "type": "string"
+          },
+          "payloadHash": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "resumeUnavailableReason": {
+            "type": "string"
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "resumedAtUtc": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          }
+        }
+      },
+      "WorkflowCheckpointTrustBoundary": {
+        "type": "integer"
       },
       "WorkflowComponentId": { },
       "WorkflowDefinition": {
@@ -12459,6 +16148,24 @@
             "items": {
               "$ref": "#/components/schemas/WorkflowInputParameterDescriptor"
             }
+          },
+          "templateKey": {
+            "type": "string"
+          },
+          "templatePackKey": {
+            "type": "string"
+          },
+          "templatePackVersion": {
+            "type": "string"
+          },
+          "sourceHash": {
+            "type": "string"
+          },
+          "externalNamespace": {
+            "type": "string"
+          },
+          "externalKey": {
+            "type": "string"
           }
         }
       },
@@ -12571,8 +16278,17 @@
             "items": {
               "$ref": "#/components/schemas/WorkflowInputParameterDescriptor"
             }
+          },
+          "externalNamespace": {
+            "type": "string"
+          },
+          "externalKey": {
+            "type": "string"
           }
         }
+      },
+      "WorkflowDefinitionSelectionKind": {
+        "type": "integer"
       },
       "WorkflowEdge": {
         "required": [
@@ -12679,6 +16395,53 @@
           }
         }
       },
+      "WorkflowEventKind": {
+        "type": "integer"
+      },
+      "WorkflowEventRecord": {
+        "required": [
+          "id",
+          "runId",
+          "kind",
+          "nodeId",
+          "message",
+          "payloadJson",
+          "createdAtUtc"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "runId": {
+            "$ref": "#/components/schemas/WorkflowRunId"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/WorkflowEventKind"
+          },
+          "nodeId": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/WorkflowNodeId"
+              }
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "payloadJson": {
+            "type": "string"
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
       "WorkflowExecutorExecutionPolicy": {
         "required": [
           "timeoutSeconds",
@@ -12718,8 +16481,57 @@
         }
       },
       "WorkflowExecutorId": { },
+      "WorkflowExternalRequestId": { },
       "WorkflowExternalRequestKind": {
         "type": "integer"
+      },
+      "WorkflowExternalRequestRecord": {
+        "required": [
+          "id",
+          "runId",
+          "kind",
+          "nodeId",
+          "eventName",
+          "requestJson",
+          "responseJson",
+          "createdAtUtc",
+          "respondedAtUtc"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/WorkflowExternalRequestId"
+          },
+          "runId": {
+            "$ref": "#/components/schemas/WorkflowRunId"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/WorkflowExternalRequestKind"
+          },
+          "nodeId": {
+            "$ref": "#/components/schemas/WorkflowNodeId"
+          },
+          "eventName": {
+            "type": "string"
+          },
+          "requestJson": {
+            "type": "string"
+          },
+          "responseJson": {
+            "type": "string"
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "respondedAtUtc": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          }
+        }
       },
       "WorkflowExternalRequestResponseApiRequest": {
         "required": [
@@ -12891,6 +16703,389 @@
       },
       "WorkflowInputParameterOptionSourceKind": {
         "type": "integer"
+      },
+      "WorkflowLaunchActor": {
+        "required": [
+          "kind",
+          "subjectId"
+        ],
+        "type": "object",
+        "properties": {
+          "kind": {
+            "$ref": "#/components/schemas/WorkflowLaunchActorKind"
+          },
+          "subjectId": {
+            "type": "string"
+          }
+        }
+      },
+      "WorkflowLaunchActorKind": {
+        "type": "integer"
+      },
+      "WorkflowLaunchCorrelationId": {
+        "required": [
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        }
+      },
+      "WorkflowLaunchIdempotencyDisposition": {
+        "type": "integer"
+      },
+      "WorkflowLaunchIdempotencyEvidence": {
+        "required": [
+          "idempotencyKeyHash",
+          "requestFingerprint",
+          "canonicalInputHash",
+          "workflowId",
+          "selectionKind",
+          "requestedVersionId",
+          "resolvedVersionId",
+          "resolvedBackend",
+          "originalRunId",
+          "claimState",
+          "runState",
+          "isTerminal",
+          "createdAtUtc",
+          "completedAtUtc",
+          "wasReplayed",
+          "replayCount",
+          "lastReplayedAtUtc"
+        ],
+        "type": "object",
+        "properties": {
+          "idempotencyKeyHash": {
+            "type": "string"
+          },
+          "requestFingerprint": {
+            "type": "string"
+          },
+          "canonicalInputHash": {
+            "type": "string"
+          },
+          "workflowId": {
+            "$ref": "#/components/schemas/WorkflowId"
+          },
+          "selectionKind": {
+            "$ref": "#/components/schemas/WorkflowDefinitionSelectionKind"
+          },
+          "requestedVersionId": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/WorkflowVersionId"
+              }
+            ]
+          },
+          "resolvedVersionId": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/WorkflowVersionId"
+              }
+            ]
+          },
+          "resolvedBackend": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/WorkflowRuntimeBackendKind"
+              }
+            ]
+          },
+          "originalRunId": {
+            "$ref": "#/components/schemas/WorkflowRunId"
+          },
+          "claimState": {
+            "$ref": "#/components/schemas/WorkflowLaunchIdempotencyRecordState"
+          },
+          "runState": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/WorkflowRunState"
+              }
+            ]
+          },
+          "isTerminal": {
+            "type": "boolean"
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "completedAtUtc": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "wasReplayed": {
+            "type": "boolean"
+          },
+          "replayCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "lastReplayedAtUtc": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          }
+        }
+      },
+      "WorkflowLaunchIdempotencyRecordState": {
+        "type": "integer"
+      },
+      "WorkflowLaunchOrigin": {
+        "required": [
+          "$origin"
+        ],
+        "type": "object",
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/WorkflowLaunchOriginApi"
+          },
+          {
+            "$ref": "#/components/schemas/WorkflowLaunchOriginPreview"
+          },
+          {
+            "$ref": "#/components/schemas/WorkflowLaunchOriginSchedulerPlanRun"
+          },
+          {
+            "$ref": "#/components/schemas/WorkflowLaunchOriginProjectStructureNode"
+          },
+          {
+            "$ref": "#/components/schemas/WorkflowLaunchOriginAgentRuntimeInvocation"
+          },
+          {
+            "$ref": "#/components/schemas/WorkflowLaunchOriginProcessAssignment"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "$origin",
+          "mapping": {
+            "api": "#/components/schemas/WorkflowLaunchOriginApi",
+            "preview": "#/components/schemas/WorkflowLaunchOriginPreview",
+            "scheduler-plan-run": "#/components/schemas/WorkflowLaunchOriginSchedulerPlanRun",
+            "project-structure-node": "#/components/schemas/WorkflowLaunchOriginProjectStructureNode",
+            "agent-runtime-invocation": "#/components/schemas/WorkflowLaunchOriginAgentRuntimeInvocation",
+            "process-assignment": "#/components/schemas/WorkflowLaunchOriginProcessAssignment"
+          }
+        }
+      },
+      "WorkflowLaunchOriginAgentRuntimeInvocation": {
+        "required": [
+          "agent",
+          "runtimeSessionId",
+          "purpose",
+          "correlationId"
+        ],
+        "properties": {
+          "$origin": {
+            "enum": [
+              "agent-runtime-invocation"
+            ],
+            "type": "string"
+          },
+          "agent": {
+            "$ref": "#/components/schemas/WorkflowLaunchActor"
+          },
+          "runtimeSessionId": {
+            "$ref": "#/components/schemas/WorkflowLaunchSessionId"
+          },
+          "purpose": {
+            "type": "string"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/WorkflowLaunchOriginKind"
+          },
+          "correlationId": {
+            "$ref": "#/components/schemas/WorkflowLaunchCorrelationId"
+          }
+        }
+      },
+      "WorkflowLaunchOriginApi": {
+        "required": [
+          "actor",
+          "correlationId"
+        ],
+        "properties": {
+          "$origin": {
+            "enum": [
+              "api"
+            ],
+            "type": "string"
+          },
+          "actor": {
+            "$ref": "#/components/schemas/WorkflowLaunchActor"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/WorkflowLaunchOriginKind"
+          },
+          "correlationId": {
+            "$ref": "#/components/schemas/WorkflowLaunchCorrelationId"
+          }
+        }
+      },
+      "WorkflowLaunchOriginKind": {
+        "type": "integer"
+      },
+      "WorkflowLaunchOriginPreview": {
+        "required": [
+          "actor",
+          "correlationId"
+        ],
+        "properties": {
+          "$origin": {
+            "enum": [
+              "preview"
+            ],
+            "type": "string"
+          },
+          "actor": {
+            "$ref": "#/components/schemas/WorkflowLaunchActor"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/WorkflowLaunchOriginKind"
+          },
+          "correlationId": {
+            "$ref": "#/components/schemas/WorkflowLaunchCorrelationId"
+          }
+        }
+      },
+      "WorkflowLaunchOriginProcessAssignment": {
+        "required": [
+          "processRunId",
+          "assignmentId",
+          "correlationId"
+        ],
+        "properties": {
+          "$origin": {
+            "enum": [
+              "process-assignment"
+            ],
+            "type": "string"
+          },
+          "processRunId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "assignmentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/WorkflowLaunchOriginKind"
+          },
+          "correlationId": {
+            "$ref": "#/components/schemas/WorkflowLaunchCorrelationId"
+          }
+        }
+      },
+      "WorkflowLaunchOriginProjectStructureNode": {
+        "required": [
+          "projectId",
+          "nodeId",
+          "requestingActor",
+          "sessionId",
+          "correlationId"
+        ],
+        "properties": {
+          "$origin": {
+            "enum": [
+              "project-structure-node"
+            ],
+            "type": "string"
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "nodeId": {
+            "$ref": "#/components/schemas/WorkflowProjectStructureNodeId"
+          },
+          "requestingActor": {
+            "$ref": "#/components/schemas/WorkflowLaunchActor"
+          },
+          "sessionId": {
+            "$ref": "#/components/schemas/WorkflowLaunchSessionId"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/WorkflowLaunchOriginKind"
+          },
+          "correlationId": {
+            "$ref": "#/components/schemas/WorkflowLaunchCorrelationId"
+          }
+        }
+      },
+      "WorkflowLaunchOriginSchedulerPlanRun": {
+        "required": [
+          "planId",
+          "planRunId",
+          "fireId",
+          "firedAtUtc",
+          "correlationId"
+        ],
+        "properties": {
+          "$origin": {
+            "enum": [
+              "scheduler-plan-run"
+            ],
+            "type": "string"
+          },
+          "planId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "planRunId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "fireId": {
+            "$ref": "#/components/schemas/WorkflowSchedulerFireId"
+          },
+          "firedAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/WorkflowLaunchOriginKind"
+          },
+          "correlationId": {
+            "$ref": "#/components/schemas/WorkflowLaunchCorrelationId"
+          }
+        }
+      },
+      "WorkflowLaunchSessionId": {
+        "required": [
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        }
       },
       "WorkflowLifecycleStatus": {
         "type": "integer"
@@ -13170,6 +17365,20 @@
           }
         }
       },
+      "WorkflowProjectStructureNodeId": {
+        "required": [
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        }
+      },
+      "WorkflowResumeAvailability": {
+        "type": "integer"
+      },
       "WorkflowRouteKind": {
         "type": "integer"
       },
@@ -13178,6 +17387,108 @@
       },
       "WorkflowRouteValueKind": {
         "type": "integer"
+      },
+      "WorkflowRunDetailApiResponse": {
+        "required": [
+          "run",
+          "events",
+          "artifacts",
+          "pendingExternalRequests",
+          "checkpoints"
+        ],
+        "type": "object",
+        "properties": {
+          "run": {
+            "$ref": "#/components/schemas/WorkflowRunSnapshot"
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WorkflowEventRecord"
+            }
+          },
+          "artifacts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WorkflowArtifactRecord"
+            }
+          },
+          "pendingExternalRequests": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WorkflowExternalRequestRecord"
+            }
+          },
+          "checkpoints": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WorkflowCheckpointRecord"
+            }
+          }
+        }
+      },
+      "WorkflowRunId": { },
+      "WorkflowRunSnapshot": {
+        "required": [
+          "runId",
+          "workflowId",
+          "versionId",
+          "state",
+          "backend",
+          "backendRunId",
+          "summary",
+          "createdAtUtc",
+          "updatedAtUtc"
+        ],
+        "type": "object",
+        "properties": {
+          "runId": {
+            "$ref": "#/components/schemas/WorkflowRunId"
+          },
+          "workflowId": {
+            "$ref": "#/components/schemas/WorkflowId"
+          },
+          "versionId": {
+            "$ref": "#/components/schemas/WorkflowVersionId"
+          },
+          "state": {
+            "$ref": "#/components/schemas/WorkflowRunState"
+          },
+          "backend": {
+            "$ref": "#/components/schemas/WorkflowRuntimeBackendKind"
+          },
+          "backendRunId": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "terminalAtUtc": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "origin": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/WorkflowLaunchOrigin"
+              }
+            ]
+          }
+        }
       },
       "WorkflowRunStartApiRequest": {
         "type": "object",
@@ -13215,6 +17526,64 @@
         },
         "additionalProperties": false
       },
+      "WorkflowRunStartApiResponse": {
+        "required": [
+          "run",
+          "events",
+          "artifacts",
+          "pendingExternalRequests",
+          "checkpoints",
+          "idempotencyDisposition",
+          "idempotencyKeyHash",
+          "created",
+          "replayed"
+        ],
+        "type": "object",
+        "properties": {
+          "run": {
+            "$ref": "#/components/schemas/WorkflowRunSnapshot"
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WorkflowEventRecord"
+            }
+          },
+          "artifacts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WorkflowArtifactRecord"
+            }
+          },
+          "pendingExternalRequests": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WorkflowExternalRequestRecord"
+            }
+          },
+          "checkpoints": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WorkflowCheckpointRecord"
+            }
+          },
+          "idempotencyDisposition": {
+            "$ref": "#/components/schemas/WorkflowLaunchIdempotencyDisposition"
+          },
+          "idempotencyKeyHash": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "created": {
+            "type": "boolean"
+          },
+          "replayed": {
+            "type": "boolean"
+          }
+        }
+      },
       "WorkflowRunState": {
         "type": "integer"
       },
@@ -13245,6 +17614,18 @@
           },
           "exposeAzureFunctionsMcpTool": {
             "type": "boolean"
+          }
+        }
+      },
+      "WorkflowSchedulerFireId": {
+        "required": [
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "format": "uuid"
           }
         }
       },
@@ -13279,6 +17660,76 @@
             "$ref": "#/components/schemas/AgentVoiceSettings"
           }
         }
+      },
+      "WorkflowStableIdentityKind": {
+        "enum": [
+          "Template",
+          "External"
+        ]
+      },
+      "WorkflowStableIdentityResolution": {
+        "required": [
+          "identityKind",
+          "namespace",
+          "key",
+          "status",
+          "workflowId",
+          "runnableVersionId",
+          "materializations",
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "identityKind": {
+            "$ref": "#/components/schemas/WorkflowStableIdentityKind"
+          },
+          "namespace": {
+            "type": "string"
+          },
+          "key": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/WorkflowStableIdentityResolutionStatus"
+          },
+          "workflowId": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/WorkflowId"
+              }
+            ]
+          },
+          "runnableVersionId": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/WorkflowVersionId"
+              }
+            ]
+          },
+          "materializations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WorkflowCatalogItem"
+            }
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "WorkflowStableIdentityResolutionStatus": {
+        "enum": [
+          "Resolved",
+          "NotFound",
+          "Ambiguous",
+          "Stale"
+        ]
       },
       "WorkflowTestRunRequest": {
         "required": [
@@ -13515,6 +17966,9 @@
     },
     {
       "name": "Agents"
+    },
+    {
+      "name": "Agent Recruiting"
     },
     {
       "name": "Prompt Gallery"

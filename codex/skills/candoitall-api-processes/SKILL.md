@@ -1,13 +1,12 @@
 ---
 name: candoitall-api-processes
-description: Use when launching, operating, observing, or reviewing CanDoItAll process runs, including durable run snapshots, summaries, graphs, and analytics, through the current HTTP API.
+description: Use when launching, dispatching, cancelling, reworking, or observing live CanDoItAll process runs through the current HTTP API.
 ---
 
 # CanDoItAll Processes API
 
 Use this skill for process runtime control and readback through the main CanDoItAll web
-API. The API has two related read models: live runtime projections and durable terminal
-run records.
+API.
 
 ## Contract Source
 
@@ -17,10 +16,6 @@ run records.
   version.
 - Check the snapshot's [provenance manifest](../_candoitall-api-shared/manifest.json)
   before relying on it.
-- Read the
-  [durable run-record reference](references/durable-run-records.md) before constructing
-  completed-run dashboards, summaries, graphs, or analytics. It supplies response and
-  error details not currently inferred by the generated OpenAPI document.
 - When the target host differs, inspect its live `/openapi/v1.json` or
   `/swagger/v1/swagger.json` document.
 - Read `GET /api/processes/contract` before generating clients or smoke tests.
@@ -40,10 +35,6 @@ run records.
 | Live list | `GET /api/processes/live` |
 | Live detail | `GET /api/processes/runs/{runId}` |
 | Live history | `GET /api/processes/runs/{runId}/history` |
-| Durable record list | `GET /api/processes/runs` |
-| Durable analytics | `GET /api/processes/runs/analytics` |
-| Durable summary | `GET /api/processes/runs/{runId}/summary` |
-| Durable graph | `GET /api/processes/runs/{runId}/graph` |
 
 ## Launch
 
@@ -103,7 +94,7 @@ Content-Type: application/json
 }
 ```
 
-## Choose A Read Model
+## Read Process State
 
 - Use `GET /api/processes/live?take=50&windowMinutes=240` for active and recently active
   runs. `take` is clamped to `1..500`; `windowMinutes` is clamped to one minute through
@@ -112,14 +103,9 @@ Content-Type: application/json
 - Use `GET /api/processes/runs/{runId}/history` for a bounded live timeline. `fromUtc`
   defaults to 24 hours before `toUtc`; `toUtc` defaults to now; `take` is clamped to
   `1..1000`.
-- Use `GET /api/processes/runs` for compact, cursor-paged terminal records.
-- Use `/summary` for bounded hard facts and the managed manager narrative.
-- Use `/graph` for a paged step dependency graph.
-- Use `/analytics` for terminal-run aggregates and source watermarks.
-
-Live projection freshness is an operating signal. Durable records instead expose source
-sequences, terminal time, schema version, completeness, and independent facts/narrative
-stage status.
+The current `apis-improvements` contract does not expose the branch-specific durable
+record list, summary, graph, or analytics routes. Do not call those routes unless the
+target host's live OpenAPI document explicitly publishes them.
 
 ## Project-Structure Bridge
 
@@ -134,11 +120,6 @@ the project-structure operation result and process readback.
 ## Operating Rules
 
 - Prefer `launch/check` before `launch`.
-- Treat `factsStatus` and `narrativeStatus` independently; a missing narrative does not
-  mean the durable record or facts are absent.
-- Treat `metrics.endedAtUtc` as business completion time. Do not substitute
-  `recordUpdatedAtUtc`, which is stage-maintenance time.
-- Follow `nextCursor` unchanged; do not derive offsets from it.
 - Preserve restricted-diagnostic and runtime-event privacy boundaries.
 - Do not invent older process authoring, artifact, assignment, escalation, approval, or
   template routes unless the running contract reintroduces them.
@@ -148,10 +129,7 @@ the project-structure operation result and process readback.
 1. Compare `GET /api/processes/contract` with the running OpenAPI document.
 2. Run `launch/check` and inspect readiness before a durable launch.
 3. After dispatch, cancellation, or rework, read live detail and history.
-4. For terminal runs, verify durable list and summary separately.
-5. For analytics, verify the effective time window, facts denominator, and data
-   watermarks.
-6. Confirm expected `400` and `404` error codes from the durable reference.
+4. Confirm expected structured errors for invalid or missing live-run operations.
 
 ## Source Route Appendix
 
@@ -166,11 +144,7 @@ the project-structure operation result and process readback.
 | `POST` | `/api/processes/runs/{runId:guid}/cancel` |
 | `POST` | `/api/processes/runs/{runId:guid}/steps/{stepInstanceId:guid}/rework` |
 | `GET` | `/api/processes/live` |
-| `GET` | `/api/processes/runs` |
-| `GET` | `/api/processes/runs/analytics` |
 | `GET` | `/api/processes/runs/{runId:guid}` |
-| `GET` | `/api/processes/runs/{runId:guid}/summary` |
-| `GET` | `/api/processes/runs/{runId:guid}/graph` |
 | `GET` | `/api/processes/runs/{runId:guid}/history` |
 
 <!-- api-docs-skills-parity:routes:end -->

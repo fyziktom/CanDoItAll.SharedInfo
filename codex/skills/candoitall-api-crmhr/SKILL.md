@@ -26,6 +26,9 @@ Use `/swagger/v1/swagger.json` to inspect the running contract when source and h
 - Use the running host's contract when its version differs from the manifest.
 - Read [references/api-contract.md](references/api-contract.md) for CRM-HR-specific
   request sequencing and DTO guidance.
+- For AI-agent interview attempts, execution evidence, human authorization, and
+  production-readiness projection, use the Agent API skill's
+  [partner contracts](../candoitall-api-agents/references/partner-api-contracts.md).
 
 ## Operating Workflow
 
@@ -59,12 +62,17 @@ Body enums currently use the Web host's numeric encoding; use the reference mapp
 
 ## Recruiting Rules
 
+- Keep the two recruiting boundaries distinct: CRM-HR owns person/candidate
+  applications and workforce conversion; `/api/agent-recruiting` owns AI-agent
+  execution evidence and readiness.
 - Create or resolve the candidate party before saving an application when deterministic identity matters.
 - Use application collection paging and exact scenario names to avoid duplicate applications.
 - Resolve recruiter, hiring manager, interviewer, task owner, target unit, buddy, and mentor ids before commands that reference them.
 - Save the application stage first, then interviews/tasks/support assignments that depend on it.
 - Read the recruitment workspace after mutations; it is the aggregate verification surface for stage history, interviews, lifecycle tasks, support assignments, and conversion state.
 - Do not convert rejected or withdrawn scenarios merely to populate Workforce.
+- CRM-HR candidate conversion does not approve or activate an AI agent. Agent readiness
+  also does not mutate CRM-HR application or workforce state.
 
 ## Idempotent Demonstration Data
 

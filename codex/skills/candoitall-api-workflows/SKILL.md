@@ -1,6 +1,6 @@
 ---
 name: candoitall-api-workflows
-description: Use when managing CanDoItAll workflow settings, definitions, lifecycle, components, test runs, runtime runs, external requests, artifacts, events, executor catalog, and analytics through the HTTP API.
+description: Use when resolving CanDoItAll workflows by stable template or external identity, launching them idempotently, or managing definitions, lifecycle, components, test/runtime runs, requests, artifacts, events, executors, and analytics through the HTTP API.
 ---
 
 # CanDoItAll Workflows API
@@ -23,13 +23,21 @@ Use this skill when a task needs workflow authoring, lifecycle control, runtime 
   before relying on it.
 - When the target host differs, use its live `/openapi/v1.json` or
   `/swagger/v1/swagger.json` document.
+- Read [stable identity and idempotency](references/stable-identity-and-idempotency.md)
+  before resolving partner workflows or implementing retry-safe launch.
+- Read the shared
+  [partner API migration matrix](../_candoitall-api-shared/references/partner-api-migration.md)
+  when removing display-name lookup or a partner-side run-submission ledger.
 
 ## Definition And Authoring Work
 
 - Contract discovery: `GET /api/workflows/contract`.
 - Settings: `GET /api/workflows/settings`, `POST /api/workflows/settings`.
 - Runtime and executor catalogs: `GET /api/workflows/runtime-backends`, `GET /api/workflows/executor-catalog`.
-- Definitions: `GET /api/workflows/definitions`, `GET /api/workflows/definitions/{workflowId}`, `GET /api/workflows/definitions/{workflowId}/versions/{versionId}`, `POST /api/workflows/definitions`, `DELETE /api/workflows/definitions/{workflowId}`.
+- Definitions: `GET /api/workflows/definitions`, stable template/external-key lookup,
+  `GET /api/workflows/definitions/{workflowId}`,
+  `GET /api/workflows/definitions/{workflowId}/versions/{versionId}`,
+  `POST /api/workflows/definitions`, and `DELETE /api/workflows/definitions/{workflowId}`.
 - Lifecycle: `POST /api/workflows/definitions/{workflowId}/publish`, `/suspend`, and `/archive`; pass `expectedVersionId` when coordinating concurrent edits.
 - Import/export: `GET /api/workflows/definitions/{workflowId}/export`, `POST /api/workflows/definitions/import`.
 - Validation: `POST /api/workflows/definitions/{workflowId}/validate` for saved definitions and `POST /api/workflows/validate` for drafts.
@@ -38,7 +46,9 @@ Use this skill when a task needs workflow authoring, lifecycle control, runtime 
 ## Runtime Work
 
 - Test runs: `POST /api/workflows/test-runs`.
-- Start runs: `POST /api/workflows/runs/start` or `POST /api/workflows/definitions/{workflowId}/runs/start`.
+- Start runs: `POST /api/workflows/runs/start` or `POST /api/workflows/definitions/{workflowId}/runs/start`; send `Idempotency-Key` for safe timeout/concurrency retries.
+- Retry evidence: `GET /api/workflows/runs/by-idempotency-key/{key}` returns the
+  original run and safe hashes without exposing the raw key.
 - Observe runs: `GET /api/workflows/runs`, `GET /api/workflows/runs/page`, `GET /api/workflows/runs/{runId}`, `GET /api/workflows/runs/{runId}/detail`.
 - Cancel runs: `POST /api/workflows/runs/{runId}/cancel`.
 - Events, checkpoints, and artifacts: `GET /api/workflows/runs/{runId}/events`, `GET /api/workflows/runs/{runId}/events/page`, `GET /api/workflows/runs/{runId}/checkpoints`, and `GET /api/workflows/runs/{runId}/artifacts`.
@@ -54,10 +64,10 @@ Use this skill when a task needs workflow authoring, lifecycle control, runtime 
 - `versionId`
 - `inputJson`
 - `requestedBackend`
-- `sourceProcessRunId`
-- `sourceProcessAssignmentId`
 
-Use `sourceProcessRunId` and `sourceProcessAssignmentId` when the workflow run is part of a governed process step.
+The public DTO rejects additional properties. It does not accept internal process-run or
+assignment lineage fields; governed process launches must originate through the process
+orchestration boundary that owns that lineage.
 
 `WorkflowRunListApiQuery` fields:
 
@@ -85,6 +95,10 @@ Use `sourceProcessRunId` and `sourceProcessAssignmentId` when the workflow run i
 ## Operating Rules
 
 - Validate a draft or saved definition before publishing or running it.
+- Resolve integrations by template/external identity, require `Resolved`, and pin
+  `runnableVersionId`; never use mutable display names as integration identity.
+- Reuse an idempotency key only for the identical workflow/version/backend/canonical
+  input. Treat `409` as a changed-request conflict.
 - Read `GET /api/workflows/contract` before building clients or smoke tests; use OpenAPI for full schema detail.
 - Prefer explicit lifecycle endpoints over resubmitting a full definition only to change status.
 - Use import/export envelopes for portable workflow definition movement; do not hand-copy internal persistence records.
@@ -99,7 +113,9 @@ Use `sourceProcessRunId` and `sourceProcessAssignmentId` when the workflow run i
 - Executor catalog entries expose `WorkflowExecutorSideEffectDescriptor`. Treat `None`, external read, external write, and idempotent processed-marker contracts as workflow governance data, not UI hints.
 - Email mark-processed executors must distinguish preview from commit with `sideEffectMode`, `dryRun`, `committed`, `idempotencyRecord`, `processedMarker`, and `externalSideEffectReceipt`.
 - Do not retry an external-write executor unless its side-effect contract is idempotent retry safe. Preserve `idempotencyKey` and provider-scoped key prefixes when reviewing workflow output or scheduler replay behavior.
-- For governed process workflow runs, preserve `sourceProcessRunId` and `sourceProcessAssignmentId` so workflow artifacts and side-effect receipts remain tied to the owning process run.
+- For governed process workflow runs, use the process orchestration API so internal
+  lineage remains tied to the owning process run; do not add internal lineage properties
+  to the public workflow start body.
 
 ## Validation
 
@@ -127,6 +143,8 @@ Workflows API route appendix. Generated from Minimal API registrations; refresh 
 | `POST` | `/api/workflows/definitions` |
 | `DELETE` | `/api/workflows/definitions/{workflowId:guid}` |
 | `GET` | `/api/workflows/definitions/{workflowId:guid}` |
+| `GET` | `/api/workflows/definitions/by-external-key/{externalNamespace}/{externalKey}` |
+| `GET` | `/api/workflows/definitions/by-template-key/{templateKey}` |
 | `POST` | `/api/workflows/definitions/{workflowId:guid}/archive` |
 | `GET` | `/api/workflows/definitions/{workflowId:guid}/export` |
 | `POST` | `/api/workflows/definitions/{workflowId:guid}/publish` |
@@ -139,6 +157,7 @@ Workflows API route appendix. Generated from Minimal API registrations; refresh 
 | `POST` | `/api/workflows/external-requests/{requestId:guid}/response` |
 | `GET` | `/api/workflows/provider-options` |
 | `GET` | `/api/workflows/runs` |
+| `GET` | `/api/workflows/runs/by-idempotency-key/{key}` |
 | `GET` | `/api/workflows/runs/{runId:guid}` |
 | `GET` | `/api/workflows/runs/{runId:guid}/artifacts` |
 | `GET` | `/api/workflows/runs/{runId:guid}/artifacts/{artifactId:guid}/content` |

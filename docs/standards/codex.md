@@ -43,6 +43,9 @@ invariants but does not replace the repository documents.
 - Generate the snapshot from a clean product-repository commit and record the commit,
   runtime document paths, environment, SHA-256, OpenAPI version, and path, operation, and
   schema counts.
+- If an authorized implementation must be published before it is committed, record the
+  baseline commit, branch, `workingTreeClean: false`, and a prominent limitation note in
+  both the manifest and support README. Never describe that capture as commit-clean.
 - Capture from the repository's canonical development URL so the OpenAPI `servers` value
   and content hash do not drift with an arbitrary temporary port.
 - Record route-family counts that account for every documented path and operation.

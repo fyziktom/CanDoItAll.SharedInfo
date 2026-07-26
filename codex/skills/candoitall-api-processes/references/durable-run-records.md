@@ -1,5 +1,9 @@
 # Durable Process Run Records API
 
+> Historical branch-specific reference. The current shared snapshot from the
+> `apis-improvements` branch does not publish these four routes. Do not use this
+> reference unless the target host's live OpenAPI contract exposes them.
+
 Use this reference with the shared OpenAPI snapshot for the durable process-run record
 surface added by the `processes-snapshots` branch. It is derived from
 `ProcessRunRecordsApi`, `ProcessRunRecordQueryService`, and the process run-record

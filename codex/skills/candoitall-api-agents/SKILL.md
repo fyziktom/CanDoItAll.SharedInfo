@@ -1,6 +1,6 @@
 ---
 name: candoitall-api-agents
-description: Use when managing CanDoItAll agents, providers, capabilities, chat sessions, execution runs, approvals, artifacts, logs, metrics, and runtime snapshots through the HTTP API.
+description: Use when managing CanDoItAll agents, remote package imports, stable external-key provisioning, portable JSON Schema output, AI-agent recruiting evidence, providers, capabilities, chat, execution runs, approvals, artifacts, logs, metrics, or runtime snapshots through the HTTP API.
 ---
 
 # CanDoItAll Agents API
@@ -22,10 +22,20 @@ Use this skill when a task needs agent catalog, provider, chat, execution, appro
   before relying on it.
 - When the target host differs, use its live `/openapi/v1.json` or
   `/swagger/v1/swagger.json` document.
+- Read [partner API contracts](references/partner-api-contracts.md) before remote package
+  import, external-key provisioning, portable JSON Schema execution, or agent recruiting
+  evidence work.
+- Read the shared
+  [partner API migration matrix](../_candoitall-api-shared/references/partner-api-migration.md)
+  when replacing server-local imports, name-based provisioning, runtime-type output
+  contracts, or partner-owned recruiting linkage.
 
 ## Catalog And Configuration
 
-- Agents: `GET /api/agents`, `GET /api/agents/bootstrap`, `GET /api/agents/{agentId}`, `POST /api/agents`, `DELETE /api/agents/{agentId}`, clone, convert-to-template, export, and import routes.
+- Agents: `GET /api/agents`, `GET /api/agents/bootstrap`, `GET /api/agents/{agentId}`, `POST /api/agents`, `DELETE /api/agents/{agentId}`, clone, convert-to-template, export, legacy server-path import, and remote-safe multipart package import.
+- Stable partner provisioning: GET/PUT/DELETE
+  `/api/agents/by-external-key/{externalNamespace}/{key}` with ETag,
+  `Idempotency-Key`, and `If-Match` handling.
 - Teams: `GET /api/agents/teams`, `GET /api/agents/teams/{teamId}`, `GET /api/agents/teams/{teamId}/editor`, `POST /api/agents/teams`, `PUT /api/agents/teams/{teamId}`, `DELETE /api/agents/teams/{teamId}`, `GET /api/agents/teams/{teamId}/agents`, `POST /api/agents/teams/{teamId}/members`, and `PUT /api/agents/teams/{teamId}/members`.
 - Providers: `/api/agents/providers`, `/providers/{providerId}/editor`, create/delete/test/test-chat, and Ollama modelfile routes.
 - Capabilities: `/api/agents/capabilities`, `/capabilities/{capabilityId}/editor`, create/delete, per-agent capability verification, tool setup tests, MCP setup tests, and access-policy previews.
@@ -37,16 +47,25 @@ Use this skill when a task needs agent catalog, provider, chat, execution, appro
 - Execution runs: `POST /api/agents/execution-runs`, `POST /api/agents/{agentId}/execution-runs`, list routes, run detail routes, and agent-scoped/global evidence routes.
 - Approvals: `/api/agents/execution-runs/{executionRunId}/pending-approvals` and run approval listing.
 - Evidence: execution artifacts, checkpoints, tool receipts, execution log, runtime snapshot, and metrics routes.
+- Recruiting evidence: create/read `/api/agent-recruiting/interviews`, append typed
+  attempts and human reviews, then read `/api/agent-recruiting/candidates/{agentId}/readiness`.
 
 ## Operating Rules
 
 - Prefer agent-scoped routes when you already know `agentId`; use global execution-run routes for cross-agent review.
+- Use `/import-package` for remote clients; never send a server filesystem path or raw
+  provider secret across environments.
+- Resolve partner-managed agents by external key. Do not emulate identity with display
+  names, and do not retry a changed payload under an existing idempotency key.
 - For debugging, query run detail first, then fetch artifacts/checkpoints/receipts/log only for the run under review.
 - Use provider test routes before assigning a provider to production-like agents.
 - Use capability verification before assuming a tool or skill is assigned to an agent.
 - Use setup tests for external tool and MCP capability descriptors before enabling them for agents or process roles. Use access-preview when a process, team, or role policy might deny required skill/tool/MCP capabilities.
 - Provider profiles include `isPrivateProvider`, `modelPrices`, and `tags`. Provider capabilities include structured output, hosted tools, hosted/local MCP, image generation, vision, compaction, native code/file/web search, and approval support.
 - For OpenAI-like Responses models beginning with `gpt-5`, `o1`, `o3`, or `o4`, temperature is omitted and `modelParameters.reasoningEffort` can be set to `none`, `low`, `medium`, `high`, or `extraHigh`.
+- Use the versioned `json-schema` structured-output DTO for portable clients. Treat its
+  validation status and preserved raw output as evidence; do not validate only
+  `responseText`.
 
 ## Canonical Runtime Contracts
 
@@ -64,6 +83,12 @@ Use this skill when a task needs agent catalog, provider, chat, execution, appro
 - `context`
 - `autoApprovePendingToolCalls`
 - `structuredOutput`
+- `inputAttachmentPaths`
+
+`AgentExecutionRunApiRequest` is the global-start shape. It requires `agentId` and
+`prompt`, then uses the same `chatSessionId`, `context`,
+`autoApprovePendingToolCalls`, `structuredOutput`, and `inputAttachmentPaths` fields as
+the scoped request.
 
 `AgentExecutionRunApiQuery` fields:
 
@@ -127,6 +152,9 @@ Agents API route appendix. Generated from Minimal API registrations; refresh fro
 | `GET` | `/api/agents/{agentId:guid}/metrics` |
 | `GET` | `/api/agents/{agentId:guid}/runtime-snapshot` |
 | `GET` | `/api/agents/bootstrap` |
+| `GET` | `/api/agents/by-external-key/{externalNamespace}/{key}` |
+| `PUT` | `/api/agents/by-external-key/{externalNamespace}/{key}` |
+| `DELETE` | `/api/agents/by-external-key/{externalNamespace}/{key}` |
 | `GET` | `/api/agents/capabilities` |
 | `POST` | `/api/agents/capabilities` |
 | `DELETE` | `/api/agents/capabilities/{capabilityId:guid}` |
@@ -142,6 +170,7 @@ Agents API route appendix. Generated from Minimal API registrations; refresh fro
 | `POST` | `/api/agents/execution-runs/{executionRunId:guid}/pending-approvals` |
 | `GET` | `/api/agents/execution-runs/{executionRunId:guid}/tool-receipts` |
 | `POST` | `/api/agents/import` |
+| `POST` | `/api/agents/import-package` |
 | `POST` | `/api/agents/memory` |
 | `DELETE` | `/api/agents/memory/{memoryId:guid}` |
 | `GET` | `/api/agents/providers` |
@@ -162,3 +191,17 @@ Agents API route appendix. Generated from Minimal API registrations; refresh fro
 | `PUT` | `/api/agents/teams/{teamId:guid}/members` |
 
 <!-- api-docs-skills-parity:routes:end -->
+
+## Agent Recruiting Route Appendix
+
+<!-- api-docs-skills-parity:agent-recruiting-routes:start -->
+
+| Method | Route |
+| --- | --- |
+| `GET` | `/api/agent-recruiting/candidates/{agentId:guid}/readiness` |
+| `POST` | `/api/agent-recruiting/interviews` |
+| `GET` | `/api/agent-recruiting/interviews/{interviewId:guid}` |
+| `POST` | `/api/agent-recruiting/interviews/{interviewId:guid}/attempts` |
+| `POST` | `/api/agent-recruiting/interviews/{interviewId:guid}/reviews` |
+
+<!-- api-docs-skills-parity:agent-recruiting-routes:end -->

@@ -74,6 +74,24 @@ if ($document -and $manifest) {
     if ([string]$manifest.source.environment -ne 'Development') {
         Add-Failure "OpenAPI manifest environment must be 'Development'."
     }
+    $workingTreeCleanProperty = $manifest.source.PSObject.Properties['workingTreeClean']
+    if (-not $workingTreeCleanProperty) {
+        Add-Failure 'OpenAPI manifest must record source.workingTreeClean.'
+    }
+    elseif (-not [bool]$manifest.source.workingTreeClean) {
+        if ([string]::IsNullOrWhiteSpace([string]$manifest.source.workingTreeNote)) {
+            Add-Failure (
+                'A non-clean OpenAPI source must include source.workingTreeNote.'
+            )
+        }
+        if ([string]$manifest.source.workingTreeStatusSha256 -notmatch
+            '^[0-9a-fA-F]{64}$') {
+            Add-Failure (
+                'A non-clean OpenAPI source must include a SHA-256 working-tree ' +
+                'status fingerprint.'
+            )
+        }
+    }
     try {
         $generatedAt = [DateTimeOffset]::Parse(
             [string]$manifest.source.generatedUtc,
@@ -368,15 +386,31 @@ if ($document -and $manifest) {
         }
 
         $skillContents = Get-Content -Raw -LiteralPath $skillFile
+        $routeAppendix = [string]$operationSet.routeAppendix
+        if ([string]::IsNullOrWhiteSpace($routeAppendix)) {
+            $routeAppendix = 'api-docs-skills-parity:routes'
+        }
+        if ($routeAppendix -notmatch '^api-docs-skills-parity:[a-z0-9-]+$') {
+            Add-Failure (
+                "Documented operation set '$setName' has invalid route appendix " +
+                "marker '$routeAppendix'."
+            )
+            continue
+        }
+
+        $appendixStartMarker = "<!-- ${routeAppendix}:start -->"
+        $appendixEndMarker = "<!-- ${routeAppendix}:end -->"
         $appendixMatch = [regex]::Match(
             $skillContents,
-            '(?s)<!-- api-docs-skills-parity:routes:start -->' +
+            '(?s)' +
+                [regex]::Escape($appendixStartMarker) +
                 '(?<body>.*?)' +
-                '<!-- api-docs-skills-parity:routes:end -->'
+                [regex]::Escape($appendixEndMarker)
         )
         if (-not $appendixMatch.Success) {
             Add-Failure (
-                "Documented operation set '$setName' skill has no route appendix markers."
+                "Documented operation set '$setName' skill has no '$routeAppendix' " +
+                'route appendix markers.'
             )
             continue
         }
