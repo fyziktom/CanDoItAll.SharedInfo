@@ -13,6 +13,8 @@ param(
 
     [switch]$NoRestore,
 
+    [string]$Version = '',
+
     [switch]$FailOnMissing,
 
     [switch]$StopOnFailure
@@ -40,6 +42,8 @@ function Invoke-IsolatedNuGetAdapter {
         [Parameter(Mandatory)]
         [string]$BuildOutputDirectory,
 
+        [string]$PackageVersion,
+
         [switch]$SkipRestore
     )
 
@@ -49,6 +53,10 @@ function Invoke-IsolatedNuGetAdapter {
     $adapterInvocation = "& $entryPointLiteral -Configuration $configurationLiteral -OutputDirectory $outputDirectoryLiteral"
     if ($SkipRestore) {
         $adapterInvocation += ' -NoRestore'
+    }
+    if (-not [string]::IsNullOrWhiteSpace($PackageVersion)) {
+        $versionLiteral = ConvertTo-PowerShellLiteral $PackageVersion
+        $adapterInvocation += " -Version $versionLiteral"
     }
 
     # A repository adapter is intentionally run in another PowerShell process. In
@@ -178,6 +186,7 @@ foreach ($directory in $directories) {
             Status = 'NotCompatible'
             ExitCode = $null
             OutputDirectory = $null
+            PackageVersion = $Version
             Message = "Missing $entryPointRelativePath"
             AdapterOutput = ''
             AdapterError = ''
@@ -192,6 +201,7 @@ foreach ($directory in $directories) {
             Status = 'Preview'
             ExitCode = $null
             OutputDirectory = $repositoryOutput
+            PackageVersion = $Version
             Message = $entryPoint
             AdapterOutput = ''
             AdapterError = ''
@@ -204,6 +214,7 @@ foreach ($directory in $directories) {
             -EntryPoint $entryPoint `
             -BuildConfiguration $Configuration `
             -BuildOutputDirectory $repositoryOutput `
+            -PackageVersion $Version `
             -SkipRestore:$NoRestore
 
         if ($adapterResult.ExitCode -ne 0) {
@@ -218,6 +229,7 @@ foreach ($directory in $directories) {
                 Status = 'Failed'
                 ExitCode = $adapterResult.ExitCode
                 OutputDirectory = $repositoryOutput
+                PackageVersion = $Version
                 Message = $message
                 AdapterOutput = $adapterResult.StandardOutput
                 AdapterError = $adapterResult.StandardError
@@ -234,6 +246,7 @@ foreach ($directory in $directories) {
             Status = 'Succeeded'
             ExitCode = 0
             OutputDirectory = $repositoryOutput
+            PackageVersion = $Version
             Message = $entryPoint
             AdapterOutput = $adapterResult.StandardOutput
             AdapterError = $adapterResult.StandardError
@@ -246,6 +259,7 @@ foreach ($directory in $directories) {
             Status = 'Failed'
             ExitCode = $null
             OutputDirectory = $repositoryOutput
+            PackageVersion = $Version
             Message = $_.Exception.Message
             AdapterOutput = ''
             AdapterError = $_.Exception.ToString()

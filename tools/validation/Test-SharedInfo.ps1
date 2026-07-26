@@ -47,6 +47,7 @@ $requiredPaths = @(
     'templates/repository/README.md',
     'templates/repository/dotnet/Directory.Build.props',
     'templates/repository/dotnet/Directory.Build.targets',
+    'templates/repository/tools/deployment/nugets/Build-NuGets.ps1',
     'templates/repository/tools/validation/Test-Docker.ps1',
     'codex/skills/apply-candoitall-shared-standards/SKILL.md',
     'codex/skills/apply-candoitall-shared-standards/agents/openai.yaml',
@@ -132,7 +133,25 @@ $sharedContractChecks = @(
         RequiredText = @(
             'https://aicandoitall.com',
             'PackageProjectUrl',
-            'RepositoryUrl'
+            'RepositoryUrl',
+            '-Version',
+            'version override'
+        )
+    },
+    [pscustomobject]@{
+        Path = 'templates/repository/tools/deployment/nugets/Build-NuGets.ps1'
+        RequiredText = @(
+            '[string]$Version',
+            '-p:Version=',
+            'PackageVersion'
+        )
+    },
+    [pscustomobject]@{
+        Path = 'tools/deployment/nugets/Invoke-CanDoItAllNuGetBuilds.ps1'
+        RequiredText = @(
+            '[string]$Version',
+            '-Version',
+            'PackageVersion'
         )
     },
     [pscustomobject]@{
@@ -150,7 +169,8 @@ $sharedContractChecks = @(
         RequiredText = @(
             'https://aicandoitall.com',
             'PackageProjectUrl',
-            'RepositoryUrl'
+            'RepositoryUrl',
+            'accept `-Version`'
         )
     },
     [pscustomobject]@{

@@ -106,9 +106,10 @@ $successAdapter = @'
 param(
     [string]$Configuration,
     [string]$OutputDirectory,
-    [switch]$NoRestore
+    [switch]$NoRestore,
+    [string]$Version
 )
-Write-Output "success|$Configuration|$OutputDirectory|$($NoRestore.IsPresent)"
+Write-Output "success|$Configuration|$OutputDirectory|$($NoRestore.IsPresent)|$Version"
 '@
 
 $throwAdapter = @'
@@ -116,7 +117,8 @@ $throwAdapter = @'
 param(
     [string]$Configuration,
     [string]$OutputDirectory,
-    [switch]$NoRestore
+    [switch]$NoRestore,
+    [string]$Version
 )
 Write-Output 'before-throw'
 throw 'fake terminating failure'
@@ -127,7 +129,8 @@ $exitAdapter = @'
 param(
     [string]$Configuration,
     [string]$OutputDirectory,
-    [switch]$NoRestore
+    [switch]$NoRestore,
+    [string]$Version
 )
 Write-Output 'before-exit'
 exit 17
@@ -146,6 +149,7 @@ try {
         ManifestPath = $aggregate.ManifestPath
         OutputRoot = $aggregate.OutputRoot
         NoRestore = $true
+        Version = '1.2.3-preview.4'
     }
 
     Assert-True ($null -ne $aggregateRun.Error) 'aggregate failures should terminate after emitting results'
@@ -159,7 +163,12 @@ try {
     $exit = @($aggregateRun.Results | Where-Object Repository -eq 'CanDoItAll.03-Exit')
     Assert-True ($success.Count -eq 1 -and $success[0].Status -eq 'Succeeded') 'success should be reported'
     Assert-True ($success[0].ExitCode -eq 0) 'success should have exit code zero'
-    Assert-True ($success[0].AdapterOutput -match 'success\|Release\|.*\|True') 'adapter output and parameters should be captured'
+    Assert-True (
+        $success[0].AdapterOutput -match 'success\|Release\|.*\|True\|1\.2\.3-preview\.4'
+    ) 'adapter output and the version override should be captured'
+    Assert-True (
+        $success[0].PackageVersion -eq '1.2.3-preview.4'
+    ) 'the orchestrator result should report the requested package version'
     Assert-True ($throw.Count -eq 1 -and $throw[0].Status -eq 'Failed') 'a terminating error should be reported'
     Assert-True ($throw[0].ExitCode -eq 1) 'a terminating error should produce exit code one'
     Assert-True ($throw[0].AdapterOutput -match 'before-throw') 'output before a terminating error should be retained'
@@ -226,9 +235,17 @@ try {
     Copy-Item -LiteralPath $adapterTemplate -Destination $templateEntryPoint
     Set-Content -LiteralPath (Join-Path $templateRepository 'CanDoItAll.Template.sln') -Value '' -Encoding UTF8
 
-    $templateResult = @(& $templateEntryPoint -OutputDirectory $templateOutput -WhatIf)
+    $templateResult = @(
+        & $templateEntryPoint `
+            -OutputDirectory $templateOutput `
+            -Version '2.3.4-preview.5' `
+            -WhatIf
+    )
     Assert-True ($templateResult.Count -eq 1) 'the template should emit one preview result'
     Assert-True ($templateResult[0].Status -eq 'Preview') 'the template should honor SupportsShouldProcess'
+    Assert-True (
+        $templateResult[0].PackageVersion -eq '2.3.4-preview.5'
+    ) 'the template preview should report the requested package version'
     Assert-True (-not (Test-Path -LiteralPath $templateOutput)) 'the template WhatIf should not create output'
 
     [pscustomobject]@{

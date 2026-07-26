@@ -28,6 +28,8 @@ Apply these even before loading a task-specific document:
   `PackageProjectUrl`; keep `RepositoryUrl` pointed at the canonical source repository.
 - NuGet packages embed the repository `LICENSE` through `PackageLicenseFile`; do not
   mislabel the added website-link condition as the unmodified SPDX `MIT` expression.
+- Repository NuGet build adapters accept `-Version` and forward it as the effective
+  package version without requiring committed project-file edits.
 - Select NuGet badges from the one or two packages users are most expected to install.
   Prefer user-facing entry packages over Abstractions, Core, or provider packages.
 - When a shared contract changes, update its standard, copy-ready template, tooling, and

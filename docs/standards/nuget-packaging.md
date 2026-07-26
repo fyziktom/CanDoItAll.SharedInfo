@@ -15,11 +15,14 @@ The entry point must accept:
 | `-Configuration` | Build configuration; default `Release` |
 | `-OutputDirectory` | Absolute or repository-relative package destination |
 | `-NoRestore` | Skip restore only when the caller guarantees it already happened |
+| `-Version` | Optional NuGet package version override without editing committed project files |
 
 It must fail with a non-zero exit when restore, build, tests required for packaging, or
-packing fails. It must not publish packages. It must support `-WhatIf` and make one
-`ShouldProcess` decision before creating output directories or starting restore, build,
-test, or pack commands.
+packing fails. When `-Version` is supplied, the adapter must forward the override to every
+restore, build, test, and pack operation that it runs, and it must not silently produce a
+package with the committed default version. It must not publish packages. It must support
+`-WhatIf` and make one `ShouldProcess` decision before creating output directories or
+starting restore, build, test, or pack commands.
 
 Start from
 [`templates/repository/tools/deployment/nugets/Build-NuGets.ps1`](../../templates/repository/tools/deployment/nugets/Build-NuGets.ps1)
@@ -86,6 +89,8 @@ standard error are returned in `AdapterOutput` and `AdapterError`.
 
 Missing entry points are reported as `NotCompatible`; they are not silently replaced by
 guesses about legacy scripts. Use `-FailOnMissing` during a future standards-adoption gate.
+The orchestrator accepts `-Version` and forwards it to every selected compatible adapter,
+so coordinated proof or release builds do not require source edits.
 
 ## Artifact Rules
 
