@@ -45,6 +45,7 @@ $requiredPaths = @(
     'templates/repository/CONTRIBUTING.md',
     'templates/repository/LICENSE',
     'templates/repository/README.md',
+    'templates/repository/docs/package-icon.png',
     'templates/repository/dotnet/Directory.Build.props',
     'templates/repository/dotnet/Directory.Build.targets',
     'templates/repository/tools/deployment/nugets/Build-NuGets.ps1',
@@ -135,7 +136,11 @@ $sharedContractChecks = @(
             'PackageProjectUrl',
             'RepositoryUrl',
             '-Version',
-            'version override'
+            'version override',
+            'PackageIcon',
+            'package-icon.png',
+            'stacked logo',
+            'PackageIconUrl'
         )
     },
     [pscustomobject]@{
@@ -245,7 +250,9 @@ $sharedContractChecks = @(
         RequiredText = @(
             'PackageLicenseFile',
             'PackageLicenseExpression',
-            'LICENSE'
+            'LICENSE',
+            'PackageIcon',
+            'package-icon.png'
         )
     },
     [pscustomobject]@{
@@ -258,6 +265,7 @@ $sharedContractChecks = @(
             'user-facing package',
             'website-link requirement',
             'PackageLicenseFile',
+            'package-icon.png',
             'Code contributions are accepted only from partners explicitly approved',
             'Unsolicited pull requests are not accepted',
             'fyziktom'
@@ -267,6 +275,7 @@ $sharedContractChecks = @(
         Path = 'codex/skills/apply-candoitall-shared-standards/SKILL.md'
         RequiredText = @(
             'selected-partner contribution policy',
+            'package-icon contract',
             'READMEs',
             'CONTRIBUTING.md'
         )
@@ -286,6 +295,7 @@ $sharedContractChecks = @(
             'website-link requirement',
             'selected-partner contribution',
             'README badge contract',
+            'package-icon',
             'NuGet'
         )
     }
@@ -304,6 +314,59 @@ foreach ($sharedContractCheck in $sharedContractChecks) {
                 "$($sharedContractCheck.Path)."
             )
         }
+    }
+}
+
+$packageIconPath = Join-Path (
+    $repositoryRoot
+) 'templates\repository\docs\package-icon.png'
+if (Test-Path -LiteralPath $packageIconPath -PathType Leaf) {
+    try {
+        $packageIconBytes = [System.IO.File]::ReadAllBytes($packageIconPath)
+        $packageIconHash = (Get-FileHash -LiteralPath $packageIconPath -Algorithm SHA256).Hash
+        $expectedPackageIconHash = (
+            '02B338424A63193ECE3E25BC7E15A1E8F382E3E64C6DF80D24279C0C0FDA130E'
+        )
+        if ($packageIconHash -ne $expectedPackageIconHash) {
+            Add-Failure 'The package-icon template is not the approved corporate favicon.'
+        }
+        if ($packageIconBytes.Length -gt 1MB) {
+            Add-Failure 'The package-icon template exceeds the NuGet 1 MB limit.'
+        }
+        if ($packageIconBytes.Length -lt 24) {
+            Add-Failure 'The package-icon template is too short to be a valid PNG.'
+        }
+        else {
+            $pngSignature = (
+                $packageIconBytes[0..7] |
+                    ForEach-Object { $_.ToString('X2') }
+            ) -join ''
+            if ($pngSignature -ne '89504E470D0A1A0A') {
+                Add-Failure 'The package-icon template is not a PNG file.'
+            }
+
+            $packageIconWidth = (
+                ([int]$packageIconBytes[16] -shl 24) -bor
+                ([int]$packageIconBytes[17] -shl 16) -bor
+                ([int]$packageIconBytes[18] -shl 8) -bor
+                [int]$packageIconBytes[19]
+            )
+            $packageIconHeight = (
+                ([int]$packageIconBytes[20] -shl 24) -bor
+                ([int]$packageIconBytes[21] -shl 16) -bor
+                ([int]$packageIconBytes[22] -shl 8) -bor
+                [int]$packageIconBytes[23]
+            )
+            if ($packageIconWidth -ne 256 -or $packageIconHeight -ne 256) {
+                Add-Failure (
+                    'The package-icon template must be the 256x256 corporate favicon; ' +
+                    "found ${packageIconWidth}x${packageIconHeight}."
+                )
+            }
+        }
+    }
+    catch {
+        Add-Failure "Package-icon template validation failed: $($_.Exception.Message)"
     }
 }
 

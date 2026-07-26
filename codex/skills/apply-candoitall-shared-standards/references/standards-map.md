@@ -30,6 +30,8 @@ Apply these even before loading a task-specific document:
   mislabel the added website-link condition as the unmodified SPDX `MIT` expression.
 - Repository NuGet build adapters accept `-Version` and forward it as the effective
   package version without requiring committed project-file edits.
+- NuGet packages that include an icon default to the copy-ready square corporate favicon
+  as `package-icon.png`; reserve stacked logos and wordmarks for larger surfaces.
 - Select NuGet badges from the one or two packages users are most expected to install.
   Prefer user-facing entry packages over Abstractions, Core, or provider packages.
 - When a shared contract changes, update its standard, copy-ready template, tooling, and

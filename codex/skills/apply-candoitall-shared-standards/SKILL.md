@@ -57,9 +57,9 @@ exception explicitly.
 - Put cross-repository coordination in `SharedInfo/tools/<area>`.
 - Keep the selected-partner contribution policy in SharedInfo and apply it to repository
   READMEs and `CONTRIBUTING.md` files without weakening it.
-- Keep the family license text, badge contract, and NuGet license-file rules in
-  SharedInfo. Adapt only the documented repository fields; keep the shared
-  `https://aicandoitall.com` license link fixed.
+- Keep the family license text, badge contract, NuGet license-file rules, and NuGet
+  package-icon contract in SharedInfo. Adapt only the documented repository fields; keep
+  the shared `https://aicandoitall.com` license link fixed.
 - Keep product code, product configuration, repository-specific entry points, data,
   secrets, task bundles, proof, logs, and generated output in their owning repository.
 - Copy and adapt templates; do not make product repositories depend on filesystem links

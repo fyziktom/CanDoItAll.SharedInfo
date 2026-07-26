@@ -54,6 +54,28 @@ website from the source repository:
 - Inspect at least one packed `.nuspec` during adoption to prove that `projectUrl` and
   repository metadata are distinct and correct.
 
+## Package Icon
+
+When a public CanDoItAll NuGet package includes an icon, use the approved square corporate
+favicon at
+[`templates/repository/docs/package-icon.png`](../../templates/repository/docs/package-icon.png)
+by default. Copy it to `docs/package-icon.png` in the adopting repository and use the
+copy-ready defaults in
+[`templates/repository/dotnet/Directory.Build.targets`](../../templates/repository/dotnet/Directory.Build.targets).
+
+- Declare `PackageIcon` as `package-icon.png` and embed the file at the package root.
+- Use the 256x256 PNG corporate favicon for package and other compact square UI surfaces.
+  It stays legible when clients scale it down and remains well below NuGet's 1 MB limit.
+  NuGet recommends 128x128; retaining the official 256x256 master is a deliberate
+  high-quality downsampling choice within the supported PNG and size contract.
+- Do not use the stacked logo or another wordmark as a package icon; reserve wordmarks for
+  larger README, website, presentation, and product surfaces where the text stays legible.
+- Do not use the deprecated `PackageIconUrl` metadata.
+- A deliberately product-specific icon may replace the corporate favicon when its owner
+  maintains an equally polished square PNG and documents the branding decision.
+- Validate the packed `.nuspec` `<icon>` value and prove the package contains the expected
+  icon bytes.
+
 ## Package License
 
 Public CanDoItAll packages use the repository-owned
