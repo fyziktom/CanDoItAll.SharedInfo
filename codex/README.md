@@ -75,9 +75,11 @@ The Components plugin requires sibling checkouts named `CanDoItAll.Mcp` and
 
 ## Provenance
 
-- Development, bundle, API, Components, and C# architecture assets were mirrored from
-  `CanDoItAll/codex`.
+- Development, bundle, API, Components, and C# architecture assets were initially
+  mirrored from `CanDoItAll/codex`; the obsolete skill and architecture mirrors were
+  removed from that product repository after consolidation.
 - Agent profiles were mirrored from `CanDoItAll/.codex/agents`.
 - CFO skills were mirrored from the reusable pack in `CanDoItAll.Economy`.
 
-The source repositories were not edited during consolidation.
+CanDoItAll app-agent templates and execution evidence remain product-owned. The
+CanDoItAll.Economy source remains unchanged pending a separately approved cleanup.

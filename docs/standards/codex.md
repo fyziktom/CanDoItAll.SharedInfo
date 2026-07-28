@@ -75,5 +75,8 @@ read-only and must not claim to be read-only while allowing edits.
 ## Migration Provenance
 
 The initial development/architecture/API skill set and Components plugin were mirrored
-from `CanDoItAll`. The CFO skill set was mirrored from `CanDoItAll.Economy`. Those source
-repositories remain unchanged until a separate cleanup phase is approved.
+from `CanDoItAll`. Their obsolete source mirrors under `CanDoItAll/codex` and
+`CanDoItAll/plugins` were removed after the shared packages were validated; product-owned
+runtime templates and execution evidence remain in `CanDoItAll`. The CFO skill set was
+mirrored from `CanDoItAll.Economy`, which remains unchanged until a separate cleanup phase
+is approved.
