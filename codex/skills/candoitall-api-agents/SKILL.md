@@ -1,6 +1,6 @@
 ---
 name: candoitall-api-agents
-description: Use when managing CanDoItAll agents, remote package imports, stable external-key provisioning, portable JSON Schema output, AI-agent recruiting evidence, providers, capabilities, chat, execution runs, approvals, artifacts, logs, metrics, or runtime snapshots through the HTTP API.
+description: Use when managing CanDoItAll agents, SSE activity, provider completions, attachments, approvals, execution evidence, remote imports, stable external-key provisioning, portable JSON Schema output, or recruiting through the HTTP API.
 ---
 
 # CanDoItAll Agents API
@@ -37,15 +37,16 @@ Use this skill when a task needs agent catalog, provider, chat, execution, appro
   `/api/agents/by-external-key/{externalNamespace}/{key}` with ETag,
   `Idempotency-Key`, and `If-Match` handling.
 - Teams: `GET /api/agents/teams`, `GET /api/agents/teams/{teamId}`, `GET /api/agents/teams/{teamId}/editor`, `POST /api/agents/teams`, `PUT /api/agents/teams/{teamId}`, `DELETE /api/agents/teams/{teamId}`, `GET /api/agents/teams/{teamId}/agents`, `POST /api/agents/teams/{teamId}/members`, and `PUT /api/agents/teams/{teamId}/members`.
-- Providers: `/api/agents/providers`, `/providers/{providerId}/editor`, create/delete/test/test-chat, and Ollama modelfile routes.
+- Providers: `/api/agents/providers`, `/providers/{providerId}/editor`, create/delete/test/test-chat, SSE chat completion, and Ollama modelfile routes.
 - Capabilities: `/api/agents/capabilities`, `/capabilities/{capabilityId}/editor`, create/delete, per-agent capability verification, tool setup tests, MCP setup tests, and access-policy previews.
 - Memory: `/api/agents/{agentId}/memory`, `POST /api/agents/memory`, and delete memory routes.
 
 ## Chat And Execution
 
-- Chat sessions: `/api/agents/{agentId}/chat-sessions`, rename, chat workspace, and `/chat`.
-- Execution runs: `POST /api/agents/execution-runs`, `POST /api/agents/{agentId}/execution-runs`, list routes, run detail routes, and agent-scoped/global evidence routes.
-- Approvals: `/api/agents/execution-runs/{executionRunId}/pending-approvals` and run approval listing.
+- Chat sessions: `/api/agents/{agentId}/chat-sessions`, rename, chat workspace, `/chat`, and `/chat/stream`.
+- Execution runs: blocking JSON and same-request SSE start routes at `/api/agents/execution-runs` and `/api/agents/{agentId}/execution-runs`, plus list, detail, and agent-scoped/global evidence routes.
+- Approvals: global approval listing and blocking/SSE response commands under `/api/agents/execution-runs/{executionRunId}`.
+- Attachments: upload a bounded image with `POST /api/agents/attachments/images`, then pass the returned `relativePath` in `attachmentPaths` or `inputAttachmentPaths`.
 - Evidence: execution artifacts, checkpoints, tool receipts, execution log, runtime snapshot, and metrics routes.
 - Recruiting evidence: create/read `/api/agent-recruiting/interviews`, list a
   candidate's interviews through
@@ -53,19 +54,88 @@ Use this skill when a task needs agent catalog, provider, chat, execution, appro
   attempts and human reviews, then read
   `/api/agent-recruiting/candidates/{agentId}/readiness`.
 
-### Activity Correlation Boundary
+### Agent SSE And Activity Correlation
 
-New execution records can expose `initialActivityOperationId`. It is the durable
-correlation identifier for the first typed in-process activity operation associated
-with that run. It is not an idempotency key and does not authorize or expose the
-activity stream.
+Prefer a same-request SSE command when one HTTP request can own both the command and
+its live response:
 
-The current HTTP contract has no agent-activity polling or SSE endpoint. The typed
-activity stream is process-local and is consumed by the Blazor surfaces. External
-clients must use execution-run detail, approvals, artifacts, checkpoints, receipts,
-logs, runtime snapshots, and metrics for durable readback. Do not invent an
-`/activity`, `/events`, or SSE route from the presence of
-`initialActivityOperationId`.
+- `POST /api/agents/{agentId}/chat/stream`
+- `POST /api/agents/execution-runs/stream`
+- `POST /api/agents/{agentId}/execution-runs/stream`
+- `POST /api/agents/execution-runs/{executionRunId}/pending-approvals/stream`
+
+These POST routes start at the beginning of their newly admitted activity operation.
+They emit numbered canonical activity frames, an id-less safe
+`agent.approval.required` frame when approvals remain, and an id-less
+`agent.command.completed` or `agent.command.failed` frame. An id-less command frame
+must not advance the canonical activity replay cursor.
+
+For command/subscriber separation, send a caller-generated UUID as
+`activityOperationId` on the corresponding blocking JSON chat, run-start, or approval
+command. Start that request without waiting for its response body, then subscribe to:
+
+`GET /api/agents/execution-operations/{operationId}/events/stream`
+
+The operation GET returns only the canonical activity stream. A transient `404` can
+mean the command has not admitted the supplied operation yet; an unknown operation
+also returns `404`. Do not silently replace the operation id. Duplicate, previously
+evicted, and capacity-exhausted operation admission return `409`, `410`, and `503`
+respectively.
+
+Every valid agent chat, run, or approval command, whether blocking JSON or
+same-request SSE, exposes the actual operation id in the
+`X-CanDoItAll-Agent-Operation-Id` response header. This is true whether the caller
+supplied the id or the server generated it. A caller that needs a concurrent
+cross-request subscriber must still generate the id before starting the command.
+
+Only the operation GET supports replay. Send either a non-negative
+`Last-Event-ID` header or equivalent `after` query parameter; if both are present they
+must be equal. An invalid or conflicting cursor returns HTTP `400` with
+`sse.cursor-invalid`. `stream.gap` reports `requestedFromInclusive` and
+`availableFromInclusive`; `stream.evicted` reports that the operation partition is no
+longer available. In either case, query durable execution-run detail and evidence
+routes before relying on later notifications.
+
+Agent activity retention and operation identity are bounded, host-local, and scoped
+to the current database profile, profile generation, and workspace. A profile switch
+cancels active readers. Reconnect against the active profile and rebuild state from
+durable run APIs; do not carry an operation cursor across a profile switch or process
+restart.
+
+An activity operation id is correlation, not an idempotency key or authorization
+credential. API authorization still gates every route.
+
+This is local/basic fan-out, not a high-volume event broker. Use one external
+subscriber per operation where practical, and do not route token-rate or
+thousands-of-subscriber workloads through the in-process activity stream.
+
+`POST /api/agents/providers/{providerId}/chat-completions/stream` resolves the
+provider profile before starting SSE. An unknown profile returns normal HTTP `404`
+with `providers.not-found` and no SSE frames. For a known profile it emits accepted,
+starts the provider invocation, emits running only after that invocation starts, and
+then emits completed or failed. A synchronous start failure therefore emits accepted
+and failed without running. The completed event contains the full response. The
+provider driver contract does not currently expose token deltas, so do not interpret
+this route as token streaming. This is a same-request status stream, not a separately
+resumable operation stream.
+
+### Safe Approvals And Attachments
+
+`agent.approval.required` contains only `approvalId`, `toolName`, `toolKind`, and
+`requestedAtUtc` for each pending approval. It deliberately omits tool arguments and
+persisted approval details. Read the scoped or global run approval endpoint when the
+authorized client needs the canonical record.
+
+The current basic approval command applies one `approved` decision to the run's
+current pending approval set. Read the approval list immediately before posting the
+decision; do not assume an older SSE summary is still complete.
+
+Upload attachments as multipart form field `file` to
+`POST /api/agents/attachments/images`. The staging boundary accepts PNG, JPEG, GIF,
+or WebP images up to 10 MB, requires a supplied content type to agree with the file
+extension, normalizes the file name, and stores the file under the managed workspace.
+Use only the returned `relativePath` in `attachmentPaths` or
+`inputAttachmentPaths`; never send or persist a server absolute path.
 
 ## Operating Rules
 
@@ -75,8 +145,10 @@ logs, runtime snapshots, and metrics for durable readback. Do not invent an
 - Resolve partner-managed agents by external key. Do not emulate identity with display
   names, and do not retry a changed payload under an existing idempotency key.
 - For debugging, query run detail first, then fetch artifacts/checkpoints/receipts/log only for the run under review.
-- Treat `initialActivityOperationId` as correlation metadata only. Continue to use
-  `executionRunId` for durable run lookups.
+- Treat `activityOperationId` and `initialActivityOperationId` as correlation metadata
+  only. Continue to use `executionRunId` for durable run lookups.
+- SSE approval summaries omit raw tool arguments. Read the run approval endpoint when
+  the full persisted approval record is required.
 - Use provider test routes before assigning a provider to production-like agents.
 - Use capability verification before assuming a tool or skill is assigned to an agent.
 - Use setup tests for external tool and MCP capability descriptors before enabling them for agents or process roles. Use access-preview when a process, team, or role policy might deny required skill/tool/MCP capabilities.
@@ -95,6 +167,14 @@ logs, runtime snapshots, and metrics for durable readback. Do not invent an
 
 ## Execution DTOs
 
+`AgentChatApiRequest` accepts `chatSessionId`, `prompt`, `attachmentPaths`, and the
+optional caller-generated `activityOperationId`.
+
+`PendingApprovalApiRequest` accepts `approved`,
+`autoApprovePendingToolCalls`, and an optional continuation
+`activityOperationId`. The current basic command applies the decision to the run's
+pending approval set; read the approval list immediately before deciding it.
+
 `AgentExecutionRunStartApiRequest` fields:
 
 - `prompt`
@@ -103,11 +183,12 @@ logs, runtime snapshots, and metrics for durable readback. Do not invent an
 - `autoApprovePendingToolCalls`
 - `structuredOutput`
 - `inputAttachmentPaths`
+- `activityOperationId`
 
 `AgentExecutionRunApiRequest` is the global-start shape. It requires `agentId` and
 `prompt`, then uses the same `chatSessionId`, `context`,
-`autoApprovePendingToolCalls`, `structuredOutput`, and `inputAttachmentPaths` fields as
-the scoped request.
+`autoApprovePendingToolCalls`, `structuredOutput`, `inputAttachmentPaths`, and
+`activityOperationId` fields as the scoped request.
 
 `AgentExecutionRunApiQuery` fields:
 
@@ -140,7 +221,9 @@ the scoped request.
 
 <!-- api-docs-skills-parity:routes:start -->
 
-Agents API route appendix. Generated from Minimal API registrations; refresh from `src/App/CanDoItAll.Web/Api/AgentsApi.cs` when routes change.
+Agents API route appendix. Generated from Minimal API registrations; refresh from
+`AgentsApi.cs`, `AgentEventsApi.cs`, `AgentProviderEventsApi.cs`, and
+`AgentAttachmentsApi.cs` when routes change.
 
 | Method | Route |
 | --- | --- |
@@ -154,6 +237,7 @@ Agents API route appendix. Generated from Minimal API registrations; refresh fro
 | `GET` | `/api/agents/{agentId:guid}/execution-log` |
 | `GET` | `/api/agents/{agentId:guid}/execution-runs` |
 | `POST` | `/api/agents/{agentId:guid}/execution-runs` |
+| `POST` | `/api/agents/{agentId:guid}/execution-runs/stream` |
 | `GET` | `/api/agents/{agentId:guid}/execution-runs/{executionRunId:guid}` |
 | `GET` | `/api/agents/{agentId:guid}/execution-runs/{executionRunId:guid}/approvals` |
 | `GET` | `/api/agents/{agentId:guid}/execution-runs/{executionRunId:guid}/artifacts` |
@@ -163,6 +247,7 @@ Agents API route appendix. Generated from Minimal API registrations; refresh fro
 | `GET` | `/api/agents/{agentId:guid}/execution-runs/{executionRunId:guid}/tool-receipts` |
 | `GET` | `/api/agents/{agentId:guid}/export` |
 | `POST` | `/api/agents/{agentId:guid}/chat` |
+| `POST` | `/api/agents/{agentId:guid}/chat/stream` |
 | `GET` | `/api/agents/{agentId:guid}/chat-sessions` |
 | `POST` | `/api/agents/{agentId:guid}/chat-sessions` |
 | `POST` | `/api/agents/{agentId:guid}/chat-sessions/{chatSessionId:guid}/rename` |
@@ -181,12 +266,17 @@ Agents API route appendix. Generated from Minimal API registrations; refresh fro
 | `POST` | `/api/agents/capabilities/access-preview` |
 | `POST` | `/api/agents/capabilities/setup-tests/mcp` |
 | `POST` | `/api/agents/capabilities/setup-tests/tool` |
+| `POST` | `/api/agents/attachments/images` |
+| `GET` | `/api/agents/execution-operations/{operationId:guid}/events/stream` |
 | `GET` | `/api/agents/execution-runs` |
 | `POST` | `/api/agents/execution-runs` |
+| `POST` | `/api/agents/execution-runs/stream` |
 | `GET` | `/api/agents/execution-runs/{executionRunId:guid}` |
+| `GET` | `/api/agents/execution-runs/{executionRunId:guid}/approvals` |
 | `GET` | `/api/agents/execution-runs/{executionRunId:guid}/artifacts` |
 | `GET` | `/api/agents/execution-runs/{executionRunId:guid}/checkpoints` |
 | `POST` | `/api/agents/execution-runs/{executionRunId:guid}/pending-approvals` |
+| `POST` | `/api/agents/execution-runs/{executionRunId:guid}/pending-approvals/stream` |
 | `GET` | `/api/agents/execution-runs/{executionRunId:guid}/tool-receipts` |
 | `POST` | `/api/agents/import` |
 | `POST` | `/api/agents/import-package` |
@@ -195,6 +285,7 @@ Agents API route appendix. Generated from Minimal API registrations; refresh fro
 | `GET` | `/api/agents/providers` |
 | `POST` | `/api/agents/providers` |
 | `DELETE` | `/api/agents/providers/{providerId:guid}` |
+| `POST` | `/api/agents/providers/{providerId:guid}/chat-completions/stream` |
 | `GET` | `/api/agents/providers/{providerId:guid}/editor` |
 | `POST` | `/api/agents/providers/{providerId:guid}/ollama-modelfile` |
 | `POST` | `/api/agents/providers/{providerId:guid}/test` |

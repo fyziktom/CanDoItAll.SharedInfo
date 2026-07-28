@@ -93,11 +93,20 @@ if ($document -and $manifest) {
         }
     }
     try {
-        $generatedAt = [DateTimeOffset]::Parse(
-            [string]$manifest.source.generatedUtc,
-            [Globalization.CultureInfo]::InvariantCulture,
-            [Globalization.DateTimeStyles]::RoundtripKind
-        )
+        $generatedUtc = $manifest.source.generatedUtc
+        $generatedAt = if ($generatedUtc -is [DateTimeOffset]) {
+            [DateTimeOffset]$generatedUtc
+        }
+        elseif ($generatedUtc -is [DateTime]) {
+            [DateTimeOffset]::new([DateTime]$generatedUtc)
+        }
+        else {
+            [DateTimeOffset]::Parse(
+                [string]$generatedUtc,
+                [Globalization.CultureInfo]::InvariantCulture,
+                [Globalization.DateTimeStyles]::RoundtripKind
+            )
+        }
         if ($generatedAt.Offset -ne [TimeSpan]::Zero) {
             Add-Failure 'OpenAPI manifest generatedUtc must use UTC.'
         }

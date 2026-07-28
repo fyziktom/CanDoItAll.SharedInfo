@@ -1,6 +1,6 @@
 ---
 name: candoitall-api-workflows
-description: Use when resolving CanDoItAll workflows by stable template or external identity, launching them idempotently, or managing definitions, lifecycle, components, test/runtime runs, requests, artifacts, events, executors, and analytics through the HTTP API.
+description: Use when resolving CanDoItAll workflows by stable identity, launching idempotently, or managing definitions, lifecycle, runtime runs, SSE signals, requests, artifacts, events, executors, and analytics through the HTTP API.
 ---
 
 # CanDoItAll Workflows API
@@ -52,9 +52,45 @@ Use this skill when a task needs workflow authoring, lifecycle control, runtime 
 - Observe runs: `GET /api/workflows/runs`, `GET /api/workflows/runs/page`, `GET /api/workflows/runs/{runId}`, `GET /api/workflows/runs/{runId}/detail`.
 - Cancel runs: `POST /api/workflows/runs/{runId}/cancel`.
 - Events, checkpoints, and artifacts: `GET /api/workflows/runs/{runId}/events`, `GET /api/workflows/runs/{runId}/events/page`, `GET /api/workflows/runs/{runId}/checkpoints`, and `GET /api/workflows/runs/{runId}/artifacts`.
+- Live lifecycle signals: `GET /api/workflows/events/stream` for all runs or `GET /api/workflows/runs/{runId}/events/stream` for one run.
 - Artifact content: `GET /api/workflows/runs/{runId}/artifacts/{artifactId}/content`.
 - Human or external input: `GET /api/workflows/runs/{runId}/pending-requests`, `POST /api/workflows/external-requests/{requestId}/response`.
 - Analytics: `GET /api/workflows/analytics`.
+
+### Workflow SSE Contract
+
+Use `GET /api/workflows/events/stream` for fleet-level workflow signals or
+`GET /api/workflows/runs/{runId}/events/stream` for one exact run. Both emit
+`workflow.run.changed` with a signal-only envelope containing `eventId`, `runId`,
+`category`, `kind`, optional `nodeId`, `occurredAtUtc`, `isTerminal`, and
+`needsAttention`. Message and payload JSON remain available only from the canonical
+run, event, artifact, checkpoint, and pending-request query routes.
+
+Resume with either a non-negative `Last-Event-ID` header or equivalent `after` query
+parameter. If both are supplied, they must be equal. The SSE `id` is a host-local API
+cursor, not the workflow `eventId` and not a durable event-store position. An invalid
+or conflicting cursor returns HTTP `400` with `sse.cursor-invalid`.
+
+When the cursor falls outside the bounded replay window or is ahead of the current
+host stream, the server emits `stream.gap`. Its payload includes `reason`,
+`requestedAfterSequence`, `firstAvailableSequence`, `lastAvailableSequence`, and
+`resumeAfterSequence`. The connection continues from `resumeAfterSequence` and sends
+any retained matching notifications, but the client must first reload canonical run
+detail/events because the missing notifications cannot be reconstructed from SSE.
+
+Workflow SSE order is publication-arrival order at this host, not canonical event-store
+order. Use `eventId` and persisted workflow events when ordering or completeness
+matters.
+
+The stream is pinned to the active database profile and runtime generation. A profile
+switch cancels existing subscriptions. Reconnect against the new profile and rebuild
+state from durable APIs; do not reuse an SSE cursor across a profile switch or process
+restart.
+
+This implementation is intentionally limited to local/basic fan-out. Global and
+run-specific subscriptions share one profile-global replay buffer and wake-up path,
+and run filters are applied while reading bounded batches. It is not a claim of
+token-rate or thousands-of-subscribers scalability.
 
 ## Runtime DTOs
 
@@ -105,6 +141,10 @@ orchestration boundary that owns that lineage.
 - Search and version reusable instructions through the Prompt Gallery API. Treat workflow component endpoints as execution-binding compatibility endpoints, not a second prompt library.
 - Use `expectedVersionId` for lifecycle commands when another agent or UI may be editing the same definition.
 - For long or active runs, prefer paged run and event routes before fetching full run detail.
+- Treat workflow SSE as a bounded, host-local signal stream. On `stream.gap`, query
+  persisted run detail/events before trusting subsequent notifications.
+- SSE omits workflow message and payload JSON. Use the existing detail, event,
+  artifact, checkpoint, and pending-request routes for canonical data.
 - After responding to a pending external request, read back `/runs/{runId}/detail` and `/events` to confirm the state transition.
 - Treat `DurableTask` and `AzureFunctions` backends as configured capabilities; do not silently fall back to `InProcess` when a requested backend is missing.
 
@@ -129,7 +169,8 @@ orchestration boundary that owns that lineage.
 
 <!-- api-docs-skills-parity:routes:start -->
 
-Workflows API route appendix. Generated from Minimal API registrations; refresh from `src/App/CanDoItAll.Web/Api/WorkflowsApi.cs` when routes change.
+Workflows API route appendix. Generated from Minimal API registrations; refresh from
+`WorkflowsApi.cs` and `WorkflowRunEventsApi.cs` when routes change.
 
 | Method | Route |
 | --- | --- |
@@ -154,6 +195,7 @@ Workflows API route appendix. Generated from Minimal API registrations; refresh 
 | `GET` | `/api/workflows/definitions/{workflowId:guid}/versions/{versionId:guid}` |
 | `POST` | `/api/workflows/definitions/import` |
 | `GET` | `/api/workflows/executor-catalog` |
+| `GET` | `/api/workflows/events/stream` |
 | `POST` | `/api/workflows/external-requests/{requestId:guid}/response` |
 | `GET` | `/api/workflows/provider-options` |
 | `GET` | `/api/workflows/runs` |
@@ -165,6 +207,7 @@ Workflows API route appendix. Generated from Minimal API registrations; refresh 
 | `GET` | `/api/workflows/runs/{runId:guid}/detail` |
 | `GET` | `/api/workflows/runs/{runId:guid}/events` |
 | `GET` | `/api/workflows/runs/{runId:guid}/events/page` |
+| `GET` | `/api/workflows/runs/{runId:guid}/events/stream` |
 | `GET` | `/api/workflows/runs/{runId:guid}/checkpoints` |
 | `GET` | `/api/workflows/runs/{runId:guid}/pending-requests` |
 | `GET` | `/api/workflows/runs/page` |

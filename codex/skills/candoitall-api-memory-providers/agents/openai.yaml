@@ -1,0 +1,4 @@
+interface:
+  display_name: "CanDoItAll Memory Providers API"
+  short_description: "Operate experimental memory provider APIs."
+  default_prompt: "Use $candoitall-api-memory-providers to configure a memory provider and run a caller-owned query."

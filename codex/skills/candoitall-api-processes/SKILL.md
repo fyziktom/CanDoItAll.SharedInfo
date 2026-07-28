@@ -1,6 +1,6 @@
 ---
 name: candoitall-api-processes
-description: Use when launching, dispatching, cancelling, reworking, or observing live CanDoItAll process runs through the current HTTP API.
+description: Use when launching, dispatching, cancelling, reworking, or observing live CanDoItAll process runs and SSE lifecycle signals through the HTTP API.
 ---
 
 # CanDoItAll Processes API
@@ -35,6 +35,8 @@ API.
 | Live list | `GET /api/processes/live` |
 | Live detail | `GET /api/processes/runs/{runId}` |
 | Live history | `GET /api/processes/runs/{runId}/history` |
+| All-run SSE signals | `GET /api/processes/events/stream` |
+| Exact-run SSE signals | `GET /api/processes/runs/{runId}/events/stream` |
 | Durable record list | `GET /api/processes/runs` |
 | Durable record summary | `GET /api/processes/runs/{runId}/summary` |
 | Durable record graph | `GET /api/processes/runs/{runId}/graph` |
@@ -118,7 +120,7 @@ Content-Type: application/json
 - Use `GET /api/processes/runs/analytics` for durable aggregate analytics filtered by
   project, definition, root run, participant, or time window.
 
-### Manager Snapshot And Activity Boundary
+### Process SSE Boundary
 
 The Process Manager chat can reuse a bounded immutable snapshot of the already-loaded
 selected-run shell inside the host process. That snapshot is invocation context, not
@@ -126,9 +128,42 @@ a durable process record and not an HTTP resource. The `/api/processes/live`,
 `/api/processes/runs/{runId}`, and history routes continue to read the canonical
 application/projection boundary.
 
-The current HTTP contract has no process-manager agent-activity SSE endpoint. External
-clients must use the documented process and agent execution evidence routes. Do not
-infer a snapshot or event-stream route from UI activity feedback.
+The process SSE routes emit signal-only lifecycle categories: started, progress,
+needs-attention, completed, failed, and cancelled. Envelopes include exact/root run
+ids plus durable global/root source sequences. Restricted events mask their event type
+and do not expose actor, correlation, or payload-hash details.
+
+Both routes emit `process.run.changed` with `eventId`, `globalSequence`,
+`rootSequence`, `rootRunId`, exact `runId`, `category`, `eventType`, `sensitivity`,
+`occurredAtUtc`, `isTerminal`, and `needsAttention`. The exact-run route filters by
+`runId`; it does not subscribe to every descendant of `rootRunId`.
+
+API replay is a bounded, host-local window even though process source events are
+durable. Resume with either a non-negative `Last-Event-ID` header or equivalent
+`after` query parameter; if both are supplied, they must be equal. The SSE `id` is an
+API cursor, not `globalSequence`. An invalid or conflicting cursor returns HTTP `400`
+with `sse.cursor-invalid`.
+
+When the cursor is outside retention or ahead of the current host stream,
+`stream.gap` reports `reason`, `requestedAfterSequence`, `firstAvailableSequence`,
+`lastAvailableSequence`, and `resumeAfterSequence`. The connection continues from
+that resume cursor and sends retained matching notifications. Reload live detail or
+history before trusting subsequent signals because SSE cannot reconstruct the missed
+projection state.
+
+Projection notification is at-least-once. Deduplicate process signals by durable
+`eventId` or `globalSequence`, not by the host-local SSE id. A process SSE event is a
+prompt to query canonical state, not a replacement for the projection/read APIs.
+
+The stream is pinned to the active database profile and runtime generation. A profile
+switch cancels existing subscriptions. Reconnect against the active profile and
+rebuild state from durable APIs; do not carry an SSE cursor across a profile switch or
+process restart.
+
+This implementation is intentionally limited to local/basic fan-out. Global and
+exact-run subscriptions share one profile-global replay buffer and wake-up path, and
+run filters are applied while reading bounded batches. It is not a claim of
+token-rate or thousands-of-subscribers scalability.
 
 ## Project-Structure Bridge
 
@@ -144,6 +179,8 @@ the project-structure operation result and process readback.
 
 - Prefer `launch/check` before `launch`.
 - Preserve restricted-diagnostic and runtime-event privacy boundaries.
+- Use the global SSE route for fleet-level attention/terminal signals and the exact-run
+  route when the `ProcessRunId` is already known.
 - Do not invent older process authoring, artifact, assignment, escalation, approval, or
   template routes unless the running contract reintroduces them.
 
@@ -161,6 +198,7 @@ the project-structure operation result and process readback.
 | Method | Route |
 | --- | --- |
 | `GET` | `/api/processes/contract` |
+| `GET` | `/api/processes/events/stream` |
 | `POST` | `/api/processes/launch/check` |
 | `POST` | `/api/processes/launch` |
 | `POST` | `/api/processes/runs/{runId:guid}/dispatch` |
@@ -172,6 +210,7 @@ the project-structure operation result and process readback.
 | `GET` | `/api/processes/runs/{runId:guid}` |
 | `GET` | `/api/processes/runs/{runId:guid}/graph` |
 | `GET` | `/api/processes/runs/{runId:guid}/history` |
+| `GET` | `/api/processes/runs/{runId:guid}/events/stream` |
 | `GET` | `/api/processes/runs/{runId:guid}/summary` |
 
 <!-- api-docs-skills-parity:routes:end -->

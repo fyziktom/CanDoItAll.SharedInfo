@@ -1,758 +1,850 @@
 {
-    "schemaVersion":  1,
-    "source":  {
-                   "repository":  "CanDoItAll",
-                   "branch":  "agents-loading-refactor",
-                   "commit":  "6e866ab531808758c268bc460ce2c997f2ae8440",
-                   "workingTreeClean":  false,
-                   "workingTreeNote":  "Captured from the rebuilt uncommitted agents-loading-refactor working tree after the agent preload/activity architecture implementation. The commit field is the baseline commit, not a clean artifact provenance claim. The status fingerprint is SHA-256 over UTF-8 git status --porcelain=v1 lines joined with LF.",
-                   "workingTreeStatusSha256":  "7AA777F8CD8C1AA8BE02E3EFC5662CF4BDD6C8F87E34DE5056588277F9F02137",
-                   "captureNote":  "Development host used the canonical HTTP 5032 launch profile and the normal configured runtime profile. Both runtime OpenAPI document endpoints returned byte-identical 438,706-byte content. The snapshot records typed execution-operation and Project Structure read-source schemas plus candidate-interview and durable process-record routes; it does not expose an activity SSE endpoint.",
-                   "webProject":  "src/App/CanDoItAll.Web/CanDoItAll.Web.csproj",
-                   "environment":  "Development",
-                   "generatedUtc":  "2026-07-28 02:32:03.3218839Z",
-                   "runtimeDocumentPaths":  [
-                                                "/openapi/v1.json",
-                                                "/swagger/v1/swagger.json"
-                                            ]
-               },
-    "artifact":  {
-                     "file":  "references/candoitall-web.openapi.json",
-                     "sha256":  "BD1F0B297956E4CEB176AA183FE283BB481D20CD686CAF075B52881BD7E92AEC",
-                     "openapiVersion":  "3.1.1",
-                     "documentTitle":  "CanDoItAll.Web | v1",
-                     "documentVersion":  "1.0.0",
-                     "serverUrl":  "http://localhost:5032/",
-                     "pathCount":  234,
-                     "operationCount":  279,
-                     "schemaCount":  347
-                 },
-    "routeFamilies":  [
-                          {
-                              "prefix":  "/_dev",
-                              "pathCount":  10,
-                              "operationCount":  10
-                          },
-                          {
-                              "prefix":  "/api/access",
-                              "pathCount":  2,
-                              "operationCount":  2
-                          },
-                          {
-                              "prefix":  "/api/agent-recruiting",
-                              "pathCount":  6,
-                              "operationCount":  6
-                          },
-                          {
-                              "prefix":  "/api/agents",
-                              "pathCount":  51,
-                              "operationCount":  64
-                          },
-                          {
-                              "prefix":  "/api/cognitive-memory",
-                              "pathCount":  6,
-                              "operationCount":  22
-                          },
-                          {
-                              "prefix":  "/api/crm-hr",
-                              "pathCount":  15,
-                              "operationCount":  19
-                          },
-                          {
-                              "prefix":  "/api/plugins",
-                              "pathCount":  18,
-                              "operationCount":  20
-                          },
-                          {
-                              "prefix":  "/api/processes",
-                              "pathCount":  13,
-                              "operationCount":  13
-                          },
-                          {
-                              "prefix":  "/api/projects",
-                              "pathCount":  7,
-                              "operationCount":  10
-                          },
-                          {
-                              "prefix":  "/api/project-structure",
-                              "pathCount":  55,
-                              "operationCount":  56
-                          },
-                          {
-                              "prefix":  "/api/prompt-gallery",
-                              "pathCount":  10,
-                              "operationCount":  11
-                          },
-                          {
-                              "prefix":  "/api/workflows",
-                              "pathCount":  36,
-                              "operationCount":  41
-                          },
-                          {
-                              "prefix":  "/authorized-files",
-                              "pathCount":  2,
-                              "operationCount":  2
-                          },
-                          {
-                              "prefix":  "/managed-files",
-                              "pathCount":  1,
-                              "operationCount":  1
-                          },
-                          {
-                              "prefix":  "/storage",
-                              "pathCount":  2,
-                              "operationCount":  2
-                          }
-                      ],
-    "documentedOperationSets":  [
-                                    {
-                                        "name":  "Agent Recruiting API",
-                                        "prefix":  "/api/agent-recruiting",
-                                        "skillFile":  "../candoitall-api-agents/SKILL.md",
-                                        "routeAppendix":  "api-docs-skills-parity:agent-recruiting-routes",
-                                        "operations":  [
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/agent-recruiting/candidates/{candidateAgentId}/interviews",
-                                                               "operationId":  "ListAgentRecruitingCandidateInterviews"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/agent-recruiting/candidates/{agentId}/readiness",
-                                                               "operationId":  "GetAgentRecruitingCandidateReadiness"
-                                                           },
-                                                           {
-                                                               "method":  "POST",
-                                                               "path":  "/api/agent-recruiting/interviews",
-                                                               "operationId":  "CreateAgentRecruitingInterview"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/agent-recruiting/interviews/{interviewId}",
-                                                               "operationId":  "GetAgentRecruitingInterview"
-                                                           },
-                                                           {
-                                                               "method":  "POST",
-                                                               "path":  "/api/agent-recruiting/interviews/{interviewId}/attempts",
-                                                               "operationId":  "AppendAgentRecruitingAttempt"
-                                                           },
-                                                           {
-                                                               "method":  "POST",
-                                                               "path":  "/api/agent-recruiting/interviews/{interviewId}/reviews",
-                                                               "operationId":  "AppendAgentRecruitingHumanReview"
-                                                           }
-                                                       ]
-                                    },
-                                    {
-                                        "name":  "Agents API",
-                                        "prefix":  "/api/agents",
-                                        "skillFile":  "../candoitall-api-agents/SKILL.md",
-                                        "operations":  [
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/agents",
-                                                               "operationId":  "ListAgents"
-                                                           },
-                                                           {
-                                                               "method":  "POST",
-                                                               "path":  "/api/agents",
-                                                               "operationId":  "SaveAgent"
-                                                           },
-                                                           {
-                                                               "method":  "DELETE",
-                                                               "path":  "/api/agents/{agentId}",
-                                                               "operationId":  "DeleteAgent"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/agents/{agentId}",
-                                                               "operationId":  "GetAgentEditor"
-                                                           },
-                                                           {
-                                                               "method":  "POST",
-                                                               "path":  "/api/agents/{agentId}/capabilities/{capabilityId}/verify",
-                                                               "operationId":  "VerifyAgentCapability"
-                                                           },
-                                                           {
-                                                               "method":  "POST",
-                                                               "path":  "/api/agents/{agentId}/chat",
-                                                               "operationId":  "SendAgentChatMessage"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/agents/{agentId}/chat-sessions",
-                                                               "operationId":  "ListAgentChatSessions"
-                                                           },
-                                                           {
-                                                               "method":  "POST",
-                                                               "path":  "/api/agents/{agentId}/chat-sessions",
-                                                               "operationId":  "CreateAgentChatSession"
-                                                           },
-                                                           {
-                                                               "method":  "POST",
-                                                               "path":  "/api/agents/{agentId}/chat-sessions/{chatSessionId}/rename",
-                                                               "operationId":  "RenameAgentChatSession"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/agents/{agentId}/chat-workspace",
-                                                               "operationId":  "GetAgentChatWorkspace"
-                                                           },
-                                                           {
-                                                               "method":  "POST",
-                                                               "path":  "/api/agents/{agentId}/clone",
-                                                               "operationId":  "CloneAgent"
-                                                           },
-                                                           {
-                                                               "method":  "POST",
-                                                               "path":  "/api/agents/{agentId}/convert-to-template",
-                                                               "operationId":  "ConvertAgentToTemplate"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/agents/{agentId}/execution-log",
-                                                               "operationId":  "ListAgentExecutionLog"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/agents/{agentId}/execution-runs",
-                                                               "operationId":  "ListAgentScopedExecutionRuns"
-                                                           },
-                                                           {
-                                                               "method":  "POST",
-                                                               "path":  "/api/agents/{agentId}/execution-runs",
-                                                               "operationId":  "StartAgentScopedExecutionRun"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/agents/{agentId}/execution-runs/{executionRunId}",
-                                                               "operationId":  "GetAgentScopedExecutionRunDetail"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/agents/{agentId}/execution-runs/{executionRunId}/approvals",
-                                                               "operationId":  "ListAgentScopedExecutionApprovals"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/agents/{agentId}/execution-runs/{executionRunId}/artifacts",
-                                                               "operationId":  "ListAgentScopedExecutionArtifacts"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/agents/{agentId}/execution-runs/{executionRunId}/checkpoints",
-                                                               "operationId":  "ListAgentScopedExecutionCheckpoints"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/agents/{agentId}/execution-runs/{executionRunId}/log",
-                                                               "operationId":  "ListAgentScopedExecutionLog"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/agents/{agentId}/execution-runs/{executionRunId}/metrics",
-                                                               "operationId":  "ListAgentScopedExecutionMetrics"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/agents/{agentId}/execution-runs/{executionRunId}/tool-receipts",
-                                                               "operationId":  "ListAgentScopedExecutionToolReceipts"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/agents/{agentId}/export",
-                                                               "operationId":  "ExportAgent"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/agents/{agentId}/memory",
-                                                               "operationId":  "ListAgentMemory"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/agents/{agentId}/metrics",
-                                                               "operationId":  "ListAgentMetrics"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/agents/{agentId}/runtime-snapshot",
-                                                               "operationId":  "GetAgentRuntimeSnapshot"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/agents/bootstrap",
-                                                               "operationId":  "GetAgentBootstrap"
-                                                           },
-                                                           {
-                                                               "method":  "DELETE",
-                                                               "path":  "/api/agents/by-external-key/{externalNamespace}/{key}",
-                                                               "operationId":  "ArchiveAgentByExternalKey"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/agents/by-external-key/{externalNamespace}/{key}",
-                                                               "operationId":  "GetAgentByExternalKey"
-                                                           },
-                                                           {
-                                                               "method":  "PUT",
-                                                               "path":  "/api/agents/by-external-key/{externalNamespace}/{key}",
-                                                               "operationId":  "ProvisionAgentByExternalKey"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/agents/capabilities",
-                                                               "operationId":  "ListAgentCapabilities"
-                                                           },
-                                                           {
-                                                               "method":  "POST",
-                                                               "path":  "/api/agents/capabilities",
-                                                               "operationId":  "SaveAgentCapability"
-                                                           },
-                                                           {
-                                                               "method":  "DELETE",
-                                                               "path":  "/api/agents/capabilities/{capabilityId}",
-                                                               "operationId":  "DeleteAgentCapability"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/agents/capabilities/{capabilityId}/editor",
-                                                               "operationId":  "GetAgentCapabilityEditor"
-                                                           },
-                                                           {
-                                                               "method":  "POST",
-                                                               "path":  "/api/agents/capabilities/access-preview",
-                                                               "operationId":  "PreviewAgentCapabilityAccess"
-                                                           },
-                                                           {
-                                                               "method":  "POST",
-                                                               "path":  "/api/agents/capabilities/setup-tests/mcp",
-                                                               "operationId":  "TestAgentMcpCapabilitySetup"
-                                                           },
-                                                           {
-                                                               "method":  "POST",
-                                                               "path":  "/api/agents/capabilities/setup-tests/tool",
-                                                               "operationId":  "TestAgentToolCapabilitySetup"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/agents/execution-runs",
-                                                               "operationId":  "ListAgentExecutionRuns"
-                                                           },
-                                                           {
-                                                               "method":  "POST",
-                                                               "path":  "/api/agents/execution-runs",
-                                                               "operationId":  "StartAgentExecutionRun"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/agents/execution-runs/{executionRunId}",
-                                                               "operationId":  "GetAgentExecutionRunDetail"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/agents/execution-runs/{executionRunId}/artifacts",
-                                                               "operationId":  "ListAgentExecutionArtifacts"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/agents/execution-runs/{executionRunId}/checkpoints",
-                                                               "operationId":  "ListAgentExecutionCheckpoints"
-                                                           },
-                                                           {
-                                                               "method":  "POST",
-                                                               "path":  "/api/agents/execution-runs/{executionRunId}/pending-approvals",
-                                                               "operationId":  "RespondToAgentExecutionApprovals"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/agents/execution-runs/{executionRunId}/tool-receipts",
-                                                               "operationId":  "ListAgentExecutionToolReceipts"
-                                                           },
-                                                           {
-                                                               "method":  "POST",
-                                                               "path":  "/api/agents/import",
-                                                               "operationId":  "ImportAgent"
-                                                           },
-                                                           {
-                                                               "method":  "POST",
-                                                               "path":  "/api/agents/import-package",
-                                                               "operationId":  "ImportAgentPackage"
-                                                           },
-                                                           {
-                                                               "method":  "POST",
-                                                               "path":  "/api/agents/memory",
-                                                               "operationId":  "SaveAgentMemory"
-                                                           },
-                                                           {
-                                                               "method":  "DELETE",
-                                                               "path":  "/api/agents/memory/{memoryId}",
-                                                               "operationId":  "DeleteAgentMemory"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/agents/providers",
-                                                               "operationId":  "ListAgentProviders"
-                                                           },
-                                                           {
-                                                               "method":  "POST",
-                                                               "path":  "/api/agents/providers",
-                                                               "operationId":  "SaveAgentProvider"
-                                                           },
-                                                           {
-                                                               "method":  "DELETE",
-                                                               "path":  "/api/agents/providers/{providerId}",
-                                                               "operationId":  "DeleteAgentProvider"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/agents/providers/{providerId}/editor",
-                                                               "operationId":  "GetAgentProviderEditor"
-                                                           },
-                                                           {
-                                                               "method":  "POST",
-                                                               "path":  "/api/agents/providers/{providerId}/ollama-modelfile",
-                                                               "operationId":  "CreateAgentProviderModelMaintenance"
-                                                           },
-                                                           {
-                                                               "method":  "POST",
-                                                               "path":  "/api/agents/providers/{providerId}/test",
-                                                               "operationId":  "TestAgentProvider"
-                                                           },
-                                                           {
-                                                               "method":  "POST",
-                                                               "path":  "/api/agents/providers/{providerId}/test-chat",
-                                                               "operationId":  "RunAgentProviderTestChat"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/agents/teams",
-                                                               "operationId":  "ListAgentTeams"
-                                                           },
-                                                           {
-                                                               "method":  "POST",
-                                                               "path":  "/api/agents/teams",
-                                                               "operationId":  "SaveAgentTeam"
-                                                           },
-                                                           {
-                                                               "method":  "DELETE",
-                                                               "path":  "/api/agents/teams/{teamId}",
-                                                               "operationId":  "DeleteAgentTeam"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/agents/teams/{teamId}",
-                                                               "operationId":  "GetAgentTeam"
-                                                           },
-                                                           {
-                                                               "method":  "PUT",
-                                                               "path":  "/api/agents/teams/{teamId}",
-                                                               "operationId":  "UpdateAgentTeam"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/agents/teams/{teamId}/agents",
-                                                               "operationId":  "ListAgentTeamAgents"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/agents/teams/{teamId}/editor",
-                                                               "operationId":  "GetAgentTeamEditor"
-                                                           },
-                                                           {
-                                                               "method":  "POST",
-                                                               "path":  "/api/agents/teams/{teamId}/members",
-                                                               "operationId":  "UpdateAgentTeamMembers"
-                                                           },
-                                                           {
-                                                               "method":  "PUT",
-                                                               "path":  "/api/agents/teams/{teamId}/members",
-                                                               "operationId":  "ReplaceAgentTeamMembers"
-                                                           }
-                                                       ]
-                                    },
-                                    {
-                                        "name":  "Processes API",
-                                        "prefix":  "/api/processes",
-                                        "skillFile":  "../candoitall-api-processes/SKILL.md",
-                                        "operations":  [
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/processes/contract",
-                                                               "operationId":  "GetProcessesApiContract"
-                                                           },
-                                                           {
-                                                               "method":  "POST",
-                                                               "path":  "/api/processes/launch",
-                                                               "operationId":  "LaunchProcess"
-                                                           },
-                                                           {
-                                                               "method":  "POST",
-                                                               "path":  "/api/processes/launch/check",
-                                                               "operationId":  "CheckProcessLaunch"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/processes/live",
-                                                               "operationId":  "ListLiveProcesses"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/processes/runs",
-                                                               "operationId":  "ListProcessRunRecords"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/processes/runs/analytics",
-                                                               "operationId":  "GetProcessRunRecordAnalytics"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/processes/runs/{runId}",
-                                                               "operationId":  "GetProcessRun"
-                                                           },
-                                                           {
-                                                               "method":  "POST",
-                                                               "path":  "/api/processes/runs/{runId}/cancel",
-                                                               "operationId":  "CancelProcessRun"
-                                                           },
-                                                           {
-                                                               "method":  "POST",
-                                                               "path":  "/api/processes/runs/{runId}/dispatch",
-                                                               "operationId":  "DispatchProcessRun"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/processes/runs/{runId}/graph",
-                                                               "operationId":  "GetProcessRunRecordGraph"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/processes/runs/{runId}/history",
-                                                               "operationId":  "GetProcessRunHistory"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/processes/runs/{runId}/summary",
-                                                               "operationId":  "GetProcessRunRecordSummary"
-                                                           },
-                                                           {
-                                                               "method":  "POST",
-                                                               "path":  "/api/processes/runs/{runId}/steps/{stepInstanceId}/rework",
-                                                               "operationId":  "RequestProcessStepRework"
-                                                           }
-                                                       ]
-                                    },
-                                    {
-                                        "name":  "Workflows API",
-                                        "prefix":  "/api/workflows",
-                                        "skillFile":  "../candoitall-api-workflows/SKILL.md",
-                                        "operations":  [
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/workflows/analytics",
-                                                               "operationId":  "GetWorkflowAnalytics"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/workflows/components",
-                                                               "operationId":  "ListWorkflowComponents"
-                                                           },
-                                                           {
-                                                               "method":  "POST",
-                                                               "path":  "/api/workflows/components",
-                                                               "operationId":  "SaveWorkflowComponent"
-                                                           },
-                                                           {
-                                                               "method":  "DELETE",
-                                                               "path":  "/api/workflows/components/{componentId}",
-                                                               "operationId":  "DeleteWorkflowComponent"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/workflows/components/{componentId}",
-                                                               "operationId":  "GetWorkflowComponent"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/workflows/contract",
-                                                               "operationId":  "GetWorkflowsApiContract"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/workflows/definitions",
-                                                               "operationId":  "ListWorkflowDefinitions"
-                                                           },
-                                                           {
-                                                               "method":  "POST",
-                                                               "path":  "/api/workflows/definitions",
-                                                               "operationId":  "SaveWorkflowDefinition"
-                                                           },
-                                                           {
-                                                               "method":  "DELETE",
-                                                               "path":  "/api/workflows/definitions/{workflowId}",
-                                                               "operationId":  "DeleteWorkflowDefinition"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/workflows/definitions/{workflowId}",
-                                                               "operationId":  "GetWorkflowDefinition"
-                                                           },
-                                                           {
-                                                               "method":  "POST",
-                                                               "path":  "/api/workflows/definitions/{workflowId}/archive",
-                                                               "operationId":  "ArchiveWorkflowDefinition"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/workflows/definitions/{workflowId}/export",
-                                                               "operationId":  "ExportWorkflowDefinition"
-                                                           },
-                                                           {
-                                                               "method":  "POST",
-                                                               "path":  "/api/workflows/definitions/{workflowId}/publish",
-                                                               "operationId":  "PublishWorkflowDefinition"
-                                                           },
-                                                           {
-                                                               "method":  "POST",
-                                                               "path":  "/api/workflows/definitions/{workflowId}/runs/start",
-                                                               "operationId":  "StartWorkflowDefinitionRun"
-                                                           },
-                                                           {
-                                                               "method":  "POST",
-                                                               "path":  "/api/workflows/definitions/{workflowId}/suspend",
-                                                               "operationId":  "SuspendWorkflowDefinition"
-                                                           },
-                                                           {
-                                                               "method":  "POST",
-                                                               "path":  "/api/workflows/definitions/{workflowId}/validate",
-                                                               "operationId":  "ValidateSavedWorkflowDefinition"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/workflows/definitions/{workflowId}/versions/{versionId}",
-                                                               "operationId":  "GetWorkflowDefinitionVersion"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/workflows/definitions/by-external-key/{externalNamespace}/{externalKey}",
-                                                               "operationId":  "GetWorkflowDefinitionByExternalKey"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/workflows/definitions/by-template-key/{templateKey}",
-                                                               "operationId":  "GetWorkflowDefinitionByTemplateKey"
-                                                           },
-                                                           {
-                                                               "method":  "POST",
-                                                               "path":  "/api/workflows/definitions/import",
-                                                               "operationId":  "ImportWorkflowDefinition"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/workflows/executor-catalog",
-                                                               "operationId":  "ListWorkflowExecutorCatalog"
-                                                           },
-                                                           {
-                                                               "method":  "POST",
-                                                               "path":  "/api/workflows/external-requests/{requestId}/response",
-                                                               "operationId":  "RespondToWorkflowExternalRequest"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/workflows/provider-options",
-                                                               "operationId":  "ListWorkflowProviderOptions"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/workflows/runs",
-                                                               "operationId":  "ListWorkflowRuns"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/workflows/runs/{runId}",
-                                                               "operationId":  "GetWorkflowRun"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/workflows/runs/{runId}/artifacts",
-                                                               "operationId":  "ListWorkflowRunArtifacts"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/workflows/runs/{runId}/artifacts/{artifactId}/content",
-                                                               "operationId":  "GetWorkflowRunArtifactContent"
-                                                           },
-                                                           {
-                                                               "method":  "POST",
-                                                               "path":  "/api/workflows/runs/{runId}/cancel",
-                                                               "operationId":  "CancelWorkflowRun"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/workflows/runs/{runId}/checkpoints",
-                                                               "operationId":  "ListWorkflowRunCheckpoints"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/workflows/runs/{runId}/detail",
-                                                               "operationId":  "GetWorkflowRunDetail"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/workflows/runs/{runId}/events",
-                                                               "operationId":  "ListWorkflowRunEvents"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/workflows/runs/{runId}/events/page",
-                                                               "operationId":  "ListWorkflowRunEventPage"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/workflows/runs/{runId}/pending-requests",
-                                                               "operationId":  "ListWorkflowRunPendingRequests"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/workflows/runs/by-idempotency-key/{key}",
-                                                               "operationId":  "GetWorkflowRunByIdempotencyKey"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/workflows/runs/page",
-                                                               "operationId":  "ListWorkflowRunPage"
-                                                           },
-                                                           {
-                                                               "method":  "POST",
-                                                               "path":  "/api/workflows/runs/start",
-                                                               "operationId":  "StartWorkflowRun"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/workflows/runtime-backends",
-                                                               "operationId":  "ListWorkflowRuntimeBackends"
-                                                           },
-                                                           {
-                                                               "method":  "GET",
-                                                               "path":  "/api/workflows/settings",
-                                                               "operationId":  "GetWorkflowSettings"
-                                                           },
-                                                           {
-                                                               "method":  "POST",
-                                                               "path":  "/api/workflows/settings",
-                                                               "operationId":  "SaveWorkflowSettings"
-                                                           },
-                                                           {
-                                                               "method":  "POST",
-                                                               "path":  "/api/workflows/test-runs",
-                                                               "operationId":  "RunWorkflowTest"
-                                                           },
-                                                           {
-                                                               "method":  "POST",
-                                                               "path":  "/api/workflows/validate",
-                                                               "operationId":  "ValidateDraftWorkflowDefinition"
-                                                           }
-                                                       ]
-                                    }
-                                ]
+  "schemaVersion": 1,
+  "source": {
+    "repository": "CanDoItAll",
+    "branch": "apis-sse",
+    "commit": "563636f944e76e777356ae2a5fec4ad66c997fd2",
+    "workingTreeClean": false,
+    "workingTreeNote": "Captured from the rebuilt uncommitted apis-sse working tree after the basic SSE and agent API implementation, configurable Swagger, native Cognitive Memory removal, and provider-neutral Memory Providers API implementation. The commit field is the baseline commit, not a clean artifact provenance claim. The status fingerprint is SHA-256 over UTF-8 git status --porcelain=v1 lines joined with LF.",
+    "workingTreeStatusSha256": "4E2D283B3855F112084B1B0B6C6D6DFD283EAC8BA009384EAF41599E367A2B7B",
+    "captureNote": "Development host used the canonical HTTP 5032 URL and normal configured runtime profile. /openapi/v1.json and /swagger/v1/swagger.json returned byte-identical 488,398-byte documents. The snapshot includes profile-isolated bounded SSE routes for agents, workflows, and processes, provider status streaming, approval continuation, bounded image attachment staging, configurable Swagger UI, and the experimental provider-neutral Memory Providers API. The retired native /api/cognitive-memory family is absent.",
+    "webProject": "src/App/CanDoItAll.Web/CanDoItAll.Web.csproj",
+    "environment": "Development",
+    "generatedUtc": "2026-07-28T22:51:54.8376442Z",
+    "runtimeDocumentPaths": [
+      "/openapi/v1.json",
+      "/swagger/v1/swagger.json"
+    ]
+  },
+  "artifact": {
+    "file": "references/candoitall-web.openapi.json",
+    "sha256": "77B03745B16C3E8B3EF490C4D5817083FABD20C9320CF1DF01E2107DF47C699F",
+    "openapiVersion": "3.1.1",
+    "documentTitle": "CanDoItAll.Web | v1",
+    "documentVersion": "1.0.0",
+    "serverUrl": "http://localhost:5032/",
+    "pathCount": 244,
+    "operationCount": 274,
+    "schemaCount": 381
+  },
+  "routeFamilies": [
+    {
+      "prefix": "/_dev",
+      "pathCount": 10,
+      "operationCount": 10
+    },
+    {
+      "prefix": "/api/access",
+      "pathCount": 2,
+      "operationCount": 2
+    },
+    {
+      "prefix": "/api/agent-recruiting",
+      "pathCount": 6,
+      "operationCount": 6
+    },
+    {
+      "prefix": "/api/agents",
+      "pathCount": 59,
+      "operationCount": 72
+    },
+    {
+      "prefix": "/api/memory-providers",
+      "pathCount": 4,
+      "operationCount": 5
+    },
+    {
+      "prefix": "/api/crm-hr",
+      "pathCount": 15,
+      "operationCount": 19
+    },
+    {
+      "prefix": "/api/plugins",
+      "pathCount": 18,
+      "operationCount": 20
+    },
+    {
+      "prefix": "/api/processes",
+      "pathCount": 15,
+      "operationCount": 15
+    },
+    {
+      "prefix": "/api/projects",
+      "pathCount": 7,
+      "operationCount": 10
+    },
+    {
+      "prefix": "/api/project-structure",
+      "pathCount": 55,
+      "operationCount": 56
+    },
+    {
+      "prefix": "/api/prompt-gallery",
+      "pathCount": 10,
+      "operationCount": 11
+    },
+    {
+      "prefix": "/api/workflows",
+      "pathCount": 38,
+      "operationCount": 43
+    },
+    {
+      "prefix": "/authorized-files",
+      "pathCount": 2,
+      "operationCount": 2
+    },
+    {
+      "prefix": "/managed-files",
+      "pathCount": 1,
+      "operationCount": 1
+    },
+    {
+      "prefix": "/storage",
+      "pathCount": 2,
+      "operationCount": 2
+    }
+  ],
+  "documentedOperationSets": [
+    {
+      "name": "Agent Recruiting API",
+      "prefix": "/api/agent-recruiting",
+      "skillFile": "../candoitall-api-agents/SKILL.md",
+      "routeAppendix": "api-docs-skills-parity:agent-recruiting-routes",
+      "operations": [
+        {
+          "method": "GET",
+          "path": "/api/agent-recruiting/candidates/{agentId}/readiness",
+          "operationId": "GetAgentRecruitingCandidateReadiness"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agent-recruiting/candidates/{candidateAgentId}/interviews",
+          "operationId": "ListAgentRecruitingCandidateInterviews"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agent-recruiting/interviews",
+          "operationId": "CreateAgentRecruitingInterview"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agent-recruiting/interviews/{interviewId}",
+          "operationId": "GetAgentRecruitingInterview"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agent-recruiting/interviews/{interviewId}/attempts",
+          "operationId": "AppendAgentRecruitingAttempt"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agent-recruiting/interviews/{interviewId}/reviews",
+          "operationId": "AppendAgentRecruitingHumanReview"
+        }
+      ]
+    },
+    {
+      "name": "Agents API",
+      "prefix": "/api/agents",
+      "skillFile": "../candoitall-api-agents/SKILL.md",
+      "operations": [
+        {
+          "method": "GET",
+          "path": "/api/agents",
+          "operationId": "ListAgents"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents",
+          "operationId": "SaveAgent"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/{agentId}",
+          "operationId": "GetAgentEditor"
+        },
+        {
+          "method": "DELETE",
+          "path": "/api/agents/{agentId}",
+          "operationId": "DeleteAgent"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/{agentId}/capabilities/{capabilityId}/verify",
+          "operationId": "VerifyAgentCapability"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/{agentId}/clone",
+          "operationId": "CloneAgent"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/{agentId}/convert-to-template",
+          "operationId": "ConvertAgentToTemplate"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/{agentId}/execution-log",
+          "operationId": "ListAgentExecutionLog"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/{agentId}/execution-runs",
+          "operationId": "ListAgentScopedExecutionRuns"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/{agentId}/execution-runs",
+          "operationId": "StartAgentScopedExecutionRun"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/{agentId}/execution-runs/{executionRunId}",
+          "operationId": "GetAgentScopedExecutionRunDetail"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/{agentId}/execution-runs/{executionRunId}/approvals",
+          "operationId": "ListAgentScopedExecutionApprovals"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/{agentId}/execution-runs/{executionRunId}/artifacts",
+          "operationId": "ListAgentScopedExecutionArtifacts"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/{agentId}/execution-runs/{executionRunId}/checkpoints",
+          "operationId": "ListAgentScopedExecutionCheckpoints"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/{agentId}/execution-runs/{executionRunId}/log",
+          "operationId": "ListAgentScopedExecutionLog"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/{agentId}/execution-runs/{executionRunId}/metrics",
+          "operationId": "ListAgentScopedExecutionMetrics"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/{agentId}/execution-runs/{executionRunId}/tool-receipts",
+          "operationId": "ListAgentScopedExecutionToolReceipts"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/{agentId}/execution-runs/stream",
+          "operationId": "StreamAgentScopedExecutionRun"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/{agentId}/export",
+          "operationId": "ExportAgent"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/{agentId}/chat",
+          "operationId": "SendAgentChatMessage"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/{agentId}/chat-sessions",
+          "operationId": "ListAgentChatSessions"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/{agentId}/chat-sessions",
+          "operationId": "CreateAgentChatSession"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/{agentId}/chat-sessions/{chatSessionId}/rename",
+          "operationId": "RenameAgentChatSession"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/{agentId}/chat-workspace",
+          "operationId": "GetAgentChatWorkspace"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/{agentId}/chat/stream",
+          "operationId": "StreamAgentChatMessage"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/{agentId}/memory",
+          "operationId": "ListAgentMemory"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/{agentId}/metrics",
+          "operationId": "ListAgentMetrics"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/{agentId}/runtime-snapshot",
+          "operationId": "GetAgentRuntimeSnapshot"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/attachments/images",
+          "operationId": "StageAgentImageAttachment"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/bootstrap",
+          "operationId": "GetAgentBootstrap"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/by-external-key/{externalNamespace}/{key}",
+          "operationId": "GetAgentByExternalKey"
+        },
+        {
+          "method": "PUT",
+          "path": "/api/agents/by-external-key/{externalNamespace}/{key}",
+          "operationId": "ProvisionAgentByExternalKey"
+        },
+        {
+          "method": "DELETE",
+          "path": "/api/agents/by-external-key/{externalNamespace}/{key}",
+          "operationId": "ArchiveAgentByExternalKey"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/capabilities",
+          "operationId": "ListAgentCapabilities"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/capabilities",
+          "operationId": "SaveAgentCapability"
+        },
+        {
+          "method": "DELETE",
+          "path": "/api/agents/capabilities/{capabilityId}",
+          "operationId": "DeleteAgentCapability"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/capabilities/{capabilityId}/editor",
+          "operationId": "GetAgentCapabilityEditor"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/capabilities/access-preview",
+          "operationId": "PreviewAgentCapabilityAccess"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/capabilities/setup-tests/mcp",
+          "operationId": "TestAgentMcpCapabilitySetup"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/capabilities/setup-tests/tool",
+          "operationId": "TestAgentToolCapabilitySetup"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/execution-operations/{operationId}/events/stream",
+          "operationId": "StreamAgentExecutionOperationEvents"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/execution-runs",
+          "operationId": "ListAgentExecutionRuns"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/execution-runs",
+          "operationId": "StartAgentExecutionRun"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/execution-runs/{executionRunId}",
+          "operationId": "GetAgentExecutionRunDetail"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/execution-runs/{executionRunId}/approvals",
+          "operationId": "ListAgentExecutionApprovals"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/execution-runs/{executionRunId}/artifacts",
+          "operationId": "ListAgentExecutionArtifacts"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/execution-runs/{executionRunId}/checkpoints",
+          "operationId": "ListAgentExecutionCheckpoints"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/execution-runs/{executionRunId}/pending-approvals",
+          "operationId": "RespondToAgentExecutionApprovals"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/execution-runs/{executionRunId}/pending-approvals/stream",
+          "operationId": "StreamAgentExecutionApprovalResponse"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/execution-runs/{executionRunId}/tool-receipts",
+          "operationId": "ListAgentExecutionToolReceipts"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/execution-runs/stream",
+          "operationId": "StreamAgentExecutionRun"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/import",
+          "operationId": "ImportAgent"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/import-package",
+          "operationId": "ImportAgentPackage"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/memory",
+          "operationId": "SaveAgentMemory"
+        },
+        {
+          "method": "DELETE",
+          "path": "/api/agents/memory/{memoryId}",
+          "operationId": "DeleteAgentMemory"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/providers",
+          "operationId": "ListAgentProviders"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/providers",
+          "operationId": "SaveAgentProvider"
+        },
+        {
+          "method": "DELETE",
+          "path": "/api/agents/providers/{providerId}",
+          "operationId": "DeleteAgentProvider"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/providers/{providerId}/editor",
+          "operationId": "GetAgentProviderEditor"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/providers/{providerId}/chat-completions/stream",
+          "operationId": "StreamAgentProviderChatCompletion"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/providers/{providerId}/ollama-modelfile",
+          "operationId": "CreateAgentProviderModelMaintenance"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/providers/{providerId}/test",
+          "operationId": "TestAgentProvider"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/providers/{providerId}/test-chat",
+          "operationId": "RunAgentProviderTestChat"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/teams",
+          "operationId": "ListAgentTeams"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/teams",
+          "operationId": "SaveAgentTeam"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/teams/{teamId}",
+          "operationId": "GetAgentTeam"
+        },
+        {
+          "method": "PUT",
+          "path": "/api/agents/teams/{teamId}",
+          "operationId": "UpdateAgentTeam"
+        },
+        {
+          "method": "DELETE",
+          "path": "/api/agents/teams/{teamId}",
+          "operationId": "DeleteAgentTeam"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/teams/{teamId}/agents",
+          "operationId": "ListAgentTeamAgents"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/teams/{teamId}/editor",
+          "operationId": "GetAgentTeamEditor"
+        },
+        {
+          "method": "PUT",
+          "path": "/api/agents/teams/{teamId}/members",
+          "operationId": "ReplaceAgentTeamMembers"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/teams/{teamId}/members",
+          "operationId": "UpdateAgentTeamMembers"
+        }
+      ]
+    },
+    {
+      "name": "Memory Providers API",
+      "prefix": "/api/memory-providers",
+      "skillFile": "../candoitall-api-memory-providers/SKILL.md",
+      "operations": [
+        {
+          "method": "GET",
+          "path": "/api/memory-providers",
+          "operationId": "ListMemoryProviders"
+        },
+        {
+          "method": "GET",
+          "path": "/api/memory-providers/{providerId}",
+          "operationId": "GetMemoryProvider"
+        },
+        {
+          "method": "PUT",
+          "path": "/api/memory-providers/{providerId}",
+          "operationId": "UpsertMemoryProvider"
+        },
+        {
+          "method": "POST",
+          "path": "/api/memory-providers/{providerId}/queries",
+          "operationId": "QueryMemoryProvider"
+        },
+        {
+          "method": "GET",
+          "path": "/api/memory-providers/operations/{operationId}",
+          "operationId": "GetMemoryProviderOperation"
+        }
+      ]
+    },
+    {
+      "name": "Processes API",
+      "prefix": "/api/processes",
+      "skillFile": "../candoitall-api-processes/SKILL.md",
+      "operations": [
+        {
+          "method": "GET",
+          "path": "/api/processes/contract",
+          "operationId": "GetProcessesApiContract"
+        },
+        {
+          "method": "GET",
+          "path": "/api/processes/events/stream",
+          "operationId": "StreamProcessRunEvents"
+        },
+        {
+          "method": "POST",
+          "path": "/api/processes/launch",
+          "operationId": "LaunchProcess"
+        },
+        {
+          "method": "POST",
+          "path": "/api/processes/launch/check",
+          "operationId": "CheckProcessLaunch"
+        },
+        {
+          "method": "GET",
+          "path": "/api/processes/live",
+          "operationId": "ListLiveProcesses"
+        },
+        {
+          "method": "GET",
+          "path": "/api/processes/runs",
+          "operationId": "ListProcessRunRecords"
+        },
+        {
+          "method": "GET",
+          "path": "/api/processes/runs/{runId}",
+          "operationId": "GetProcessRun"
+        },
+        {
+          "method": "POST",
+          "path": "/api/processes/runs/{runId}/cancel",
+          "operationId": "CancelProcessRun"
+        },
+        {
+          "method": "POST",
+          "path": "/api/processes/runs/{runId}/dispatch",
+          "operationId": "DispatchProcessRun"
+        },
+        {
+          "method": "GET",
+          "path": "/api/processes/runs/{runId}/events/stream",
+          "operationId": "StreamProcessRunEventsByRun"
+        },
+        {
+          "method": "GET",
+          "path": "/api/processes/runs/{runId}/graph",
+          "operationId": "GetProcessRunRecordGraph"
+        },
+        {
+          "method": "GET",
+          "path": "/api/processes/runs/{runId}/history",
+          "operationId": "GetProcessRunHistory"
+        },
+        {
+          "method": "POST",
+          "path": "/api/processes/runs/{runId}/steps/{stepInstanceId}/rework",
+          "operationId": "RequestProcessStepRework"
+        },
+        {
+          "method": "GET",
+          "path": "/api/processes/runs/{runId}/summary",
+          "operationId": "GetProcessRunRecordSummary"
+        },
+        {
+          "method": "GET",
+          "path": "/api/processes/runs/analytics",
+          "operationId": "GetProcessRunRecordAnalytics"
+        }
+      ]
+    },
+    {
+      "name": "Workflows API",
+      "prefix": "/api/workflows",
+      "skillFile": "../candoitall-api-workflows/SKILL.md",
+      "operations": [
+        {
+          "method": "GET",
+          "path": "/api/workflows/analytics",
+          "operationId": "GetWorkflowAnalytics"
+        },
+        {
+          "method": "GET",
+          "path": "/api/workflows/components",
+          "operationId": "ListWorkflowComponents"
+        },
+        {
+          "method": "POST",
+          "path": "/api/workflows/components",
+          "operationId": "SaveWorkflowComponent"
+        },
+        {
+          "method": "GET",
+          "path": "/api/workflows/components/{componentId}",
+          "operationId": "GetWorkflowComponent"
+        },
+        {
+          "method": "DELETE",
+          "path": "/api/workflows/components/{componentId}",
+          "operationId": "DeleteWorkflowComponent"
+        },
+        {
+          "method": "GET",
+          "path": "/api/workflows/contract",
+          "operationId": "GetWorkflowsApiContract"
+        },
+        {
+          "method": "GET",
+          "path": "/api/workflows/definitions",
+          "operationId": "ListWorkflowDefinitions"
+        },
+        {
+          "method": "POST",
+          "path": "/api/workflows/definitions",
+          "operationId": "SaveWorkflowDefinition"
+        },
+        {
+          "method": "GET",
+          "path": "/api/workflows/definitions/{workflowId}",
+          "operationId": "GetWorkflowDefinition"
+        },
+        {
+          "method": "DELETE",
+          "path": "/api/workflows/definitions/{workflowId}",
+          "operationId": "DeleteWorkflowDefinition"
+        },
+        {
+          "method": "POST",
+          "path": "/api/workflows/definitions/{workflowId}/archive",
+          "operationId": "ArchiveWorkflowDefinition"
+        },
+        {
+          "method": "GET",
+          "path": "/api/workflows/definitions/{workflowId}/export",
+          "operationId": "ExportWorkflowDefinition"
+        },
+        {
+          "method": "POST",
+          "path": "/api/workflows/definitions/{workflowId}/publish",
+          "operationId": "PublishWorkflowDefinition"
+        },
+        {
+          "method": "POST",
+          "path": "/api/workflows/definitions/{workflowId}/runs/start",
+          "operationId": "StartWorkflowDefinitionRun"
+        },
+        {
+          "method": "POST",
+          "path": "/api/workflows/definitions/{workflowId}/suspend",
+          "operationId": "SuspendWorkflowDefinition"
+        },
+        {
+          "method": "POST",
+          "path": "/api/workflows/definitions/{workflowId}/validate",
+          "operationId": "ValidateSavedWorkflowDefinition"
+        },
+        {
+          "method": "GET",
+          "path": "/api/workflows/definitions/{workflowId}/versions/{versionId}",
+          "operationId": "GetWorkflowDefinitionVersion"
+        },
+        {
+          "method": "GET",
+          "path": "/api/workflows/definitions/by-external-key/{externalNamespace}/{externalKey}",
+          "operationId": "GetWorkflowDefinitionByExternalKey"
+        },
+        {
+          "method": "GET",
+          "path": "/api/workflows/definitions/by-template-key/{templateKey}",
+          "operationId": "GetWorkflowDefinitionByTemplateKey"
+        },
+        {
+          "method": "POST",
+          "path": "/api/workflows/definitions/import",
+          "operationId": "ImportWorkflowDefinition"
+        },
+        {
+          "method": "GET",
+          "path": "/api/workflows/events/stream",
+          "operationId": "StreamWorkflowRunEvents"
+        },
+        {
+          "method": "GET",
+          "path": "/api/workflows/executor-catalog",
+          "operationId": "ListWorkflowExecutorCatalog"
+        },
+        {
+          "method": "POST",
+          "path": "/api/workflows/external-requests/{requestId}/response",
+          "operationId": "RespondToWorkflowExternalRequest"
+        },
+        {
+          "method": "GET",
+          "path": "/api/workflows/provider-options",
+          "operationId": "ListWorkflowProviderOptions"
+        },
+        {
+          "method": "GET",
+          "path": "/api/workflows/runs",
+          "operationId": "ListWorkflowRuns"
+        },
+        {
+          "method": "GET",
+          "path": "/api/workflows/runs/{runId}",
+          "operationId": "GetWorkflowRun"
+        },
+        {
+          "method": "GET",
+          "path": "/api/workflows/runs/{runId}/artifacts",
+          "operationId": "ListWorkflowRunArtifacts"
+        },
+        {
+          "method": "GET",
+          "path": "/api/workflows/runs/{runId}/artifacts/{artifactId}/content",
+          "operationId": "GetWorkflowRunArtifactContent"
+        },
+        {
+          "method": "POST",
+          "path": "/api/workflows/runs/{runId}/cancel",
+          "operationId": "CancelWorkflowRun"
+        },
+        {
+          "method": "GET",
+          "path": "/api/workflows/runs/{runId}/detail",
+          "operationId": "GetWorkflowRunDetail"
+        },
+        {
+          "method": "GET",
+          "path": "/api/workflows/runs/{runId}/events",
+          "operationId": "ListWorkflowRunEvents"
+        },
+        {
+          "method": "GET",
+          "path": "/api/workflows/runs/{runId}/events/page",
+          "operationId": "ListWorkflowRunEventPage"
+        },
+        {
+          "method": "GET",
+          "path": "/api/workflows/runs/{runId}/events/stream",
+          "operationId": "StreamWorkflowRunEventsByRun"
+        },
+        {
+          "method": "GET",
+          "path": "/api/workflows/runs/{runId}/checkpoints",
+          "operationId": "ListWorkflowRunCheckpoints"
+        },
+        {
+          "method": "GET",
+          "path": "/api/workflows/runs/{runId}/pending-requests",
+          "operationId": "ListWorkflowRunPendingRequests"
+        },
+        {
+          "method": "GET",
+          "path": "/api/workflows/runs/by-idempotency-key/{key}",
+          "operationId": "GetWorkflowRunByIdempotencyKey"
+        },
+        {
+          "method": "GET",
+          "path": "/api/workflows/runs/page",
+          "operationId": "ListWorkflowRunPage"
+        },
+        {
+          "method": "POST",
+          "path": "/api/workflows/runs/start",
+          "operationId": "StartWorkflowRun"
+        },
+        {
+          "method": "GET",
+          "path": "/api/workflows/runtime-backends",
+          "operationId": "ListWorkflowRuntimeBackends"
+        },
+        {
+          "method": "GET",
+          "path": "/api/workflows/settings",
+          "operationId": "GetWorkflowSettings"
+        },
+        {
+          "method": "POST",
+          "path": "/api/workflows/settings",
+          "operationId": "SaveWorkflowSettings"
+        },
+        {
+          "method": "POST",
+          "path": "/api/workflows/test-runs",
+          "operationId": "RunWorkflowTest"
+        },
+        {
+          "method": "POST",
+          "path": "/api/workflows/validate",
+          "operationId": "ValidateDraftWorkflowDefinition"
+        }
+      ]
+    }
+  ]
 }

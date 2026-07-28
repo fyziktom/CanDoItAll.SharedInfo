@@ -4020,8 +4020,45 @@
           "required": true
         },
         "responses": {
-          "200": {
-            "description": "OK"
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Gone",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -4054,8 +4091,45 @@
           "required": true
         },
         "responses": {
-          "200": {
-            "description": "OK"
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Gone",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -4109,6 +4183,36 @@
           },
           "403": {
             "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Gone",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
             "content": {
               "application/json": {
                 "schema": {
@@ -4323,6 +4427,36 @@
           },
           "403": {
             "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Gone",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
             "content": {
               "application/json": {
                 "schema": {
@@ -4851,6 +4985,30 @@
         }
       }
     },
+    "/api/agents/execution-runs/{executionRunId}/approvals": {
+      "get": {
+        "tags": [
+          "Agents"
+        ],
+        "operationId": "ListAgentExecutionApprovals",
+        "parameters": [
+          {
+            "name": "executionRunId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/agents/{agentId}/execution-log": {
       "get": {
         "tags": [
@@ -4935,6 +5093,621 @@
         "responses": {
           "200": {
             "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/agents/execution-operations/{operationId}/events/stream": {
+      "get": {
+        "tags": [
+          "Agents"
+        ],
+        "operationId": "StreamAgentExecutionOperationEvents",
+        "parameters": [
+          {
+            "name": "operationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/agents/{agentId}/chat/stream": {
+      "post": {
+        "tags": [
+          "Agents"
+        ],
+        "operationId": "StreamAgentChatMessage",
+        "parameters": [
+          {
+            "name": "agentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AgentChatApiRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Gone",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/agents/execution-runs/stream": {
+      "post": {
+        "tags": [
+          "Agents"
+        ],
+        "operationId": "StreamAgentExecutionRun",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AgentExecutionRunApiRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Gone",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/agents/{agentId}/execution-runs/stream": {
+      "post": {
+        "tags": [
+          "Agents"
+        ],
+        "operationId": "StreamAgentScopedExecutionRun",
+        "parameters": [
+          {
+            "name": "agentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AgentExecutionRunStartApiRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Gone",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/agents/execution-runs/{executionRunId}/pending-approvals/stream": {
+      "post": {
+        "tags": [
+          "Agents"
+        ],
+        "operationId": "StreamAgentExecutionApprovalResponse",
+        "parameters": [
+          {
+            "name": "executionRunId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PendingApprovalApiRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Gone",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/agents/providers/{providerId}/chat-completions/stream": {
+      "post": {
+        "tags": [
+          "Agents"
+        ],
+        "operationId": "StreamAgentProviderChatCompletion",
+        "parameters": [
+          {
+            "name": "providerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProviderChatCompletionApiRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/agents/attachments/images": {
+      "post": {
+        "tags": [
+          "Agents"
+        ],
+        "operationId": "StageAgentImageAttachment",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/AgentImageAttachmentUploadRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentChatAttachmentStagingResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -7297,6 +8070,77 @@
         }
       }
     },
+    "/api/workflows/events/stream": {
+      "get": {
+        "tags": [
+          "Workflows"
+        ],
+        "operationId": "StreamWorkflowRunEvents",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/workflows/runs/{runId}/events/stream": {
+      "get": {
+        "tags": [
+          "Workflows"
+        ],
+        "operationId": "StreamWorkflowRunEventsByRun",
+        "parameters": [
+          {
+            "name": "runId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/processes/runs": {
       "get": {
         "tags": [
@@ -7852,256 +8696,395 @@
         }
       }
     },
-    "/api/cognitive-memory/contract": {
+    "/api/processes/events/stream": {
       "get": {
         "tags": [
-          "Cognitive Memory"
+          "Processes"
         ],
-        "operationId": "CognitiveMemoryLegacyContract",
+        "operationId": "StreamProcessRunEvents",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
           }
         }
       }
     },
-    "/api/cognitive-memory": {
+    "/api/processes/runs/{runId}/events/stream": {
       "get": {
         "tags": [
-          "Cognitive Memory"
+          "Processes"
         ],
-        "operationId": "CognitiveMemoryLegacyRetiredRoot",
+        "operationId": "StreamProcessRunEventsByRun",
+        "parameters": [
+          {
+            "name": "runId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
           }
         }
-      },
-      "post": {
+      }
+    },
+    "/api/memory-providers": {
+      "get": {
         "tags": [
-          "Cognitive Memory"
+          "Memory Providers"
         ],
-        "operationId": "CognitiveMemoryLegacyRetiredRoot",
+        "operationId": "ListMemoryProviders",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MemoryProviderProfileApiResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/memory-providers/{providerId}": {
+      "get": {
+        "tags": [
+          "Memory Providers"
+        ],
+        "operationId": "GetMemoryProvider",
+        "parameters": [
+          {
+            "name": "providerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MemoryProviderProfileApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
           }
         }
       },
       "put": {
         "tags": [
-          "Cognitive Memory"
+          "Memory Providers"
         ],
-        "operationId": "CognitiveMemoryLegacyRetiredRoot",
-        "responses": {
-          "200": {
-            "description": "OK"
+        "operationId": "UpsertMemoryProvider",
+        "parameters": [
+          {
+            "name": "providerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
-        }
-      },
-      "patch": {
-        "tags": [
-          "Cognitive Memory"
         ],
-        "operationId": "CognitiveMemoryLegacyRetiredRoot",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MemoryProviderProfileApiRequest"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Cognitive Memory"
-        ],
-        "operationId": "CognitiveMemoryLegacyRetiredRoot",
-        "responses": {
-          "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MemoryProviderProfileApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
           }
         }
       }
     },
-    "/api/cognitive-memory/{path}": {
-      "get": {
-        "tags": [
-          "Cognitive Memory"
-        ],
-        "operationId": "CognitiveMemoryLegacyRetiredCatchAll",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
+    "/api/memory-providers/{providerId}/queries": {
       "post": {
         "tags": [
-          "Cognitive Memory"
+          "Memory Providers"
         ],
-        "operationId": "CognitiveMemoryLegacyRetiredCatchAll",
-        "responses": {
-          "200": {
-            "description": "OK"
+        "operationId": "QueryMemoryProvider",
+        "parameters": [
+          {
+            "name": "providerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
-        }
-      },
-      "put": {
-        "tags": [
-          "Cognitive Memory"
         ],
-        "operationId": "CognitiveMemoryLegacyRetiredCatchAll",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MemoryProviderQueryApiRequest"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "patch": {
-        "tags": [
-          "Cognitive Memory"
-        ],
-        "operationId": "CognitiveMemoryLegacyRetiredCatchAll",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Cognitive Memory"
-        ],
-        "operationId": "CognitiveMemoryLegacyRetiredCatchAll",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/cognitive-memory/v1/contract": {
-      "get": {
-        "tags": [
-          "Cognitive Memory"
-        ],
-        "operationId": "CognitiveMemoryV1Contract",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/cognitive-memory/v1": {
-      "get": {
-        "tags": [
-          "Cognitive Memory"
-        ],
-        "operationId": "CognitiveMemoryV1RetiredRoot",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "Cognitive Memory"
-        ],
-        "operationId": "CognitiveMemoryV1RetiredRoot",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "put": {
-        "tags": [
-          "Cognitive Memory"
-        ],
-        "operationId": "CognitiveMemoryV1RetiredRoot",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "patch": {
-        "tags": [
-          "Cognitive Memory"
-        ],
-        "operationId": "CognitiveMemoryV1RetiredRoot",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Cognitive Memory"
-        ],
-        "operationId": "CognitiveMemoryV1RetiredRoot",
-        "responses": {
-          "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MemoryProviderQueryApiResponse"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MemoryProviderQueryApiResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MemoryProviderQueryApiResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MemoryProviderQueryApiResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MemoryProviderQueryApiResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Bad Gateway",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MemoryProviderQueryApiResponse"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Gateway Timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MemoryProviderQueryApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
           }
         }
       }
     },
-    "/api/cognitive-memory/v1/{path}": {
+    "/api/memory-providers/operations/{operationId}": {
       "get": {
         "tags": [
-          "Cognitive Memory"
+          "Memory Providers"
         ],
-        "operationId": "CognitiveMemoryV1RetiredCatchAll",
-        "responses": {
-          "200": {
-            "description": "OK"
+        "operationId": "GetMemoryProviderOperation",
+        "parameters": [
+          {
+            "name": "operationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
-        }
-      },
-      "post": {
-        "tags": [
-          "Cognitive Memory"
         ],
-        "operationId": "CognitiveMemoryV1RetiredCatchAll",
         "responses": {
           "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "put": {
-        "tags": [
-          "Cognitive Memory"
-        ],
-        "operationId": "CognitiveMemoryV1RetiredCatchAll",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "patch": {
-        "tags": [
-          "Cognitive Memory"
-        ],
-        "operationId": "CognitiveMemoryV1RetiredCatchAll",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Cognitive Memory"
-        ],
-        "operationId": "CognitiveMemoryV1RetiredCatchAll",
-        "responses": {
-          "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MemoryProviderOperationStatusApiResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MemoryProviderOperationStatusApiResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MemoryProviderOperationStatusApiResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MemoryProviderOperationStatusApiResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Bad Gateway",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MemoryProviderOperationStatusApiResponse"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Gateway Timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MemoryProviderOperationStatusApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -9567,7 +10550,8 @@
             "items": {
               "type": "string"
             }
-          }
+          },
+          "activityOperationId": { }
         }
       },
       "AgentExecutionRunStartApiRequest": {
@@ -9618,7 +10602,8 @@
             "items": {
               "type": "string"
             }
-          }
+          },
+          "activityOperationId": { }
         }
       },
       "AgentExternalProvisioningReceipt": {
@@ -9730,11 +10715,51 @@
             "items": {
               "type": "string"
             }
+          },
+          "activityOperationId": { }
+        }
+      },
+      "AgentChatAttachmentStagingResult": {
+        "required": [
+          "relativePath",
+          "contentType",
+          "sizeBytes"
+        ],
+        "type": "object",
+        "properties": {
+          "relativePath": {
+            "type": "string"
+          },
+          "contentType": {
+            "type": "string"
+          },
+          "sizeBytes": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int64"
           }
         }
       },
       "AgentChatHistoryMode": {
         "type": "integer"
+      },
+      "AgentImageAttachmentUploadRequest": {
+        "type": "object",
+        "properties": {
+          "file": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/IFormFile"
+              }
+            ]
+          }
+        }
       },
       "AgentImageGenerationAccessSettings": {
         "type": "object",
@@ -12554,6 +13579,40 @@
           }
         }
       },
+      "MemoryAcceptedOperationApiResponse": {
+        "required": [
+          "operationId",
+          "statusPath",
+          "expiresAtUtc",
+          "pollAfterSeconds",
+          "callbackAvailable"
+        ],
+        "type": "object",
+        "properties": {
+          "operationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "statusPath": {
+            "type": "string"
+          },
+          "expiresAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "pollAfterSeconds": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "callbackAvailable": {
+            "type": "boolean"
+          }
+        }
+      },
       "MemoryCapabilityId": {
         "required": [
           "value"
@@ -12562,6 +13621,98 @@
         "properties": {
           "value": {
             "type": "string"
+          }
+        }
+      },
+      "MemoryCitationApiResponse": {
+        "required": [
+          "sourceRef",
+          "label"
+        ],
+        "type": "object",
+        "properties": {
+          "sourceRef": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          }
+        }
+      },
+      "MemoryContextPackApiResponse": {
+        "required": [
+          "contextPackId",
+          "summary",
+          "sections",
+          "warnings",
+          "providerConfidence",
+          "feedbackHandle"
+        ],
+        "type": "object",
+        "properties": {
+          "contextPackId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "sections": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MemoryContextSectionApiResponse"
+            }
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MemoryWarningApiResponse"
+            }
+          },
+          "providerConfidence": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "feedbackHandle": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "MemoryContextSectionApiResponse": {
+        "required": [
+          "title",
+          "text",
+          "citations",
+          "confidence"
+        ],
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "citations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MemoryCitationApiResponse"
+            }
+          },
+          "confidence": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
+            "format": "double"
           }
         }
       },
@@ -12607,8 +13758,192 @@
       "MemoryKind": {
         "type": "integer"
       },
+      "MemoryLedgerStatus": {
+        "enum": [
+          "Pending",
+          "Accepted",
+          "Running",
+          "Completed",
+          "Failed",
+          "TimedOut",
+          "Cancelled",
+          "Expired",
+          "Forgotten"
+        ]
+      },
+      "MemoryOperationHandlerStatus": {
+        "enum": [
+          "Completed",
+          "Accepted",
+          "NoProviderConfigured",
+          "NoEnabledProvider",
+          "ProviderNotFound",
+          "ProviderDisabled",
+          "CapabilityUnavailable",
+          "CapabilityDenied",
+          "CapabilityMismatch",
+          "DriverUnavailable",
+          "SourceCaptureFailed",
+          "NotFound",
+          "Cancelled",
+          "Failed",
+          "TimedOut",
+          "UnsupportedOperation",
+          "ProviderDenied",
+          "ProviderSelectionRequired",
+          "AccessDenied",
+          "ProviderConfigurationFailed",
+          "DriverFailed"
+        ]
+      },
+      "MemoryOperationKind": {
+        "enum": [
+          "ContextQuery",
+          "Ingestion",
+          "Feedback",
+          "SourceRequest",
+          "EventAcknowledge",
+          "OperationStatus",
+          "CapabilityExchange",
+          "Health"
+        ]
+      },
       "MemoryProviderAssignmentScope": {
         "type": "integer"
+      },
+      "MemoryProviderCapabilitiesApiRequest": {
+        "required": [
+          "supportsSynchronousQueries",
+          "supportsAsynchronousQueries",
+          "supportsOperationStatus"
+        ],
+        "type": "object",
+        "properties": {
+          "supportsSynchronousQueries": {
+            "type": "boolean"
+          },
+          "supportsAsynchronousQueries": {
+            "type": "boolean"
+          },
+          "supportsOperationStatus": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MemoryProviderCapabilitiesApiResponse": {
+        "required": [
+          "supportsSynchronousQueries",
+          "supportsAsynchronousQueries",
+          "supportsOperationStatus",
+          "supportsRclUi",
+          "supportsIframeUi"
+        ],
+        "type": "object",
+        "properties": {
+          "supportsSynchronousQueries": {
+            "type": "boolean"
+          },
+          "supportsAsynchronousQueries": {
+            "type": "boolean"
+          },
+          "supportsOperationStatus": {
+            "type": "boolean"
+          },
+          "supportsRclUi": {
+            "type": "boolean"
+          },
+          "supportsIframeUi": {
+            "type": "boolean"
+          }
+        }
+      },
+      "MemoryProviderDriverKind": {
+        "enum": [
+          "Http",
+          "Mcp",
+          "NativeRemote",
+          "Mock",
+          "InProcessMigration"
+        ]
+      },
+      "MemoryProviderDriverKindApiRequest": {
+        "enum": [
+          "Http",
+          "Mcp",
+          "NativeRemote",
+          "Mock"
+        ]
+      },
+      "MemoryProviderFallbackBehavior": {
+        "enum": [
+          "DenyImplicitFallback",
+          "AllowDefaultProviderWhenNoAssignment"
+        ]
+      },
+      "MemoryProviderFallbackBehaviorApiRequest": {
+        "enum": [
+          "DenyImplicitFallback",
+          "AllowDefaultProviderWhenNoAssignment"
+        ]
+      },
+      "MemoryProviderHealthState": {
+        "enum": [
+          "Unknown",
+          "Healthy",
+          "Degraded",
+          "Unreachable"
+        ]
+      },
+      "MemoryProviderHttpTransportApiModel": {
+        "required": [
+          "baseUrl",
+          "queryPath",
+          "healthPath",
+          "apiKeyEnvironmentVariable",
+          "authHeaderName",
+          "authScheme",
+          "timeoutMilliseconds",
+          "maxRetryAttempts"
+        ],
+        "type": "object",
+        "properties": {
+          "baseUrl": {
+            "type": "string"
+          },
+          "queryPath": {
+            "type": "string"
+          },
+          "healthPath": {
+            "type": "string"
+          },
+          "apiKeyEnvironmentVariable": {
+            "type": "string"
+          },
+          "authHeaderName": {
+            "type": "string"
+          },
+          "authScheme": {
+            "type": "string"
+          },
+          "timeoutMilliseconds": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "maxRetryAttempts": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
       },
       "MemoryProviderInstanceId": {
         "required": [
@@ -12621,8 +13956,533 @@
           }
         }
       },
+      "MemoryProviderInteractionSupportApiResponse": {
+        "required": [
+          "supportsSynchronousQueries",
+          "supportsAsynchronousOperations"
+        ],
+        "type": "object",
+        "properties": {
+          "supportsSynchronousQueries": {
+            "type": "boolean"
+          },
+          "supportsAsynchronousOperations": {
+            "type": "boolean"
+          }
+        }
+      },
+      "MemoryProviderLimitsApiResponse": {
+        "required": [
+          "maxContextSections",
+          "maxSourceItems",
+          "maxInFlightOperations",
+          "operationTimeoutSeconds"
+        ],
+        "type": "object",
+        "properties": {
+          "maxContextSections": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "maxSourceItems": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "maxInFlightOperations": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "operationTimeoutSeconds": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
+            "format": "double"
+          }
+        }
+      },
+      "MemoryProviderMcpTransportApiModel": {
+        "required": [
+          "descriptorKind",
+          "serverKey",
+          "displayName",
+          "description",
+          "remoteEndpoint",
+          "authHeaderName",
+          "authHeaderEnvironmentVariable",
+          "contextQueryTool",
+          "operationStatusTool"
+        ],
+        "type": "object",
+        "properties": {
+          "descriptorKind": {
+            "type": "string"
+          },
+          "serverKey": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "remoteEndpoint": {
+            "type": "string"
+          },
+          "authHeaderName": {
+            "type": "string"
+          },
+          "authHeaderEnvironmentVariable": {
+            "type": "string"
+          },
+          "contextQueryTool": {
+            "type": "string"
+          },
+          "operationStatusTool": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MemoryProviderOperationApiResponse": {
+        "required": [
+          "operationId",
+          "providerId",
+          "requestedCapability",
+          "operationKind",
+          "status",
+          "retryCount",
+          "transitionCount",
+          "createdAtUtc",
+          "updatedAtUtc",
+          "completedAtUtc",
+          "statusReason"
+        ],
+        "type": "object",
+        "properties": {
+          "operationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "providerId": {
+            "type": "string"
+          },
+          "requestedCapability": {
+            "type": "string"
+          },
+          "operationKind": {
+            "$ref": "#/components/schemas/MemoryOperationKind"
+          },
+          "status": {
+            "$ref": "#/components/schemas/MemoryLedgerStatus"
+          },
+          "retryCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "transitionCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "completedAtUtc": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "statusReason": {
+            "type": "string"
+          }
+        }
+      },
+      "MemoryProviderOperationStatusApiResponse": {
+        "required": [
+          "status",
+          "diagnostic",
+          "selection",
+          "operation"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/MemoryOperationHandlerStatus"
+          },
+          "diagnostic": {
+            "type": "string"
+          },
+          "selection": {
+            "$ref": "#/components/schemas/MemoryProviderSelectionApiResponse"
+          },
+          "operation": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/MemoryProviderOperationApiResponse"
+              }
+            ]
+          }
+        }
+      },
+      "MemoryProviderProfileApiRequest": {
+        "required": [
+          "displayName",
+          "driverKind",
+          "isEnabled",
+          "fallbackBehavior",
+          "providerKind",
+          "selectionTags",
+          "capabilities",
+          "http",
+          "mcp"
+        ],
+        "type": "object",
+        "properties": {
+          "displayName": {
+            "type": "string"
+          },
+          "driverKind": {
+            "$ref": "#/components/schemas/MemoryProviderDriverKindApiRequest"
+          },
+          "isEnabled": {
+            "type": "boolean"
+          },
+          "fallbackBehavior": {
+            "$ref": "#/components/schemas/MemoryProviderFallbackBehaviorApiRequest"
+          },
+          "providerKind": {
+            "type": "string"
+          },
+          "selectionTags": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "type": "string"
+            }
+          },
+          "capabilities": {
+            "$ref": "#/components/schemas/MemoryProviderCapabilitiesApiRequest"
+          },
+          "http": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/MemoryProviderHttpTransportApiModel"
+              }
+            ]
+          },
+          "mcp": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/MemoryProviderMcpTransportApiModel"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "MemoryProviderProfileApiResponse": {
+        "required": [
+          "providerId",
+          "displayName",
+          "driverKind",
+          "isEnabled",
+          "healthState",
+          "workspaceScope",
+          "fallbackBehavior",
+          "providerKind",
+          "protocolVersion",
+          "selectionTags",
+          "capabilities",
+          "interactionSupport",
+          "limits",
+          "http",
+          "mcp"
+        ],
+        "type": "object",
+        "properties": {
+          "providerId": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "driverKind": {
+            "$ref": "#/components/schemas/MemoryProviderDriverKind"
+          },
+          "isEnabled": {
+            "type": "boolean"
+          },
+          "healthState": {
+            "$ref": "#/components/schemas/MemoryProviderHealthState"
+          },
+          "workspaceScope": {
+            "$ref": "#/components/schemas/MemoryProviderWorkspaceScope"
+          },
+          "fallbackBehavior": {
+            "$ref": "#/components/schemas/MemoryProviderFallbackBehavior"
+          },
+          "providerKind": {
+            "type": "string"
+          },
+          "protocolVersion": {
+            "type": "string"
+          },
+          "selectionTags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "capabilities": {
+            "$ref": "#/components/schemas/MemoryProviderCapabilitiesApiResponse"
+          },
+          "interactionSupport": {
+            "$ref": "#/components/schemas/MemoryProviderInteractionSupportApiResponse"
+          },
+          "limits": {
+            "$ref": "#/components/schemas/MemoryProviderLimitsApiResponse"
+          },
+          "http": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/MemoryProviderHttpTransportApiModel"
+              }
+            ]
+          },
+          "mcp": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/MemoryProviderMcpTransportApiModel"
+              }
+            ]
+          }
+        }
+      },
+      "MemoryProviderQueryApiRequest": {
+        "required": [
+          "query",
+          "mode"
+        ],
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string"
+          },
+          "mode": {
+            "$ref": "#/components/schemas/MemoryProviderQueryMode"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MemoryProviderQueryApiResponse": {
+        "required": [
+          "status",
+          "diagnostic",
+          "selection",
+          "operation",
+          "contextPack",
+          "acceptedOperation",
+          "feedbackHandle",
+          "driverDispatchAttempted"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/MemoryOperationHandlerStatus"
+          },
+          "diagnostic": {
+            "type": "string"
+          },
+          "selection": {
+            "$ref": "#/components/schemas/MemoryProviderSelectionApiResponse"
+          },
+          "operation": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/MemoryProviderOperationApiResponse"
+              }
+            ]
+          },
+          "contextPack": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/MemoryContextPackApiResponse"
+              }
+            ]
+          },
+          "acceptedOperation": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/MemoryAcceptedOperationApiResponse"
+              }
+            ]
+          },
+          "feedbackHandle": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "driverDispatchAttempted": {
+            "type": "boolean"
+          }
+        }
+      },
+      "MemoryProviderQueryMode": {
+        "enum": [
+          "Synchronous",
+          "Asynchronous"
+        ]
+      },
+      "MemoryProviderSelectionApiResponse": {
+        "required": [
+          "status",
+          "reason",
+          "requiredCapability",
+          "dispatchAllowed",
+          "diagnostic",
+          "selectedProviderId",
+          "candidateProviderIds"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/MemoryProviderSelectionStatus"
+          },
+          "reason": {
+            "$ref": "#/components/schemas/MemoryProviderSelectionReason"
+          },
+          "requiredCapability": {
+            "type": "string"
+          },
+          "dispatchAllowed": {
+            "type": "boolean"
+          },
+          "diagnostic": {
+            "type": "string"
+          },
+          "selectedProviderId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "candidateProviderIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "MemoryProviderSelectionReason": {
+        "enum": [
+          "None",
+          "ExplicitProvider",
+          "AssignmentOverride",
+          "DefaultProvider"
+        ]
+      },
+      "MemoryProviderSelectionStatus": {
+        "enum": [
+          "Selected",
+          "NoProviderConfigured",
+          "NoEnabledProvider",
+          "ProviderNotFound",
+          "ProviderDisabled",
+          "CapabilityUnavailable",
+          "CapabilityDenied",
+          "ProviderDenied",
+          "ProviderSelectionRequired",
+          "ProviderConfigurationFailed"
+        ]
+      },
+      "MemoryProviderWorkspaceScope": {
+        "enum": [
+          "AllWorkspaces",
+          "SingleWorkspace"
+        ]
+      },
       "MemorySourceScope": {
         "type": "integer"
+      },
+      "MemoryWarningApiResponse": {
+        "required": [
+          "kind",
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "kind": {
+            "$ref": "#/components/schemas/MemoryWarningKind"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "MemoryWarningKind": {
+        "enum": [
+          "PolicyLimited",
+          "ProviderPartial",
+          "CapabilityUnavailable",
+          "SourceUnavailable"
+        ]
       },
       "PartyAddressCreateApiRequest": {
         "type": "object",
@@ -12886,7 +14746,8 @@
           },
           "autoApprovePendingToolCalls": {
             "type": "boolean"
-          }
+          },
+          "activityOperationId": { }
         }
       },
       "PendingToolApprovalRecord": {
@@ -15387,6 +17248,32 @@
           "outputFormat": {
             "type": "string",
             "default": "Markdown"
+          }
+        }
+      },
+      "ProviderChatCompletionApiRequest": {
+        "required": [
+          "model",
+          "systemPrompt",
+          "messages",
+          "prompt"
+        ],
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string"
+          },
+          "systemPrompt": {
+            "type": "string"
+          },
+          "messages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProviderTestChatMessage"
+            }
+          },
+          "prompt": {
+            "type": "string"
           }
         }
       },
@@ -18457,7 +20344,7 @@
       "name": "Processes"
     },
     {
-      "name": "Cognitive Memory"
+      "name": "Memory Providers"
     },
     {
       "name": "Plugins"

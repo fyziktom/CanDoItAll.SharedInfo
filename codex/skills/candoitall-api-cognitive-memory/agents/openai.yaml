@@ -1,4 +1,0 @@
-interface:
-  display_name: "CanDoItAll Cognitive Memory API"
-  short_description: "Inspect the retired Cognitive Memory HTTP contract."
-  default_prompt: "Use $candoitall-api-cognitive-memory to inspect the retired base-host contract, verify 410 migration guidance, and avoid calling removed Cognitive Memory routes."

@@ -8,20 +8,20 @@ CanDoItAll API skills.
 - Artifact: [`references/candoitall-web.openapi.json`](references/candoitall-web.openapi.json)
 - Provenance: [`manifest.json`](manifest.json)
 - Source repository: `CanDoItAll`
-- Source branch: `agents-loading-refactor`
-- Baseline source commit: `6e866ab531808758c268bc460ce2c997f2ae8440`
+- Source branch: `apis-sse`
+- Baseline source commit: `563636f944e76e777356ae2a5fec4ad66c997fd2`
 - Source state: uncommitted working tree; `workingTreeClean: false`
 - Document server: `http://localhost:5032/`
 - Runtime endpoints: `/openapi/v1.json` and `/swagger/v1/swagger.json`
 - OpenAPI version: `3.1.1`
-- Paths: `234`
-- Operations: `279`
-- Component schemas: `347`
+- Paths: `244`
+- Operations: `274`
+- Component schemas: `381`
 - SHA-256:
-  `BD1F0B297956E4CEB176AA183FE283BB481D20CD686CAF075B52881BD7E92AEC`
+  `77B03745B16C3E8B3EF490C4D5817083FABD20C9320CF1DF01E2107DF47C699F`
 
 The snapshot was captured from a rebuilt Development host on the canonical 5032 URL.
-Both runtime document endpoints returned byte-identical 438,706-byte content. The
+Both runtime document endpoints returned byte-identical 488,398-byte content. The
 product source was not committed at capture time, so the baseline commit and a
 working-tree status fingerprint are recorded in the manifest; this is deliberately
 not represented as commit-clean provenance.
@@ -31,15 +31,15 @@ not represented as commit-clean provenance.
 | `/_dev` | 10 | 10 |
 | `/api/access` | 2 | 2 |
 | `/api/agent-recruiting` | 6 | 6 |
-| `/api/agents` | 51 | 64 |
-| `/api/cognitive-memory` | 6 | 22 |
+| `/api/agents` | 59 | 72 |
+| `/api/memory-providers` | 4 | 5 |
 | `/api/crm-hr` | 15 | 19 |
 | `/api/plugins` | 18 | 20 |
-| `/api/processes` | 13 | 13 |
+| `/api/processes` | 15 | 15 |
 | `/api/projects` | 7 | 10 |
 | `/api/project-structure` | 55 | 56 |
 | `/api/prompt-gallery` | 10 | 11 |
-| `/api/workflows` | 36 | 41 |
+| `/api/workflows` | 38 | 43 |
 | `/authorized-files` | 2 | 2 |
 | `/managed-files` | 1 | 1 |
 | `/storage` | 2 | 2 |
@@ -48,23 +48,24 @@ These families account for every path and operation in the document. The Develop
 document intentionally includes the `/_dev` surface. Static files, Blazor routes, and
 other non-API application routes are not OpenAPI operations.
 
-The manifest records complete Agents, Agent Recruiting, Processes, and Workflows
-operation sets, including operation identifiers. Validation compares every set with the
-generated document and its skill route appendix so these API and skill contracts cannot
-drift silently.
+The manifest records complete Agents, Agent Recruiting, Memory Providers, Processes,
+and Workflows operation sets, including operation identifiers. Validation compares
+every set with the generated document and its skill route appendix so these API and
+skill contracts cannot drift silently.
 
-The base-host Cognitive Memory surface is currently retired. Its documented routes
-provide the contract response and `410 Gone` migration guidance; the former ingestion,
-recall, and consolidation surface is not live in this source commit.
+The main host now exposes only the experimental, provider-neutral
+`/api/memory-providers` surface for profile configuration, context queries, and
+caller-owned operation status. Native Cognitive Memory belongs to the separate
+`CanDoItAll.CognitiveMemory` repository, which remains WIP and unpublished; the main
+host does not expose a `/api/cognitive-memory` compatibility family.
 
-Relative to the preceding artifact, this snapshot adds typed
-`AgentExecutionOperationId` and `ProjectStructureReadSource` schemas, candidate
-interview listing and assessment schemas, and four durable process-record routes:
-list, summary, graph, and analytics. The run operation identifier is durable
-correlation metadata; the current contract does not publish an agent-activity polling
-or SSE endpoint. Project Structure HTTP reads remain canonical: invocation-local
-snapshots are available only to the in-process runtime tool and are rejected by the
-HTTP boundary.
+Relative to the preceding artifact, this snapshot adds bounded SSE contracts for
+agent activity and same-request commands, provider completion status, workflow run
+signals, and process run signals. It also adds bounded image attachment staging,
+global agent approval readback, caller-supplied activity-operation correlation, and
+configurable Swagger UI. Workflow and process streams support global or exact-run
+subscriptions; their cursors are bounded and host-local, so canonical detail/history
+routes remain the source of truth after a replay gap or process restart.
 
 Use the [partner API migration matrix](references/partner-api-migration.md) when upgrading
 an integration that still uses the superseded partner-side workarounds.
