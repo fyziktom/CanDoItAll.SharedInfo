@@ -2,13 +2,15 @@
     "schemaVersion":  1,
     "source":  {
                    "repository":  "CanDoItAll",
-                   "branch":  "apis-improvements",
-                   "commit":  "75ea79252a3c3d442e7a404f619f167c4b3edfcf",
-                   "workingTreeClean":  true,
-                   "captureNote":  "Development host used the canonical URL with isolated workspace/control-plane paths, an in-memory database, and an in-memory secret vault. API registrations and OpenAPI generation were unchanged. Both runtime documents were byte-identical to the prior working-tree capture.",
+                   "branch":  "agents-loading-refactor",
+                   "commit":  "6e866ab531808758c268bc460ce2c997f2ae8440",
+                   "workingTreeClean":  false,
+                   "workingTreeNote":  "Captured from the rebuilt uncommitted agents-loading-refactor working tree after the agent preload/activity architecture implementation. The commit field is the baseline commit, not a clean artifact provenance claim. The status fingerprint is SHA-256 over UTF-8 git status --porcelain=v1 lines joined with LF.",
+                   "workingTreeStatusSha256":  "7AA777F8CD8C1AA8BE02E3EFC5662CF4BDD6C8F87E34DE5056588277F9F02137",
+                   "captureNote":  "Development host used the canonical HTTP 5032 launch profile and the normal configured runtime profile. Both runtime OpenAPI document endpoints returned byte-identical 438,706-byte content. The snapshot records typed execution-operation and Project Structure read-source schemas plus candidate-interview and durable process-record routes; it does not expose an activity SSE endpoint.",
                    "webProject":  "src/App/CanDoItAll.Web/CanDoItAll.Web.csproj",
                    "environment":  "Development",
-                   "generatedUtc":  "2026-07-26T06:01:38.7874614Z",
+                   "generatedUtc":  "2026-07-28 02:32:03.3218839Z",
                    "runtimeDocumentPaths":  [
                                                 "/openapi/v1.json",
                                                 "/swagger/v1/swagger.json"
@@ -16,14 +18,14 @@
                },
     "artifact":  {
                      "file":  "references/candoitall-web.openapi.json",
-                     "sha256":  "A5D9EE04B93A5913CB3AF7004B1F91F7F85A6639CF911F2BA2258316C778B51C",
+                     "sha256":  "BD1F0B297956E4CEB176AA183FE283BB481D20CD686CAF075B52881BD7E92AEC",
                      "openapiVersion":  "3.1.1",
                      "documentTitle":  "CanDoItAll.Web | v1",
                      "documentVersion":  "1.0.0",
                      "serverUrl":  "http://localhost:5032/",
-                     "pathCount":  229,
-                     "operationCount":  274,
-                     "schemaCount":  342
+                     "pathCount":  234,
+                     "operationCount":  279,
+                     "schemaCount":  347
                  },
     "routeFamilies":  [
                           {
@@ -38,8 +40,8 @@
                           },
                           {
                               "prefix":  "/api/agent-recruiting",
-                              "pathCount":  5,
-                              "operationCount":  5
+                              "pathCount":  6,
+                              "operationCount":  6
                           },
                           {
                               "prefix":  "/api/agents",
@@ -63,8 +65,8 @@
                           },
                           {
                               "prefix":  "/api/processes",
-                              "pathCount":  9,
-                              "operationCount":  9
+                              "pathCount":  13,
+                              "operationCount":  13
                           },
                           {
                               "prefix":  "/api/projects",
@@ -109,6 +111,11 @@
                                         "skillFile":  "../candoitall-api-agents/SKILL.md",
                                         "routeAppendix":  "api-docs-skills-parity:agent-recruiting-routes",
                                         "operations":  [
+                                                           {
+                                                               "method":  "GET",
+                                                               "path":  "/api/agent-recruiting/candidates/{candidateAgentId}/interviews",
+                                                               "operationId":  "ListAgentRecruitingCandidateInterviews"
+                                                           },
                                                            {
                                                                "method":  "GET",
                                                                "path":  "/api/agent-recruiting/candidates/{agentId}/readiness",
@@ -490,6 +497,16 @@
                                                            },
                                                            {
                                                                "method":  "GET",
+                                                               "path":  "/api/processes/runs",
+                                                               "operationId":  "ListProcessRunRecords"
+                                                           },
+                                                           {
+                                                               "method":  "GET",
+                                                               "path":  "/api/processes/runs/analytics",
+                                                               "operationId":  "GetProcessRunRecordAnalytics"
+                                                           },
+                                                           {
+                                                               "method":  "GET",
                                                                "path":  "/api/processes/runs/{runId}",
                                                                "operationId":  "GetProcessRun"
                                                            },
@@ -505,8 +522,18 @@
                                                            },
                                                            {
                                                                "method":  "GET",
+                                                               "path":  "/api/processes/runs/{runId}/graph",
+                                                               "operationId":  "GetProcessRunRecordGraph"
+                                                           },
+                                                           {
+                                                               "method":  "GET",
                                                                "path":  "/api/processes/runs/{runId}/history",
                                                                "operationId":  "GetProcessRunHistory"
+                                                           },
+                                                           {
+                                                               "method":  "GET",
+                                                               "path":  "/api/processes/runs/{runId}/summary",
+                                                               "operationId":  "GetProcessRunRecordSummary"
                                                            },
                                                            {
                                                                "method":  "POST",

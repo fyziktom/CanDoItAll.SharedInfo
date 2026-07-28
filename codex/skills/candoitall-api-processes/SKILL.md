@@ -35,6 +35,10 @@ API.
 | Live list | `GET /api/processes/live` |
 | Live detail | `GET /api/processes/runs/{runId}` |
 | Live history | `GET /api/processes/runs/{runId}/history` |
+| Durable record list | `GET /api/processes/runs` |
+| Durable record summary | `GET /api/processes/runs/{runId}/summary` |
+| Durable record graph | `GET /api/processes/runs/{runId}/graph` |
+| Durable record analytics | `GET /api/processes/runs/analytics` |
 
 ## Launch
 
@@ -103,9 +107,28 @@ Content-Type: application/json
 - Use `GET /api/processes/runs/{runId}/history` for a bounded live timeline. `fromUtc`
   defaults to 24 hours before `toUtc`; `toUtc` defaults to now; `take` is clamped to
   `1..1000`.
-The current `apis-improvements` contract does not expose the branch-specific durable
-record list, summary, graph, or analytics routes. Do not call those routes unless the
-target host's live OpenAPI document explicitly publishes them.
+- Use `GET /api/processes/runs` for cursor-paged durable records. Available filters
+  are `projectId`, `definitionId`, `rootRunId`, `disposition`, `participantId`,
+  `fromUtc`, `toUtc`, `take`, and `cursor`.
+- Use `GET /api/processes/runs/{runId}/summary` for a paged summary with
+  `stepOffset`, `stepTake`, `runtimeEventMinuteOffset`, and
+  `runtimeEventMinuteTake`.
+- Use `GET /api/processes/runs/{runId}/graph` for the bounded durable step graph with
+  `stepOffset` and `stepTake`.
+- Use `GET /api/processes/runs/analytics` for durable aggregate analytics filtered by
+  project, definition, root run, participant, or time window.
+
+### Manager Snapshot And Activity Boundary
+
+The Process Manager chat can reuse a bounded immutable snapshot of the already-loaded
+selected-run shell inside the host process. That snapshot is invocation context, not
+a durable process record and not an HTTP resource. The `/api/processes/live`,
+`/api/processes/runs/{runId}`, and history routes continue to read the canonical
+application/projection boundary.
+
+The current HTTP contract has no process-manager agent-activity SSE endpoint. External
+clients must use the documented process and agent execution evidence routes. Do not
+infer a snapshot or event-stream route from UI activity feedback.
 
 ## Project-Structure Bridge
 
@@ -144,7 +167,11 @@ the project-structure operation result and process readback.
 | `POST` | `/api/processes/runs/{runId:guid}/cancel` |
 | `POST` | `/api/processes/runs/{runId:guid}/steps/{stepInstanceId:guid}/rework` |
 | `GET` | `/api/processes/live` |
+| `GET` | `/api/processes/runs` |
+| `GET` | `/api/processes/runs/analytics` |
 | `GET` | `/api/processes/runs/{runId:guid}` |
+| `GET` | `/api/processes/runs/{runId:guid}/graph` |
 | `GET` | `/api/processes/runs/{runId:guid}/history` |
+| `GET` | `/api/processes/runs/{runId:guid}/summary` |
 
 <!-- api-docs-skills-parity:routes:end -->

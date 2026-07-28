@@ -47,8 +47,25 @@ Use this skill when a task needs agent catalog, provider, chat, execution, appro
 - Execution runs: `POST /api/agents/execution-runs`, `POST /api/agents/{agentId}/execution-runs`, list routes, run detail routes, and agent-scoped/global evidence routes.
 - Approvals: `/api/agents/execution-runs/{executionRunId}/pending-approvals` and run approval listing.
 - Evidence: execution artifacts, checkpoints, tool receipts, execution log, runtime snapshot, and metrics routes.
-- Recruiting evidence: create/read `/api/agent-recruiting/interviews`, append typed
-  attempts and human reviews, then read `/api/agent-recruiting/candidates/{agentId}/readiness`.
+- Recruiting evidence: create/read `/api/agent-recruiting/interviews`, list a
+  candidate's interviews through
+  `/api/agent-recruiting/candidates/{candidateAgentId}/interviews`, append typed
+  attempts and human reviews, then read
+  `/api/agent-recruiting/candidates/{agentId}/readiness`.
+
+### Activity Correlation Boundary
+
+New execution records can expose `initialActivityOperationId`. It is the durable
+correlation identifier for the first typed in-process activity operation associated
+with that run. It is not an idempotency key and does not authorize or expose the
+activity stream.
+
+The current HTTP contract has no agent-activity polling or SSE endpoint. The typed
+activity stream is process-local and is consumed by the Blazor surfaces. External
+clients must use execution-run detail, approvals, artifacts, checkpoints, receipts,
+logs, runtime snapshots, and metrics for durable readback. Do not invent an
+`/activity`, `/events`, or SSE route from the presence of
+`initialActivityOperationId`.
 
 ## Operating Rules
 
@@ -58,6 +75,8 @@ Use this skill when a task needs agent catalog, provider, chat, execution, appro
 - Resolve partner-managed agents by external key. Do not emulate identity with display
   names, and do not retry a changed payload under an existing idempotency key.
 - For debugging, query run detail first, then fetch artifacts/checkpoints/receipts/log only for the run under review.
+- Treat `initialActivityOperationId` as correlation metadata only. Continue to use
+  `executionRunId` for durable run lookups.
 - Use provider test routes before assigning a provider to production-like agents.
 - Use capability verification before assuming a tool or skill is assigned to an agent.
 - Use setup tests for external tool and MCP capability descriptors before enabling them for agents or process roles. Use access-preview when a process, team, or role policy might deny required skill/tool/MCP capabilities.
@@ -198,6 +217,7 @@ Agents API route appendix. Generated from Minimal API registrations; refresh fro
 
 | Method | Route |
 | --- | --- |
+| `GET` | `/api/agent-recruiting/candidates/{candidateAgentId:guid}/interviews` |
 | `GET` | `/api/agent-recruiting/candidates/{agentId:guid}/readiness` |
 | `POST` | `/api/agent-recruiting/interviews` |
 | `GET` | `/api/agent-recruiting/interviews/{interviewId:guid}` |

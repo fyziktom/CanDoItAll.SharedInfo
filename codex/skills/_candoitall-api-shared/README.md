@@ -8,33 +8,34 @@ CanDoItAll API skills.
 - Artifact: [`references/candoitall-web.openapi.json`](references/candoitall-web.openapi.json)
 - Provenance: [`manifest.json`](manifest.json)
 - Source repository: `CanDoItAll`
-- Source branch: `apis-improvements`
-- Source commit: `75ea79252a3c3d442e7a404f619f167c4b3edfcf`
-- Source state: committed and clean; `workingTreeClean: true`
+- Source branch: `agents-loading-refactor`
+- Baseline source commit: `6e866ab531808758c268bc460ce2c997f2ae8440`
+- Source state: uncommitted working tree; `workingTreeClean: false`
 - Document server: `http://localhost:5032/`
 - Runtime endpoints: `/openapi/v1.json` and `/swagger/v1/swagger.json`
 - OpenAPI version: `3.1.1`
-- Paths: `229`
-- Operations: `274`
-- Component schemas: `342`
+- Paths: `234`
+- Operations: `279`
+- Component schemas: `347`
 - SHA-256:
-  `A5D9EE04B93A5913CB3AF7004B1F91F7F85A6639CF911F2BA2258316C778B51C`
+  `BD1F0B297956E4CEB176AA183FE283BB481D20CD686CAF075B52881BD7E92AEC`
 
-The snapshot was captured from the clean source commit in the Development environment
-with isolated runtime storage and in-memory infrastructure. Both runtime document
-endpoints returned byte-identical content, and the result was byte-identical to the
-earlier working-tree capture.
+The snapshot was captured from a rebuilt Development host on the canonical 5032 URL.
+Both runtime document endpoints returned byte-identical 438,706-byte content. The
+product source was not committed at capture time, so the baseline commit and a
+working-tree status fingerprint are recorded in the manifest; this is deliberately
+not represented as commit-clean provenance.
 
 | Route family | Paths | Operations |
 | --- | ---: | ---: |
 | `/_dev` | 10 | 10 |
 | `/api/access` | 2 | 2 |
-| `/api/agent-recruiting` | 5 | 5 |
+| `/api/agent-recruiting` | 6 | 6 |
 | `/api/agents` | 51 | 64 |
 | `/api/cognitive-memory` | 6 | 22 |
 | `/api/crm-hr` | 15 | 19 |
 | `/api/plugins` | 18 | 20 |
-| `/api/processes` | 9 | 9 |
+| `/api/processes` | 13 | 13 |
 | `/api/projects` | 7 | 10 |
 | `/api/project-structure` | 55 | 56 |
 | `/api/prompt-gallery` | 10 | 11 |
@@ -56,12 +57,14 @@ The base-host Cognitive Memory surface is currently retired. Its documented rout
 provide the contract response and `410 Gone` migration guidance; the former ingestion,
 recall, and consolidation surface is not live in this source commit.
 
-This snapshot adds remote package import, external-key agent provisioning, portable JSON
-Schema output schemas, stable workflow lookup, workflow launch idempotency evidence,
-typed OpenAPI response/error schemas, and agent recruiting evidence. The four durable
-process snapshot routes published by the prior `processes-snapshots` artifact are not
-present on this branch; the Processes skill now fails closed unless a target host's live
-contract reintroduces them.
+Relative to the preceding artifact, this snapshot adds typed
+`AgentExecutionOperationId` and `ProjectStructureReadSource` schemas, candidate
+interview listing and assessment schemas, and four durable process-record routes:
+list, summary, graph, and analytics. The run operation identifier is durable
+correlation metadata; the current contract does not publish an agent-activity polling
+or SSE endpoint. Project Structure HTTP reads remain canonical: invocation-local
+snapshots are available only to the in-process runtime tool and are rejected by the
+HTTP boundary.
 
 Use the [partner API migration matrix](references/partner-api-migration.md) when upgrading
 an integration that still uses the superseded partner-side workarounds.

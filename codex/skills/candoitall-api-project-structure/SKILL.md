@@ -39,13 +39,37 @@ Use this skill when a task needs project, hierarchy, project-structure, dependen
 
 ## Direct Tool Boundary
 
-The internal project-structure runtime tool surface currently exposes 53 direct functions through `ProjectStructureAgentRuntimeToolProvider`. It broadly mirrors the 52-route `/api/project-structure` HTTP surface and adds the repo-branch lease helper `project_structure_repo_branch_lease_acquire`, which is a runtime tool and not an HTTP route. Direct runtime tools include node create (`project_structure_node_create`), single and batch node delete (`project_structure_node_delete`, `project_structure_nodes_delete`), focused node updates, generic links, asset create/content (`project_structure_asset_create`, `project_structure_asset_content_get`), lease renew, process/workflow node operations, and read/write/import/lease tools. These tools are classified by `AgentToolInvocationPolicy`; destructive and mutating tools still require project-structure write access and the normal approval path.
+The internal project-structure runtime tool surface currently exposes 53 direct functions through `ProjectStructureAgentRuntimeToolProvider`. It broadly mirrors the 55-path, 56-operation `/api/project-structure` HTTP surface and adds the repo-branch lease helper `project_structure_repo_branch_lease_acquire`, which is a runtime tool and not an HTTP route. Direct runtime tools include node create (`project_structure_node_create`), single and batch node delete (`project_structure_node_delete`, `project_structure_nodes_delete`), focused node updates, generic links, asset create/content (`project_structure_asset_create`, `project_structure_asset_content_get`), lease renew, process/workflow node operations, and read/write/import/lease tools. These tools are classified by `AgentToolInvocationPolicy`; destructive and mutating tools still require project-structure write access and the normal approval path.
 
 When a process or agent asks for a direct project-structure tool and that tool is unavailable in the running host, use the HTTP API skill for the equivalent governed action and record the missing tool name as an environment/runtime issue. Do not reinstall or infer a removed ProjectStructure MCP server.
+
+### Structure Read Source
+
+`ProjectStructureReadRequest.source` is shared with the internal
+`project_structure_read` runtime tool, but the two transports have different
+eligible sources:
+
+- For `POST /api/project-structure/projects/{projectId}/structure/read`,
+  `ContextDefault` is normalized to `CanonicalCurrent`, and
+  `CanonicalCurrent` reads the canonical application service.
+- `InvocationSnapshot` is bound to an active in-process agent invocation and is not
+  available through HTTP. The route fails closed with HTTP 400 and
+  `ProjectStructureReadSourceUnavailable`; it never silently substitutes a database
+  read.
+- An undefined source value fails with HTTP 400 and
+  `ProjectStructureReadSourceInvalid`.
+- The internal runtime tool may use `InvocationSnapshot` only when the invocation
+  carries an eligible, fresh, covered Project Structure snapshot. Its tool response
+  reports the effective source. There is no silent snapshot-to-canonical fallback.
+
+HTTP clients should send `CanonicalCurrent` explicitly when they want to make the
+data source unambiguous.
 
 ## Operating Rules
 
 - Prefer focused endpoints over fetching or sending entire graphs.
+- Use `CanonicalCurrent` for HTTP structure reads. Do not request
+  `InvocationSnapshot` outside the internal agent runtime.
 - Acquire a project lease before mutating shared project structure. Use repo-branch leases for branch-wide coordination.
 - Preserve current-run lineage in nodes and assets that mirror process evidence: process run id, step run id, execution run id, workflow run id, source artifact path, source content hash, route/viewport for screenshots, and storage receipt ids when present.
 - For typed project blocks, keep `objectType` as `ProjectBlock` and use lowercase `objectSubtype` values such as `feature`, `architecture`, `implementation`, `testing`, `delivery`, `research`, `risk`, `deployment`, `operations`, `repos`, or `dockers`.

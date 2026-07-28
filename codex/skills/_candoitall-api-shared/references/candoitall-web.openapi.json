@@ -5272,6 +5272,78 @@
         }
       }
     },
+    "/api/agent-recruiting/candidates/{candidateAgentId}/interviews": {
+      "get": {
+        "tags": [
+          "Agent Recruiting"
+        ],
+        "operationId": "ListAgentRecruitingCandidateInterviews",
+        "parameters": [
+          {
+            "name": "candidateAgentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "recruitmentApplicationId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AgentRecruitingInterview"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/agent-recruiting/candidates/{agentId}/readiness": {
       "get": {
         "tags": [
@@ -5283,6 +5355,14 @@
             "name": "agentId",
             "in": "path",
             "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "recruitmentApplicationId",
+            "in": "query",
             "schema": {
               "type": "string",
               "format": "uuid"
@@ -7217,6 +7297,276 @@
         }
       }
     },
+    "/api/processes/runs": {
+      "get": {
+        "tags": [
+          "Processes"
+        ],
+        "operationId": "ListProcessRunRecords",
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "definitionId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "rootRunId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "disposition",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "participantId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fromUtc",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "toUtc",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "take",
+            "in": "query",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/processes/runs/analytics": {
+      "get": {
+        "tags": [
+          "Processes"
+        ],
+        "operationId": "GetProcessRunRecordAnalytics",
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "definitionId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "rootRunId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "participantId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fromUtc",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "toUtc",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/processes/runs/{runId}/summary": {
+      "get": {
+        "tags": [
+          "Processes"
+        ],
+        "operationId": "GetProcessRunRecordSummary",
+        "parameters": [
+          {
+            "name": "runId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "stepOffset",
+            "in": "query",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          },
+          {
+            "name": "stepTake",
+            "in": "query",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          },
+          {
+            "name": "runtimeEventMinuteOffset",
+            "in": "query",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          },
+          {
+            "name": "runtimeEventMinuteTake",
+            "in": "query",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/processes/runs/{runId}/graph": {
+      "get": {
+        "tags": [
+          "Processes"
+        ],
+        "operationId": "GetProcessRunRecordGraph",
+        "parameters": [
+          {
+            "name": "runId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "stepOffset",
+            "in": "query",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          },
+          {
+            "name": "stepTake",
+            "in": "query",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/processes/contract": {
       "get": {
         "tags": [
@@ -8921,37 +9271,6 @@
           }
         }
       },
-      "AgentChatApiRequest": {
-        "required": [
-          "chatSessionId",
-          "prompt"
-        ],
-        "type": "object",
-        "properties": {
-          "chatSessionId": {
-            "type": [
-              "null",
-              "string"
-            ],
-            "format": "uuid"
-          },
-          "prompt": {
-            "type": "string"
-          },
-          "attachmentPaths": {
-            "type": [
-              "null",
-              "array"
-            ],
-            "items": {
-              "type": "string"
-            }
-          }
-        }
-      },
-      "AgentChatHistoryMode": {
-        "type": "integer"
-      },
       "AgentCloneApiRequest": {
         "required": [
           "cloneName"
@@ -9194,6 +9513,7 @@
           }
         }
       },
+      "AgentExecutionOperationId": { },
       "AgentExecutionRunApiRequest": {
         "required": [
           "agentId",
@@ -9384,6 +9704,37 @@
           "Required",
           null
         ]
+      },
+      "AgentChatApiRequest": {
+        "required": [
+          "chatSessionId",
+          "prompt"
+        ],
+        "type": "object",
+        "properties": {
+          "chatSessionId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
+          },
+          "prompt": {
+            "type": "string"
+          },
+          "attachmentPaths": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "AgentChatHistoryMode": {
+        "type": "integer"
       },
       "AgentImageGenerationAccessSettings": {
         "type": "object",
@@ -9857,6 +10208,57 @@
           }
         }
       },
+      "AgentRecruitingAssessmentAnalysis": {
+        "required": [
+          "classification",
+          "confidence",
+          "summary",
+          "proposedNextStep",
+          "strengths",
+          "gaps"
+        ],
+        "type": "object",
+        "properties": {
+          "classification": {
+            "$ref": "#/components/schemas/AgentRecruitingAssessmentClassification"
+          },
+          "confidence": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "proposedNextStep": {
+            "$ref": "#/components/schemas/AgentRecruitingProposedNextStep"
+          },
+          "strengths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "gaps": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "AgentRecruitingAssessmentClassification": {
+        "enum": [
+          "StrongFit",
+          "Suitable",
+          "NeedsTraining",
+          "NotSuitable",
+          "Inconclusive"
+        ]
+      },
       "AgentRecruitingAttempt": {
         "required": [
           "id",
@@ -9943,6 +10345,16 @@
           "createdAtUtc": {
             "type": "string",
             "format": "date-time"
+          },
+          "analysis": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/AgentRecruitingAssessmentAnalysis"
+              }
+            ]
           }
         }
       },
@@ -10289,8 +10701,32 @@
             "items": {
               "$ref": "#/components/schemas/AgentRecruitingHumanReview"
             }
+          },
+          "recruitmentApplicationId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
+          },
+          "projectId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
           }
         }
+      },
+      "AgentRecruitingProposedNextStep": {
+        "enum": [
+          "Advance",
+          "RequestHumanReview",
+          "AssignTraining",
+          "Reassess",
+          "Hold",
+          "Reject"
+        ]
       },
       "AgentRecruitingReadinessStatus": {
         "enum": [
@@ -10723,6 +11159,16 @@
                 "$ref": "#/components/schemas/AgentRecruitingAutomatedEvaluation"
               }
             ]
+          },
+          "analysis": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/AgentRecruitingAssessmentAnalysis"
+              }
+            ]
           }
         }
       },
@@ -11012,163 +11458,6 @@
           }
         }
       },
-      "ChatMessageRecord": {
-        "required": [
-          "id",
-          "role",
-          "content",
-          "createdAtUtc",
-          "tokenEstimate"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "role": {
-            "$ref": "#/components/schemas/ChatMessageRole"
-          },
-          "content": {
-            "type": "string"
-          },
-          "createdAtUtc": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "tokenEstimate": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": [
-              "integer",
-              "string"
-            ],
-            "format": "int32"
-          }
-        }
-      },
-      "ChatMessageRole": {
-        "type": "integer"
-      },
-      "ChatSessionRecord": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "agentId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "title": {
-            "type": "string"
-          },
-          "createdAtUtc": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "updatedAtUtc": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "messages": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ChatMessageRecord"
-            }
-          },
-          "latestExecutionRunId": {
-            "type": [
-              "null",
-              "string"
-            ],
-            "format": "uuid"
-          },
-          "compatibility": {
-            "oneOf": [
-              {
-                "type": "null"
-              },
-              {
-                "$ref": "#/components/schemas/ChatSessionRuntimeCompatibilityRecord"
-              }
-            ]
-          },
-          "RuntimeSessionKey": {
-            "type": [
-              "null",
-              "string"
-            ]
-          },
-          "SerializedSessionStateJson": {
-            "type": [
-              "null",
-              "string"
-            ]
-          },
-          "PendingApprovals": {
-            "type": [
-              "null",
-              "array"
-            ],
-            "items": {
-              "$ref": "#/components/schemas/PendingToolApprovalRecord"
-            }
-          },
-          "AutoApprovePendingToolCalls": {
-            "type": "boolean"
-          }
-        }
-      },
-      "ChatSessionRenameApiRequest": {
-        "required": [
-          "title"
-        ],
-        "type": "object",
-        "properties": {
-          "title": {
-            "type": "string"
-          }
-        }
-      },
-      "ChatSessionRuntimeCompatibilityRecord": {
-        "required": [
-          "runtimeSessionKey",
-          "serializedSessionStateJson",
-          "pendingApprovals"
-        ],
-        "type": "object",
-        "properties": {
-          "runtimeSessionKey": {
-            "type": [
-              "null",
-              "string"
-            ]
-          },
-          "serializedSessionStateJson": {
-            "type": [
-              "null",
-              "string"
-            ]
-          },
-          "pendingApprovals": {
-            "type": [
-              "null",
-              "array"
-            ],
-            "items": {
-              "$ref": "#/components/schemas/PendingToolApprovalRecord"
-            }
-          },
-          "autoApprovePendingToolCalls": {
-            "type": "boolean",
-            "default": false
-          },
-          "hasState": {
-            "type": "boolean"
-          }
-        }
-      },
       "CreateAgentRecruitingInterviewCommand": {
         "required": [
           "candidateAgentId",
@@ -11186,6 +11475,20 @@
           },
           "purpose": {
             "type": "string"
+          },
+          "recruitmentApplicationId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
+          },
+          "projectId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
           }
         }
       },
@@ -11720,6 +12023,16 @@
           "structuredOutputValidationErrorsJson": {
             "type": "string",
             "default": "[]"
+          },
+          "initialActivityOperationId": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/AgentExecutionOperationId"
+              }
+            ]
           }
         }
       },
@@ -11946,6 +12259,163 @@
             "items": {
               "$ref": "#/components/schemas/GanttTaskId"
             }
+          }
+        }
+      },
+      "ChatMessageRecord": {
+        "required": [
+          "id",
+          "role",
+          "content",
+          "createdAtUtc",
+          "tokenEstimate"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "role": {
+            "$ref": "#/components/schemas/ChatMessageRole"
+          },
+          "content": {
+            "type": "string"
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "tokenEstimate": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          }
+        }
+      },
+      "ChatMessageRole": {
+        "type": "integer"
+      },
+      "ChatSessionRecord": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "agentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "messages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ChatMessageRecord"
+            }
+          },
+          "latestExecutionRunId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
+          },
+          "compatibility": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ChatSessionRuntimeCompatibilityRecord"
+              }
+            ]
+          },
+          "RuntimeSessionKey": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "SerializedSessionStateJson": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "PendingApprovals": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/PendingToolApprovalRecord"
+            }
+          },
+          "AutoApprovePendingToolCalls": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ChatSessionRenameApiRequest": {
+        "required": [
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          }
+        }
+      },
+      "ChatSessionRuntimeCompatibilityRecord": {
+        "required": [
+          "runtimeSessionKey",
+          "serializedSessionStateJson",
+          "pendingApprovals"
+        ],
+        "type": "object",
+        "properties": {
+          "runtimeSessionKey": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "serializedSessionStateJson": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "pendingApprovals": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/PendingToolApprovalRecord"
+            }
+          },
+          "autoApprovePendingToolCalls": {
+            "type": "boolean",
+            "default": false
+          },
+          "hasState": {
+            "type": "boolean"
           }
         }
       },
@@ -13222,42 +13692,6 @@
           }
         }
       },
-      "ProjectStructureChecklistRequest": {
-        "type": "object",
-        "properties": {
-          "maxPriority": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": [
-              "null",
-              "integer",
-              "string"
-            ],
-            "format": "int32"
-          },
-          "objectTypes": {
-            "type": [
-              "null",
-              "array"
-            ],
-            "items": {
-              "$ref": "#/components/schemas/ProjectObjectType"
-            }
-          },
-          "includePaused": {
-            "type": "boolean",
-            "default": false
-          },
-          "take": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": [
-              "null",
-              "integer",
-              "string"
-            ],
-            "format": "int32"
-          }
-        }
-      },
       "ProjectStructureCommandKind": {
         "type": "integer"
       },
@@ -13285,6 +13719,42 @@
               "string"
             ],
             "format": "int32"
+          },
+          "take": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          }
+        }
+      },
+      "ProjectStructureChecklistRequest": {
+        "type": "object",
+        "properties": {
+          "maxPriority": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "objectTypes": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/ProjectObjectType"
+            }
+          },
+          "includePaused": {
+            "type": "boolean",
+            "default": false
           },
           "take": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -14059,8 +14529,15 @@
               "string"
             ],
             "format": "int32"
+          },
+          "source": {
+            "$ref": "#/components/schemas/ProjectStructureReadSource"
           }
         }
+      },
+      "ProjectStructureReadSource": {
+        "type": "integer",
+        "default": 0
       },
       "ProjectStructureStatusBatchInput": {
         "required": [
@@ -15998,107 +16475,6 @@
           }
         }
       },
-      "WorkflowCheckpointId": { },
-      "WorkflowCheckpointKind": {
-        "type": "integer"
-      },
-      "WorkflowCheckpointRecord": {
-        "required": [
-          "id",
-          "runId",
-          "workflowId",
-          "versionId",
-          "backend",
-          "kind",
-          "trustBoundary",
-          "resumeAvailability",
-          "nodeId",
-          "externalRequestId",
-          "backendCheckpointId",
-          "payloadReference",
-          "payloadHash",
-          "summary",
-          "resumeUnavailableReason",
-          "createdAtUtc",
-          "resumedAtUtc"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "$ref": "#/components/schemas/WorkflowCheckpointId"
-          },
-          "runId": {
-            "$ref": "#/components/schemas/WorkflowRunId"
-          },
-          "workflowId": {
-            "$ref": "#/components/schemas/WorkflowId"
-          },
-          "versionId": {
-            "$ref": "#/components/schemas/WorkflowVersionId"
-          },
-          "backend": {
-            "$ref": "#/components/schemas/WorkflowRuntimeBackendKind"
-          },
-          "kind": {
-            "$ref": "#/components/schemas/WorkflowCheckpointKind"
-          },
-          "trustBoundary": {
-            "$ref": "#/components/schemas/WorkflowCheckpointTrustBoundary"
-          },
-          "resumeAvailability": {
-            "$ref": "#/components/schemas/WorkflowResumeAvailability"
-          },
-          "nodeId": {
-            "oneOf": [
-              {
-                "type": "null"
-              },
-              {
-                "$ref": "#/components/schemas/WorkflowNodeId"
-              }
-            ]
-          },
-          "externalRequestId": {
-            "oneOf": [
-              {
-                "type": "null"
-              },
-              {
-                "$ref": "#/components/schemas/WorkflowExternalRequestId"
-              }
-            ]
-          },
-          "backendCheckpointId": {
-            "type": "string"
-          },
-          "payloadReference": {
-            "type": "string"
-          },
-          "payloadHash": {
-            "type": "string"
-          },
-          "summary": {
-            "type": "string"
-          },
-          "resumeUnavailableReason": {
-            "type": "string"
-          },
-          "createdAtUtc": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "resumedAtUtc": {
-            "type": [
-              "null",
-              "string"
-            ],
-            "format": "date-time"
-          }
-        }
-      },
-      "WorkflowCheckpointTrustBoundary": {
-        "type": "integer"
-      },
       "WorkflowComponentId": { },
       "WorkflowDefinition": {
         "required": [
@@ -16592,6 +16968,107 @@
             "format": "int32"
           }
         }
+      },
+      "WorkflowCheckpointId": { },
+      "WorkflowCheckpointKind": {
+        "type": "integer"
+      },
+      "WorkflowCheckpointRecord": {
+        "required": [
+          "id",
+          "runId",
+          "workflowId",
+          "versionId",
+          "backend",
+          "kind",
+          "trustBoundary",
+          "resumeAvailability",
+          "nodeId",
+          "externalRequestId",
+          "backendCheckpointId",
+          "payloadReference",
+          "payloadHash",
+          "summary",
+          "resumeUnavailableReason",
+          "createdAtUtc",
+          "resumedAtUtc"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/WorkflowCheckpointId"
+          },
+          "runId": {
+            "$ref": "#/components/schemas/WorkflowRunId"
+          },
+          "workflowId": {
+            "$ref": "#/components/schemas/WorkflowId"
+          },
+          "versionId": {
+            "$ref": "#/components/schemas/WorkflowVersionId"
+          },
+          "backend": {
+            "$ref": "#/components/schemas/WorkflowRuntimeBackendKind"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/WorkflowCheckpointKind"
+          },
+          "trustBoundary": {
+            "$ref": "#/components/schemas/WorkflowCheckpointTrustBoundary"
+          },
+          "resumeAvailability": {
+            "$ref": "#/components/schemas/WorkflowResumeAvailability"
+          },
+          "nodeId": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/WorkflowNodeId"
+              }
+            ]
+          },
+          "externalRequestId": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/WorkflowExternalRequestId"
+              }
+            ]
+          },
+          "backendCheckpointId": {
+            "type": "string"
+          },
+          "payloadReference": {
+            "type": "string"
+          },
+          "payloadHash": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "resumeUnavailableReason": {
+            "type": "string"
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "resumedAtUtc": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          }
+        }
+      },
+      "WorkflowCheckpointTrustBoundary": {
+        "type": "integer"
       },
       "WorkflowId": { },
       "WorkflowInputParameterDescriptor": {
@@ -17617,18 +18094,6 @@
           }
         }
       },
-      "WorkflowSchedulerFireId": {
-        "required": [
-          "value"
-        ],
-        "type": "object",
-        "properties": {
-          "value": {
-            "type": "string",
-            "format": "uuid"
-          }
-        }
-      },
       "WorkflowSettings": {
         "required": [
           "defaultRuntimePolicy",
@@ -17658,6 +18123,18 @@
           },
           "normalizedVoiceSettings": {
             "$ref": "#/components/schemas/AgentVoiceSettings"
+          }
+        }
+      },
+      "WorkflowSchedulerFireId": {
+        "required": [
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "format": "uuid"
           }
         }
       },
