@@ -16,6 +16,7 @@ The entry point must accept:
 | `-OutputDirectory` | Absolute or repository-relative package destination |
 | `-NoRestore` | Skip restore only when the caller guarantees it already happened |
 | `-Version` | Optional NuGet package version override without editing committed project files |
+| `-CreateRunDirectory` | Treat an explicit output path as a root and create a versioned, timestamped child |
 
 It must fail with a non-zero exit when restore, build, tests required for packaging, or
 packing fails. When `-Version` is supplied, the adapter must forward the override to every
@@ -23,6 +24,12 @@ restore, build, test, and pack operation that it runs, and it must not silently 
 package with the committed default version. It must not publish packages. It must support
 `-WhatIf` and make one `ShouldProcess` decision before creating output directories or
 starting restore, build, test, or pack commands.
+
+When `-OutputDirectory` is omitted, the adapter must resolve the effective package
+version and write to
+`artifacts/packages/<version>_<yyyyMMdd-HHmmssfff>`. The millisecond timestamp prevents
+one run from reusing stale packages from another. An explicitly supplied output
+directory is exact unless `-CreateRunDirectory` is also supplied.
 
 Start from
 [`templates/repository/tools/deployment/nugets/Build-NuGets.ps1`](../../templates/repository/tools/deployment/nugets/Build-NuGets.ps1)
@@ -56,14 +63,16 @@ website from the source repository:
 
 ## Package Icon
 
-When a public CanDoItAll NuGet package includes an icon, use the approved square corporate
-favicon at
+Every public CanDoItAll NuGet package must include the approved square corporate favicon
+at
 [`templates/repository/docs/package-icon.png`](../../templates/repository/docs/package-icon.png)
 by default. Copy it to `docs/package-icon.png` in the adopting repository and use the
 copy-ready defaults in
 [`templates/repository/dotnet/Directory.Build.targets`](../../templates/repository/dotnet/Directory.Build.targets).
 
 - Declare `PackageIcon` as `package-icon.png` and embed the file at the package root.
+- Treat a missing `docs/package-icon.png` as a packaging error. Do not silently omit the
+  icon merely because the file was not copied during adoption.
 - Use the 256x256 PNG corporate favicon for package and other compact square UI surfaces.
   It stays legible when clients scale it down and remains well below NuGet's 1 MB limit.
   NuGet recommends 128x128; retaining the official 256x256 master is a deliberate
@@ -78,22 +87,19 @@ copy-ready defaults in
 
 ## Package License
 
-Public CanDoItAll packages use the repository-owned
-[MIT-derived license with CanDoItAll website-link requirement](licensing.md). Because the extra
-redistribution condition is not the unmodified SPDX `MIT` license:
+Public CanDoItAll packages use the unmodified [MIT License](licensing.md):
 
-- set `PackageLicenseFile` to `LICENSE`;
-- pack the adapted repository-root `LICENSE` at the package root;
-- do not set `PackageLicenseExpression` to `MIT`;
-- require `<license type="file">LICENSE</license>` in the packed `.nuspec`;
-- verify that the package contains the license and its fixed link to
-  `https://aicandoitall.com`;
-- keep `PackageProjectUrl` on that shared website while `RepositoryUrl` continues to
-  identify the package's canonical source repository.
+- set `PackageLicenseExpression` to `MIT`;
+- do not set `PackageLicenseFile` for the family license;
+- require `<license type="expression">MIT</license>` in the packed `.nuspec`;
+- keep `PackageProjectUrl` on the shared website while `RepositoryUrl` continues to
+  identify the package's canonical source repository;
+- pack `THIRD-PARTY-NOTICES.md` when the package redistributes external material that
+  requires retained copyright or license notices.
 
 Start from
 [`templates/repository/dotnet/Directory.Build.targets`](../../templates/repository/dotnet/Directory.Build.targets)
-when centralizing license-file packing.
+when centralizing license-expression, package-icon, and notice behavior.
 
 ## Central Orchestration
 
@@ -116,9 +122,14 @@ so coordinated proof or release builds do not require source edits.
 
 ## Artifact Rules
 
-- Default output is `artifacts/packages/<repository>` in SharedInfo.
+- A repository adapter defaults to
+  `artifacts/packages/<version>_<yyyyMMdd-HHmmssfff>`.
+- A coordinated SharedInfo run isolates repositories below its run output. When the
+  caller supplies `-Version`, use that version in the coordinated run-folder name;
+  otherwise use `committed-versions_<yyyyMMdd-HHmmssfff>` to state that repository-owned
+  versions differ.
 - Package and symbol files are generated and ignored.
 - A repository decides its package IDs, versions, symbols, readme, and any deliberate
-  package-specific project-page override. License metadata follows the shared licensing
-  standard unless an owner-approved legal exception is documented.
+  package-specific project-page override. License and third-party notice metadata follow
+  the shared licensing standard unless an owner-approved legal exception is documented.
 - Publishing is a separate tool and requires explicit destination and authorization.

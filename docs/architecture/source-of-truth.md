@@ -12,7 +12,7 @@ source code, local configuration, release logic, and domain-specific automation.
 |---|---|---|
 | Repository layout | Canonical convention and templates | Adopted layout and exceptions |
 | README and policies | Required sections and templates | Product content and contacts |
-| Licensing | Family license text, fixed website link, badge, and package-metadata contract | Copyright year and owner, plus documented legal exceptions |
+| Licensing | Unmodified MIT text, badge, package-metadata contract, and third-party notice baseline | Copyright year and owner, accurate third-party inventory, plus documented legal exceptions |
 | Git hygiene | Baseline ignore/attributes templates | Deliberate product-specific exceptions |
 | .NET defaults | Baseline properties and SDK policy | Target frameworks, versions, package metadata |
 | Docker and Compose | Naming, storage, exposure, image, runtime, and validation baseline | Images, service configuration, secrets, data, operations, and recovery |

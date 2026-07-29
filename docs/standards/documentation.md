@@ -45,8 +45,7 @@ repository with no public package omits all NuGet badges; a non-.NET repository 
 - NuGet badges must link to the canonical package page and use labels that distinguish
   the selected user-facing packages.
 - The .NET badge must link to the supported .NET download page.
-- The license badge must link to the repository-owned `LICENSE` file and say
-  `MIT-derived with website link`.
+- The license badge must link to the repository-owned `LICENSE` file and say `MIT`.
 
 ## Durable Documentation
 
@@ -68,6 +67,8 @@ Repositories distributed outside one private development machine should include:
 - The family `LICENSE` adapted from
   [`licensing.md`](licensing.md), unless the owner has documented an explicit legal
   exception.
+- `THIRD-PARTY-NOTICES.md` when the repository redistributes, vendors, generates from,
+  or wraps third-party material requiring retained copyright or license notices.
 
 The contribution policy is family-wide:
 

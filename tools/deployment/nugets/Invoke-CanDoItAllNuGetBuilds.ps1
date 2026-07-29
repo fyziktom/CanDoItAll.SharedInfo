@@ -113,6 +113,17 @@ catch {
 $RepositoriesRoot = [System.IO.Path]::GetFullPath($RepositoriesRoot)
 $OutputRoot = [System.IO.Path]::GetFullPath($OutputRoot)
 $ManifestPath = [System.IO.Path]::GetFullPath($ManifestPath)
+$runVersionLabel = if ([string]::IsNullOrWhiteSpace($Version)) {
+    'committed-versions'
+}
+else {
+    $Version.Trim()
+}
+foreach ($invalidFileNameCharacter in [System.IO.Path]::GetInvalidFileNameChars()) {
+    $runVersionLabel = $runVersionLabel.Replace($invalidFileNameCharacter, '_')
+}
+$runTimestamp = Get-Date -Format 'yyyyMMdd-HHmmssfff'
+$runOutputRoot = Join-Path $OutputRoot "${runVersionLabel}_$runTimestamp"
 
 if (-not (Test-Path -LiteralPath $RepositoriesRoot -PathType Container)) {
     throw "Repositories root does not exist: $RepositoriesRoot"
@@ -194,7 +205,7 @@ foreach ($directory in $directories) {
         continue
     }
 
-    $repositoryOutput = Join-Path $OutputRoot $directory.Name
+    $repositoryOutput = Join-Path $runOutputRoot $directory.Name
     if (-not $PSCmdlet.ShouldProcess($directory.FullName, "Build NuGet packages into '$repositoryOutput'")) {
         $results.Add([pscustomobject]@{
             Repository = $directory.Name

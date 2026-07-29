@@ -44,6 +44,7 @@ $requiredPaths = @(
     'templates/repository/docker/README.md',
     'templates/repository/CONTRIBUTING.md',
     'templates/repository/LICENSE',
+    'templates/repository/THIRD-PARTY-NOTICES.md',
     'templates/repository/README.md',
     'templates/repository/docs/package-icon.png',
     'templates/repository/dotnet/Directory.Build.props',
@@ -140,7 +141,11 @@ $sharedContractChecks = @(
             'PackageIcon',
             'package-icon.png',
             'stacked logo',
-            'PackageIconUrl'
+            'PackageIconUrl',
+            'artifacts/packages/<version>_<yyyyMMdd-HHmmssfff>',
+            'PackageLicenseExpression',
+            '<license type="expression">MIT</license>',
+            'THIRD-PARTY-NOTICES.md'
         )
     },
     [pscustomobject]@{
@@ -148,7 +153,9 @@ $sharedContractChecks = @(
         RequiredText = @(
             '[string]$Version',
             '-p:Version=',
-            'PackageVersion'
+            'PackageVersion',
+            '[switch]$CreateRunDirectory',
+            'yyyyMMdd-HHmmssfff'
         )
     },
     [pscustomobject]@{
@@ -156,7 +163,9 @@ $sharedContractChecks = @(
         RequiredText = @(
             '[string]$Version',
             '-Version',
-            'PackageVersion'
+            'PackageVersion',
+            'yyyyMMdd-HHmmssfff',
+            'committed-versions'
         )
     },
     [pscustomobject]@{
@@ -181,22 +190,24 @@ $sharedContractChecks = @(
     [pscustomobject]@{
         Path = 'LICENSE'
         RequiredText = @(
-            'MIT-Derived License with CanDoItAll Website Link Requirement',
-            'Software or a substantial portion of it',
-            'source or binary form',
-            'https://aicandoitall.com',
-            'One such link satisfies this condition'
+            'MIT License',
+            'Copyright (c) 2026 fyziktom',
+            'Permission is hereby granted, free of charge',
+            'The above copyright notice and this permission notice shall be included',
+            'THE SOFTWARE IS PROVIDED "AS IS"'
         )
     },
     [pscustomobject]@{
         Path = 'docs/standards/licensing.md'
         RequiredText = @(
-            'MIT-Derived License with CanDoItAll Website Link Requirement',
+            'unmodified **MIT License**',
             'https://aicandoitall.com',
-            'PackageLicenseFile',
             'PackageLicenseExpression',
+            'Do not set `PackageLicenseFile`',
             'PackageProjectUrl',
-            'RepositoryUrl'
+            'RepositoryUrl',
+            'THIRD-PARTY-NOTICES.md',
+            'wrapped JavaScript/CSS'
         )
     },
     [pscustomobject]@{
@@ -205,7 +216,7 @@ $sharedContractChecks = @(
             'README Badges',
             'one or, at most, two NuGet packages',
             'Abstractions',
-            'MIT-derived with website link',
+            'license badge must link to the repository-owned `LICENSE` file and say `MIT`',
             'accepted only from partners who have been explicitly approved',
             'Unsolicited pull requests are not accepted',
             'fyziktom'
@@ -225,11 +236,21 @@ $sharedContractChecks = @(
     [pscustomobject]@{
         Path = 'templates/repository/LICENSE'
         RequiredText = @(
-            'MIT-Derived License with CanDoItAll Website Link Requirement',
-            'Software or a substantial portion of it',
-            'source or binary form',
-            'https://aicandoitall.com',
-            'One such link satisfies this condition'
+            'MIT License',
+            'Copyright (c) ${COPYRIGHT_YEAR} ${COPYRIGHT_OWNER}',
+            'Permission is hereby granted, free of charge',
+            'The above copyright notice and this permission notice shall be included',
+            'THE SOFTWARE IS PROVIDED "AS IS"'
+        )
+    },
+    [pscustomobject]@{
+        Path = 'templates/repository/THIRD-PARTY-NOTICES.md'
+        RequiredText = @(
+            'exact version or source revision',
+            'upstream project and source URL',
+            'copyright holder',
+            'SPDX license identifier',
+            'complete required license or notice text'
         )
     },
     [pscustomobject]@{
@@ -240,7 +261,9 @@ $sharedContractChecks = @(
             'img.shields.io/nuget/dt/${PRIMARY_USER_PACKAGE_ID}',
             'img.shields.io/nuget/v/${SECONDARY_USER_PACKAGE_ID}',
             'img.shields.io/nuget/dt/${SECONDARY_USER_PACKAGE_ID}',
-            'MIT--derived%20with%20website%20link',
+            'license-MIT-blue.svg',
+            '[MIT License](LICENSE)',
+            'THIRD-PARTY-NOTICES.md',
             'Code contributions are limited to partners approved by the maintainer',
             'fyziktom'
         )
@@ -248,11 +271,14 @@ $sharedContractChecks = @(
     [pscustomobject]@{
         Path = 'templates/repository/dotnet/Directory.Build.targets'
         RequiredText = @(
-            'PackageLicenseFile',
             'PackageLicenseExpression',
-            'LICENSE',
+            '>MIT</PackageLicenseExpression>',
+            'PackageLicenseFile',
             'PackageIcon',
-            'package-icon.png'
+            'package-icon.png',
+            'THIRD-PARTY-NOTICES.md',
+            'ValidateCanDoItAllPackageLegalAndIconMetadata',
+            'Copy the approved SharedInfo package icon'
         )
     },
     [pscustomobject]@{
@@ -263,9 +289,11 @@ $sharedContractChecks = @(
         RequiredText = @(
             'docs/standards/licensing.md',
             'user-facing package',
-            'website-link requirement',
-            'PackageLicenseFile',
+            'unmodified MIT License',
+            'PackageLicenseExpression',
+            'artifacts/packages/<version>_<yyyyMMdd-HHmmssfff>',
             'package-icon.png',
+            'THIRD-PARTY-NOTICES.md',
             'Code contributions are accepted only from partners explicitly approved',
             'Unsolicited pull requests are not accepted',
             'fyziktom'
@@ -283,20 +311,20 @@ $sharedContractChecks = @(
     [pscustomobject]@{
         Path = 'README.md'
         RequiredText = @(
-            'MIT--derived%20with%20website%20link',
-            'MIT-Derived License with CanDoItAll Website Link Requirement',
-            'https://aicandoitall.com'
+            'license-MIT-blue.svg',
+            '[MIT License](LICENSE)',
+            'licensing and third-party notices standard'
         )
     },
     [pscustomobject]@{
         Path = 'AGENTS.md'
         RequiredText = @(
-            'family license',
-            'website-link requirement',
+            'family MIT license',
             'selected-partner contribution',
             'README badge contract',
             'package-icon',
-            'NuGet'
+            'NuGet',
+            'third-party'
         )
     }
 )
@@ -375,11 +403,49 @@ foreach ($licenseContractPath in $licenseContractPaths) {
     $licenseContractContents = Get-Content -Raw -LiteralPath (
         Join-Path $repositoryRoot $licenseContractPath
     )
-    if ($licenseContractContents.Contains('github.com') -or
-        $licenseContractContents.Contains('${SOURCE_REPOSITORY_URL}')) {
-        Add-Failure (
-            "$licenseContractPath must use the shared website link, not a repository URL."
-        )
+    foreach ($forbiddenLicenseText in @(
+        'MIT-Derived',
+        'website link requirement',
+        'https://aicandoitall.com',
+        'Any redistribution of the Software',
+        'One such link satisfies'
+    )) {
+        if ($licenseContractContents.Contains($forbiddenLicenseText)) {
+            Add-Failure (
+                "$licenseContractPath contains non-MIT condition text " +
+                "'$forbiddenLicenseText'."
+            )
+        }
+    }
+}
+
+$pureMitContractPaths = @(
+    'README.md',
+    'AGENTS.md',
+    'docs/standards/licensing.md',
+    'docs/standards/documentation.md',
+    'docs/standards/nuget-packaging.md',
+    'templates/repository/README.md',
+    'templates/repository/dotnet/Directory.Build.targets',
+    'codex/skills/apply-candoitall-shared-standards/SKILL.md',
+    'codex/skills/apply-candoitall-shared-standards/references/standards-map.md'
+)
+foreach ($pureMitContractPath in $pureMitContractPaths) {
+    $pureMitContents = Get-Content -Raw -LiteralPath (
+        Join-Path $repositoryRoot $pureMitContractPath
+    )
+    foreach ($forbiddenSharedText in @(
+        'MIT-derived',
+        'MIT--derived',
+        'website-link requirement',
+        'website link requirement'
+    )) {
+        if ($pureMitContents.Contains($forbiddenSharedText)) {
+            Add-Failure (
+                "$pureMitContractPath still contains obsolete license text " +
+                "'$forbiddenSharedText'."
+            )
+        }
     }
 }
 

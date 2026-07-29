@@ -6,7 +6,7 @@
 [![${SECONDARY_USER_PACKAGE_BADGE_LABEL} version](https://img.shields.io/nuget/v/${SECONDARY_USER_PACKAGE_ID}.svg?logo=nuget&label=${SECONDARY_USER_PACKAGE_BADGE_LABEL})](https://www.nuget.org/packages/${SECONDARY_USER_PACKAGE_ID})
 [![${SECONDARY_USER_PACKAGE_BADGE_LABEL} downloads](https://img.shields.io/nuget/dt/${SECONDARY_USER_PACKAGE_ID}.svg?logo=nuget&label=${SECONDARY_USER_PACKAGE_BADGE_LABEL}%20downloads)](https://www.nuget.org/packages/${SECONDARY_USER_PACKAGE_ID})
 [![.NET ${DOTNET_MAJOR_VERSION}](https://img.shields.io/badge/.NET-${DOTNET_MAJOR_VERSION}.0-512BD4?logo=dotnet)](https://dotnet.microsoft.com/download/dotnet/${DOTNET_MAJOR_VERSION}.0)
-[![License](https://img.shields.io/badge/license-MIT--derived%20with%20website%20link-blue.svg)](LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 Choose packages by expected end-user installation, not dependency centrality. Remove the
 secondary pair unless the repository has two co-equal product entry points. Remove all
@@ -80,11 +80,11 @@ NuGet packages.
 
 ## License And Contributions
 
-This repository uses the
-[MIT-Derived License with CanDoItAll Website Link Requirement](LICENSE). Redistributions
-of the software or a substantial portion of it in source or binary form must include at
-least one link to [aicandoitall.com](https://aicandoitall.com). One such link satisfies
-the added condition for a distribution containing multiple covered CanDoItAll libraries.
+This repository uses the [MIT License](LICENSE).
+
+See [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) when this repository redistributes,
+vendors, generates from, or wraps external material that requires retained copyright or
+license notices. Remove this paragraph when no notice file is required.
 
 Code contributions are limited to partners approved by the maintainer. See
 [CONTRIBUTING.md](CONTRIBUTING.md) and contact the `fyziktom` account on LinkedIn before

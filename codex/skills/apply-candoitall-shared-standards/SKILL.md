@@ -57,9 +57,10 @@ exception explicitly.
 - Put cross-repository coordination in `SharedInfo/tools/<area>`.
 - Keep the selected-partner contribution policy in SharedInfo and apply it to repository
   READMEs and `CONTRIBUTING.md` files without weakening it.
-- Keep the family license text, badge contract, NuGet license-file rules, and NuGet
-  package-icon contract in SharedInfo. Adapt only the documented repository fields; keep
-  the shared `https://aicandoitall.com` license link fixed.
+- Keep the family MIT text, badge contract, NuGet license-expression rules, NuGet
+  package-icon contract, artifact run-folder contract, and third-party notice rules in
+  SharedInfo. Adapt only the documented repository fields; keep
+  `https://aicandoitall.com` as project metadata rather than a license condition.
 - Keep product code, product configuration, repository-specific entry points, data,
   secrets, task bundles, proof, logs, and generated output in their owning repository.
 - Copy and adapt templates; do not make product repositories depend on filesystem links
@@ -90,6 +91,10 @@ reference, and validation together, then run:
 Run the current Codex skill/plugin validator when those packages change. Do not claim
 compliance from syntax validation alone; for Docker, builds, health, persistence,
 shutdown, backup/restore, and smoke behavior require runtime evidence.
+
+For licensing and packaging work, inspect packed `.nuspec` metadata and archive contents.
+Audit copied source, vendored browser assets, generated CSS/JavaScript, wrapper packages,
+and lock files for retained third-party copyrights and license notices.
 
 ## Report The Result
 

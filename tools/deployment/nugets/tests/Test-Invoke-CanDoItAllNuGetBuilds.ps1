@@ -169,6 +169,10 @@ try {
     Assert-True (
         $success[0].PackageVersion -eq '1.2.3-preview.4'
     ) 'the orchestrator result should report the requested package version'
+    Assert-True (
+        $success[0].OutputDirectory -match
+            '[\\/]1\.2\.3-preview\.4_\d{8}-\d{9}[\\/]CanDoItAll\.01-Success$'
+    ) 'the orchestrator should isolate the run below a versioned, timestamped folder'
     Assert-True ($throw.Count -eq 1 -and $throw[0].Status -eq 'Failed') 'a terminating error should be reported'
     Assert-True ($throw[0].ExitCode -eq 1) 'a terminating error should produce exit code one'
     Assert-True ($throw[0].AdapterOutput -match 'before-throw') 'output before a terminating error should be retained'
@@ -247,6 +251,16 @@ try {
         $templateResult[0].PackageVersion -eq '2.3.4-preview.5'
     ) 'the template preview should report the requested package version'
     Assert-True (-not (Test-Path -LiteralPath $templateOutput)) 'the template WhatIf should not create output'
+
+    $templateDefaultResult = @(
+        & $templateEntryPoint `
+            -Version '2.3.4-preview.5' `
+            -WhatIf
+    )
+    Assert-True (
+        $templateDefaultResult[0].OutputDirectory -match
+            '[\\/]artifacts[\\/]packages[\\/]2\.3\.4-preview\.5_\d{8}-\d{9}$'
+    ) 'the template default should use a versioned, timestamped run directory'
 
     [pscustomobject]@{
         Test = 'Invoke-CanDoItAllNuGetBuilds'

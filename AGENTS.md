@@ -13,11 +13,11 @@
 
 - Put normative rules in `docs/standards`.
 - Put copy-ready examples in `templates/repository`.
-- Keep the family license, website-link requirement, selected-partner contribution
-  policy, README badge contract, NuGet license-file rules, and NuGet package-icon
-  contract synchronized across their standards, templates, reusable skill, and
-  validation. Keep the shared website URL fixed; adopting repositories replace only the
-  documented repository metadata.
+- Keep the family MIT license, selected-partner contribution policy, README badge contract,
+  NuGet license-expression rules, NuGet package-icon contract, and third-party notice
+  contract synchronized across their standards, templates, reusable skill, and validation.
+  Keep the shared project website URL fixed in project metadata; adopting repositories
+  replace only the documented repository metadata.
 - Put cross-repository scripts in a purpose-specific `tools/<area>` folder.
 - Keep repository-owned entry points in the owning repository and document their contract
   here.

@@ -6,13 +6,18 @@ Restores and packs the repository's NuGet packages.
 Build configuration. The default is Release.
 
 .PARAMETER OutputDirectory
-Absolute or repository-relative package destination.
+Absolute or repository-relative package destination. When omitted, a
+versioned, timestamped run directory is created below artifacts/packages.
 
 .PARAMETER NoRestore
 Skips restore when the caller guarantees it has already completed.
 
 .PARAMETER Version
 Overrides the package version without editing committed project files.
+
+.PARAMETER CreateRunDirectory
+Treats an explicitly supplied OutputDirectory as a root and creates the same
+versioned, timestamped child used by the default.
 
 .EXAMPLE
 .\tools\deployment\nugets\Build-NuGets.ps1 -Version '1.2.3'
@@ -26,7 +31,9 @@ param(
 
     [switch]$NoRestore,
 
-    [string]$Version = ''
+    [string]$Version = '',
+
+    [switch]$CreateRunDirectory
 )
 
 $ErrorActionPreference = 'Stop'
@@ -34,16 +41,61 @@ Set-StrictMode -Version Latest
 
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..\..')).Path
 $effectiveVersion = $Version.Trim()
+if ([string]::IsNullOrWhiteSpace($effectiveVersion)) {
+    $versionCandidates = [System.Collections.Generic.List[string]]::new()
+    $directoryBuildPropsPath = Join-Path $repositoryRoot 'Directory.Build.props'
+    if (Test-Path -LiteralPath $directoryBuildPropsPath -PathType Leaf) {
+        [xml]$directoryBuildProps = Get-Content -LiteralPath $directoryBuildPropsPath -Raw
+        foreach ($propertyName in @(
+            'CanDoItAllPackageBaseVersion',
+            'Version',
+            'VersionPrefix',
+            'PackageVersion'
+        )) {
+            foreach ($node in @($directoryBuildProps.SelectNodes(
+                "/*[local-name()='Project']/*[local-name()='PropertyGroup']/*[local-name()='$propertyName']"
+            ))) {
+                $candidate = $node.InnerText.Trim()
+                if (-not [string]::IsNullOrWhiteSpace($candidate) -and
+                    -not $candidate.Contains('$(')) {
+                    $versionCandidates.Add($candidate)
+                }
+            }
+        }
+    }
+
+    if ($versionCandidates.Count -eq 0) {
+        throw (
+            'Cannot determine the committed package version for the run-directory name. ' +
+            'Pass -Version or customize this adapter to evaluate the repository version.'
+        )
+    }
+
+    $effectiveVersion = $versionCandidates[0]
+}
+
 $msbuildProperties = @()
-if (-not [string]::IsNullOrWhiteSpace($effectiveVersion)) {
+if (-not [string]::IsNullOrWhiteSpace($Version)) {
     $msbuildProperties += "-p:Version=$effectiveVersion"
 }
 
 if (-not $OutputDirectory) {
-    $OutputDirectory = Join-Path $repositoryRoot 'artifacts\packages'
+    $outputRoot = Join-Path $repositoryRoot 'artifacts\packages'
 }
-elseif (-not [System.IO.Path]::IsPathRooted($OutputDirectory)) {
-    $OutputDirectory = Join-Path $repositoryRoot $OutputDirectory
+elseif ([System.IO.Path]::IsPathRooted($OutputDirectory)) {
+    $outputRoot = $OutputDirectory
+}
+else {
+    $outputRoot = Join-Path $repositoryRoot $OutputDirectory
+}
+
+$outputRoot = [System.IO.Path]::GetFullPath($outputRoot)
+if (-not $OutputDirectory -or $CreateRunDirectory) {
+    $runTimestamp = Get-Date -Format 'yyyyMMdd-HHmmssfff'
+    $OutputDirectory = Join-Path $outputRoot "${effectiveVersion}_$runTimestamp"
+}
+else {
+    $OutputDirectory = $outputRoot
 }
 
 $OutputDirectory = [System.IO.Path]::GetFullPath($OutputDirectory)
@@ -63,12 +115,7 @@ $operation = if ($NoRestore) {
 else {
     'Restore and pack'
 }
-$versionDescription = if ([string]::IsNullOrWhiteSpace($effectiveVersion)) {
-    'using the committed package version'
-}
-else {
-    "at package version '$effectiveVersion'"
-}
+$versionDescription = "at package version '$effectiveVersion'"
 if (-not $PSCmdlet.ShouldProcess(
         $OutputDirectory,
         "$operation NuGet packages $versionDescription from '$($solutions[0].FullName)'"

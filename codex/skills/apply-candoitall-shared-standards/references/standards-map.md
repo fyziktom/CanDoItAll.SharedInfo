@@ -17,21 +17,24 @@ Apply these even before loading a task-specific document:
   validate exact recursive targets.
 - Do not commit secrets, local overrides, generated output, Codex runtime state, browser
   artifacts, task proof, or logs.
-- Maintained CanDoItAll repositories use the MIT-derived license with the fixed
-  `https://aicandoitall.com` website-link requirement and display applicable CI,
-  user-facing package, .NET, and license badges.
+- Maintained CanDoItAll repositories use the unmodified MIT License and display
+  applicable CI, user-facing package, .NET, and MIT license badges.
 - Code contributions are accepted only from partners explicitly approved by the
   maintainer. Unsolicited pull requests are not accepted; prospective partners contact
   the `fyziktom` account on LinkedIn and wait for approval before preparing or opening a
   pull request.
 - Public CanDoItAll NuGet packages use `https://aicandoitall.com` as the default
   `PackageProjectUrl`; keep `RepositoryUrl` pointed at the canonical source repository.
-- NuGet packages embed the repository `LICENSE` through `PackageLicenseFile`; do not
-  mislabel the added website-link condition as the unmodified SPDX `MIT` expression.
-- Repository NuGet build adapters accept `-Version` and forward it as the effective
-  package version without requiring committed project-file edits.
-- NuGet packages that include an icon default to the copy-ready square corporate favicon
-  as `package-icon.png`; reserve stacked logos and wordmarks for larger surfaces.
+- NuGet packages declare `PackageLicenseExpression` as `MIT`; do not use
+  `PackageLicenseFile` for the family license.
+- Repository NuGet build adapters accept `-Version`, forward it as the effective package
+  version without committed project-file edits, and default to
+  `artifacts/packages/<version>_<yyyyMMdd-HHmmssfff>`.
+- Public NuGet packages include the copy-ready square corporate favicon as
+  `package-icon.png`; a missing `docs/package-icon.png` is a packaging failure.
+- Preserve third-party copyrights and license notices for copied source, vendored or
+  wrapped JavaScript/CSS, generated assets, and other redistributed external material.
+  Pack `THIRD-PARTY-NOTICES.md` with affected packages.
 - Select NuGet badges from the one or two packages users are most expected to install.
   Prefer user-facing entry packages over Abstractions, Core, or provider packages.
 - When a shared contract changes, update its standard, copy-ready template, tooling, and
@@ -46,7 +49,7 @@ Paths are relative to the resolved `CanDoItAll.SharedInfo` root.
 | Ownership or source-of-truth decision | `docs/architecture/source-of-truth.md` | target repository ownership docs |
 | Root folders and names | `docs/standards/repository-layout.md` | `templates/repository` |
 | README, contributing, security, durable docs | `docs/standards/documentation.md` | matching root templates |
-| License text, website link, badge, or package license metadata | `docs/standards/licensing.md` | `templates/repository/LICENSE`; README and .NET targets templates |
+| License text, badge, package license metadata, or third-party notices | `docs/standards/licensing.md` | `templates/repository/LICENSE`, `THIRD-PARTY-NOTICES.md`; README and .NET targets templates |
 | Git attributes, ignores, local/generated state | `docs/standards/git.md` | `.gitignore`, `.gitattributes` templates |
 | SDK pinning, MSBuild defaults, solution layout | `docs/standards/dotnet.md` | `templates/repository/dotnet` |
 | Dockerfile, Compose, ports, networks, volumes, secrets, health, runtime | `docs/standards/docker.md` | `templates/repository/docker`; `tools/validation/Test-DockerConventions.ps1` |
