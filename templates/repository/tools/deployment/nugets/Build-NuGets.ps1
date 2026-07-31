@@ -40,6 +40,32 @@ $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
 
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..\..')).Path
+$globalJsonPath = Join-Path $repositoryRoot 'global.json'
+if (-not (Test-Path -LiteralPath $globalJsonPath -PathType Leaf)) {
+    throw "global.json was not found at '$globalJsonPath'."
+}
+
+function Invoke-DotNet {
+    param(
+        [Parameter(Mandatory)]
+        [string[]]$Arguments,
+
+        [Parameter(Mandatory)]
+        [string]$FailureMessage
+    )
+
+    Push-Location -LiteralPath $repositoryRoot
+    try {
+        & dotnet @Arguments
+        if ($LASTEXITCODE -ne 0) {
+            throw "$FailureMessage Exit code: $LASTEXITCODE."
+        }
+    }
+    finally {
+        Pop-Location
+    }
+}
+
 $effectiveVersion = $Version.Trim()
 if ([string]::IsNullOrWhiteSpace($effectiveVersion)) {
     $versionCandidates = [System.Collections.Generic.List[string]]::new()
@@ -138,10 +164,9 @@ if (-not $NoRestore) {
         'restore',
         $solutions[0].FullName
     ) + $msbuildProperties
-    & dotnet @restoreArguments
-    if ($LASTEXITCODE -ne 0) {
-        throw "dotnet restore failed with exit code $LASTEXITCODE."
-    }
+    Invoke-DotNet `
+        -Arguments $restoreArguments `
+        -FailureMessage 'dotnet restore failed.'
 }
 
 # Add repository-specific packaging tests before this call when they are required.
@@ -153,10 +178,9 @@ $packArguments = @(
     '--output', $OutputDirectory,
     '-p:ContinuousIntegrationBuild=true'
 ) + $msbuildProperties
-& dotnet @packArguments
-if ($LASTEXITCODE -ne 0) {
-    throw "dotnet pack failed with exit code $LASTEXITCODE."
-}
+Invoke-DotNet `
+    -Arguments $packArguments `
+    -FailureMessage 'dotnet pack failed.'
 
 [pscustomobject]@{
     Repository = Split-Path $repositoryRoot -Leaf

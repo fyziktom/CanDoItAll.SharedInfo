@@ -1,6 +1,6 @@
 {
   "sdk": {
-    "version": "${DOTNET_SDK_VERSION}",
+    "version": "10.0.302",
     "rollForward": "latestPatch",
     "allowPrerelease": false
   }

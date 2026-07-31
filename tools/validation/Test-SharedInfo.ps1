@@ -31,6 +31,7 @@ $requiredPaths = @(
     'docs/standards/codex.md',
     'docs/standards/docker.md',
     'docs/inventory/2026-07-24-docker-baseline.md',
+    'docs/inventory/2026-07-31-dotnet-10.0.302-baseline.md',
     'codex/skills/_candoitall-api-shared/README.md',
     'codex/skills/_candoitall-api-shared/manifest.json',
     'codex/skills/_candoitall-api-shared/references/candoitall-web.openapi.json',
@@ -47,6 +48,7 @@ $requiredPaths = @(
     'templates/repository/THIRD-PARTY-NOTICES.md',
     'templates/repository/README.md',
     'templates/repository/docs/package-icon.png',
+    'templates/repository/dotnet/global.json.template',
     'templates/repository/dotnet/Directory.Build.props',
     'templates/repository/dotnet/Directory.Build.targets',
     'templates/repository/tools/deployment/nugets/Build-NuGets.ps1',
@@ -131,6 +133,34 @@ if (Test-Path -LiteralPath $skillInstallerPath -PathType Leaf) {
 
 $sharedContractChecks = @(
     [pscustomobject]@{
+        Path = 'docs/standards/dotnet.md'
+        RequiredText = @(
+            '10.0.302',
+            '10.0.10',
+            'latestPatch',
+            'allowPrerelease: false',
+            'repository root as',
+            'working directory'
+        )
+    },
+    [pscustomobject]@{
+        Path = 'templates/repository/dotnet/global.json.template'
+        RequiredText = @(
+            '"version": "10.0.302"',
+            '"rollForward": "latestPatch"',
+            '"allowPrerelease": false'
+        )
+    },
+    [pscustomobject]@{
+        Path = 'templates/repository/docker/Dockerfile.dotnet'
+        RequiredText = @(
+            'ARG DOTNET_SDK_VERSION=10.0.302',
+            'ARG DOTNET_RUNTIME_VERSION=10.0.10',
+            'dotnet/sdk:${DOTNET_SDK_VERSION}',
+            'dotnet/aspnet:${DOTNET_RUNTIME_VERSION}'
+        )
+    },
+    [pscustomobject]@{
         Path = 'docs/standards/nuget-packaging.md'
         RequiredText = @(
             'https://aicandoitall.com',
@@ -145,7 +175,9 @@ $sharedContractChecks = @(
             'artifacts/packages/<version>_<yyyyMMdd-HHmmssfff>',
             'PackageLicenseExpression',
             '<license type="expression">MIT</license>',
-            'THIRD-PARTY-NOTICES.md'
+            'THIRD-PARTY-NOTICES.md',
+            'repository root as the working',
+            '`global.json`'
         )
     },
     [pscustomobject]@{
@@ -155,7 +187,9 @@ $sharedContractChecks = @(
             '-p:Version=',
             'PackageVersion',
             '[switch]$CreateRunDirectory',
-            'yyyyMMdd-HHmmssfff'
+            'yyyyMMdd-HHmmssfff',
+            "Join-Path `$repositoryRoot 'global.json'",
+            'Push-Location -LiteralPath $repositoryRoot'
         )
     },
     [pscustomobject]@{
@@ -184,7 +218,9 @@ $sharedContractChecks = @(
             'https://aicandoitall.com',
             'PackageProjectUrl',
             'RepositoryUrl',
-            'accept `-Version`'
+            'accept `-Version`',
+            '10.0.302',
+            '10.0.10'
         )
     },
     [pscustomobject]@{

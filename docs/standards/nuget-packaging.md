@@ -23,7 +23,10 @@ packing fails. When `-Version` is supplied, the adapter must forward the overrid
 restore, build, test, and pack operation that it runs, and it must not silently produce a
 package with the committed default version. It must not publish packages. It must support
 `-WhatIf` and make one `ShouldProcess` decision before creating output directories or
-starting restore, build, test, or pack commands.
+starting restore, build, test, or pack commands. It must require the repository
+`global.json` and execute every `dotnet` command with the repository root as the working
+directory. Absolute solution or project paths do not change SDK resolution; without this
+working-directory boundary, a caller or the shared orchestrator can select another SDK.
 
 When `-OutputDirectory` is omitted, the adapter must resolve the effective package
 version and write to

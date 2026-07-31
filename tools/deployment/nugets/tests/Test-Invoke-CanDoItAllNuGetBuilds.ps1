@@ -7,6 +7,9 @@ $orchestrator = (Resolve-Path (Join-Path $PSScriptRoot '..\Invoke-CanDoItAllNuGe
 $adapterTemplate = (Resolve-Path (
     Join-Path $PSScriptRoot '..\..\..\..\templates\repository\tools\deployment\nugets\Build-NuGets.ps1'
 )).Path
+$globalJsonTemplate = (Resolve-Path (
+    Join-Path $PSScriptRoot '..\..\..\..\templates\repository\dotnet\global.json.template'
+)).Path
 $testRoot = Join-Path (
     [System.IO.Path]::GetTempPath()
 ) "candoitall-sharedinfo-nuget-tests-$([Guid]::NewGuid().ToString('N'))"
@@ -237,6 +240,9 @@ try {
     $templateOutput = Join-Path $templateRepository 'artifacts\packages'
     New-Item -ItemType Directory -Path (Split-Path $templateEntryPoint -Parent) -Force | Out-Null
     Copy-Item -LiteralPath $adapterTemplate -Destination $templateEntryPoint
+    Copy-Item `
+        -LiteralPath $globalJsonTemplate `
+        -Destination (Join-Path $templateRepository 'global.json')
     Set-Content -LiteralPath (Join-Path $templateRepository 'CanDoItAll.Template.sln') -Value '' -Encoding UTF8
 
     $templateResult = @(

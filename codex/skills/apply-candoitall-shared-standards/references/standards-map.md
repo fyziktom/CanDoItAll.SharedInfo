@@ -25,6 +25,8 @@ Apply these even before loading a task-specific document:
   pull request.
 - Public CanDoItAll NuGet packages use `https://aicandoitall.com` as the default
   `PackageProjectUrl`; keep `RepositoryUrl` pointed at the canonical source repository.
+- CanDoItAll .NET repositories pin SDK `10.0.302` with `latestPatch` roll-forward and
+  prerelease SDKs disabled; .NET container runtime stages use runtime `10.0.10`.
 - NuGet packages declare `PackageLicenseExpression` as `MIT`; do not use
   `PackageLicenseFile` for the family license.
 - Repository NuGet build adapters accept `-Version`, forward it as the effective package
