@@ -8,23 +8,22 @@ CanDoItAll API skills.
 - Artifact: [`references/candoitall-web.openapi.json`](references/candoitall-web.openapi.json)
 - Provenance: [`manifest.json`](manifest.json)
 - Source repository: `CanDoItAll`
-- Source branch: `apis-sse`
-- Baseline source commit: `563636f944e76e777356ae2a5fec4ad66c997fd2`
-- Source state: uncommitted working tree; `workingTreeClean: false`
+- Source branch: `maf-refactor`
+- Source commit: `cbc74af8f6d53ff1ee738f7485940a4e2440fb56`
+- Source state: clean committed working tree; `workingTreeClean: true`
 - Document server: `http://localhost:5032/`
 - Runtime endpoints: `/openapi/v1.json` and `/swagger/v1/swagger.json`
 - OpenAPI version: `3.1.1`
-- Paths: `244`
-- Operations: `274`
-- Component schemas: `381`
+- Paths: `250`
+- Operations: `280`
+- Component schemas: `435`
 - SHA-256:
-  `77B03745B16C3E8B3EF490C4D5817083FABD20C9320CF1DF01E2107DF47C699F`
+  `4F47CB76201A7A5A12212CACCBD9A5F7F7698C095CD84E9500C5F54010A49CE4`
 
-The snapshot was captured from a rebuilt Development host on the canonical 5032 URL.
-Both runtime document endpoints returned byte-identical 488,398-byte content. The
-product source was not committed at capture time, so the baseline commit and a
-working-tree status fingerprint are recorded in the manifest; this is deliberately
-not represented as commit-clean provenance.
+The snapshot was captured after a clean Release build from a committed working tree. An
+isolated in-memory Development profile served the canonical 5032 URL without reading or
+mutating the normal workspace. Both runtime document endpoints returned byte-identical
+751,132-byte content.
 
 | Route family | Paths | Operations |
 | --- | ---: | ---: |
@@ -36,8 +35,8 @@ not represented as commit-clean provenance.
 | `/api/crm-hr` | 15 | 19 |
 | `/api/plugins` | 18 | 20 |
 | `/api/processes` | 15 | 15 |
-| `/api/projects` | 7 | 10 |
-| `/api/project-structure` | 55 | 56 |
+| `/api/projects` | 10 | 13 |
+| `/api/project-structure` | 58 | 59 |
 | `/api/prompt-gallery` | 10 | 11 |
 | `/api/workflows` | 38 | 43 |
 | `/authorized-files` | 2 | 2 |
@@ -49,9 +48,9 @@ document intentionally includes the `/_dev` surface. Static files, Blazor routes
 other non-API application routes are not OpenAPI operations.
 
 The manifest records complete Agents, Agent Recruiting, Memory Providers, Processes,
-and Workflows operation sets, including operation identifiers. Validation compares
-every set with the generated document and its skill route appendix so these API and
-skill contracts cannot drift silently.
+Projects, Project Structure, and Workflows operation sets, including operation
+identifiers. Validation compares every set with the generated document and its skill
+route appendix so these API and skill contracts cannot drift silently.
 
 The main host now exposes only the experimental, provider-neutral
 `/api/memory-providers` surface for profile configuration, context queries, and
@@ -59,13 +58,13 @@ caller-owned operation status. Native Cognitive Memory belongs to the separate
 `CanDoItAll.CognitiveMemory` repository, which remains WIP and unpublished; the main
 host does not expose a `/api/cognitive-memory` compatibility family.
 
-Relative to the preceding artifact, this snapshot adds bounded SSE contracts for
-agent activity and same-request commands, provider completion status, workflow run
-signals, and process run signals. It also adds bounded image attachment staging,
-global agent approval readback, caller-supplied activity-operation correlation, and
-configurable Swagger UI. Workflow and process streams support global or exact-run
-subscriptions; their cursors are bounded and host-local, so canonical detail/history
-routes remain the source of truth after a replay gap or process restart.
+Relative to the preceding artifact, this snapshot publishes transport-owned agent
+response DTOs, additive exact per-proposal approval decisions, aggregate execution-run
+usage totals, project deletion-cleanup recovery/readback, and project-structure node
+copy. The bounded SSE route families remain profile-isolated and host-local, so
+canonical detail/history routes remain the source of truth after a replay gap, profile
+switch, or process restart. The ordinary LLM conversation foundation remains
+unregistered and exposes no HTTP route.
 
 Use the [partner API migration matrix](references/partner-api-migration.md) when upgrading
 an integration that still uses the superseded partner-side workarounds.

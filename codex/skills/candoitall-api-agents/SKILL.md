@@ -126,9 +126,11 @@ resumable operation stream.
 persisted approval details. Read the scoped or global run approval endpoint when the
 authorized client needs the canonical record.
 
-The current basic approval command applies one `approved` decision to the run's
-current pending approval set. Read the approval list immediately before posting the
-decision; do not assume an older SSE summary is still complete.
+Read the approval list immediately before posting a decision; do not assume an older SSE
+summary is still complete. New clients should send `decisions` with exactly one
+`approvalId`/`approved` pair for every currently pending approval. Duplicate, unknown,
+missing, or stale decision sets fail with `agents.approval-decision-mismatch`. The required
+legacy `approved` field remains a uniform decision only when `decisions` is absent or empty.
 
 Upload attachments as multipart form field `file` to
 `POST /api/agents/attachments/images`. The staging boundary accepts PNG, JPEG, GIF,
@@ -161,9 +163,9 @@ Use only the returned `relativePath` in `attachmentPaths` or
 ## Canonical Runtime Contracts
 
 - Process-driven agent runs should use the canonical structured output contract key for process-step outcomes and preserve `processRunId`, `processStepId`, `schedulerRunId`, and `messageId` filters when reviewing execution runs.
-- Provider usage is a ledger observation, not a chat estimate. Preserve `ProviderUsageObservationStatus`, `ProviderUsageSourcePhase`, token counts, pricing status, and execution/run identifiers when reviewing metrics or artifacts.
+- Provider usage is a ledger observation, not a chat estimate. The HTTP run-detail contract exposes `usageTotals`: observation counts, known/unknown usage counts, token and tool-call totals, known/unknown cost counts, and known cost. Raw internal provider-usage observation enums are not public API fields.
 - Tool receipts and runtime snapshots are current-run evidence. Do not treat stale prior-run receipts, copied artifacts, or provider test-chat output as proof for a governed process step.
-- When a process proof claims real automation dispatch, verify at least one execution run is bound to the claimed process run and step, has relevant tool receipts, and has provider usage observations when a provider response was produced. A provider test route or detached chat session proves provider health only, not process execution.
+- When a process proof claims real automation dispatch, verify at least one execution run is bound to the claimed process run and step, has relevant tool receipts, and reports `usageTotals.observationCount > 0` when a provider response was produced. A provider test route or detached chat session proves provider health only, not process execution.
 
 ## Execution DTOs
 
@@ -172,8 +174,10 @@ optional caller-generated `activityOperationId`.
 
 `PendingApprovalApiRequest` accepts `approved`,
 `autoApprovePendingToolCalls`, and an optional continuation
-`activityOperationId`. The current basic command applies the decision to the run's
-pending approval set; read the approval list immediately before deciding it.
+`activityOperationId`. Its optional `decisions` collection contains
+`PendingApprovalDecisionApiRequest` values with `approvalId` and `approved`. A non-empty
+collection takes precedence over the legacy uniform `approved` value and must match the
+run's freshly read pending approval set exactly.
 
 `AgentExecutionRunStartApiRequest` fields:
 
@@ -209,6 +213,11 @@ pending approval set; read the approval list immediately before deciding it.
 - `createdToUtc`
 - `updatedFromUtc`
 - `updatedToUtc`
+
+`GET /api/agents/execution-runs/{executionRunId}` returns the transport-owned
+`AgentExecutionRunDetailApiResponse`. Use its `run`, `chatSession`, `executionLog`,
+`metrics`, `approvals`, `artifacts`, `checkpoints`, `toolReceipts`, and `usageTotals`
+properties. Do not generate clients against removed internal persistence record schemas.
 
 ## Validation
 
