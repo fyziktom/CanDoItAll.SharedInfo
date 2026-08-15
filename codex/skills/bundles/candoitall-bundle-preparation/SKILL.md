@@ -13,7 +13,7 @@ Create the smallest durable coordination artifact that removes execution guesswo
 - Inspect current repositories before freezing scope or source references.
 - Preserve explicit user values and literal scope. Use decision rules where judgment is required.
 - Keep reusable context in bundle files; omit repeated prose and process that do not change execution behavior.
-- Make validation proportional to risk through explicit proof tiers.
+- Make validation proportional to risk through explicit proof tiers and affected-scope test selection. Proof tier controls evidence depth, not test breadth.
 
 ## Decide Whether A Bundle Is Needed
 
@@ -45,7 +45,7 @@ If all roles are usable, preserve the shape. Add a compatibility map to the root
 - `feedback`: QA notes, screenshots, review documents, concrete defects, or short issue lists. Emphasize literal note closure and observable regression proof.
 - `initiative`: features, migrations, refactors, cross-repo programs, or architecture changes. Emphasize inventories, boundaries, state/data flow, failure behavior, and dependency gates.
 
-Profiles describe content, not proof depth. Select `Standard`, `Behavioral`, or `Governed` proof separately for every subbundle using the coordinator skill’s proof-tier rules.
+Profiles describe content, not proof depth or test breadth. Select `Standard`, `Behavioral`, or `Governed` proof separately for every subbundle using the coordinator skill’s proof-tier rules.
 
 ## Canonical Preparation Flow
 
@@ -57,7 +57,7 @@ Use this flow for a new canonical bundle:
 4. Inspect the real repo or workspace and record current state, source ownership, package boundaries, and relevant tests.
 5. Split work by coherent outcome and ownership. Avoid arbitrary file-count or “misc” phases.
 6. Model prerequisites, critical foundations, parallel-safe work, reopen triggers, and downstream invalidation.
-7. Give each subbundle a proof tier and observable progression gate.
+7. Give each subbundle a proof tier, affected test project and stable `FullyQualifiedName`/topic filter, selection reason, expected discovery, invalidation keys, broad-gate decision, and observable progression gate. Use an explicit non-test check when no automated test applies.
 8. Add domain overlays only where applicable: C# architecture, UI/browser, host behavior, production workflow/process E2E, memory/lifecycle artifacts, security, or migration rollback.
 9. Complete traceability from input to requirement, owner, proof, and closure.
 10. Run `scripts/validate_bundle.py --stage prepared` for canonical bundles, then `candoitall-bundle-validator`. For compatible non-canonical bundles, record a manual semantic readiness gate.
@@ -86,7 +86,7 @@ Every work unit must state, under any clear headings:
 - prerequisites, dependency impact, and reopen triggers;
 - exact source references or discovery instructions;
 - implementation boundary and acceptance criteria;
-- proof tier and required validation;
+- proof tier and required validation, including focused test/check selection, expected discovery, invalidation keys, and broad-gate decision;
 - progression decision;
 - browser/host proof only when applicable.
 
@@ -121,13 +121,14 @@ When work changes large classes, partial classes, project references, runtime co
 
 ## Quality Gate
 
-Reject preparation when execution would still need to guess the intended outcome, scope, owner, prerequisite, proof tier, validation, or reopen condition. Do not reject it merely because optional canonical files are absent or headings use different names.
+Reject preparation when execution would still need to guess the intended outcome, scope, owner, prerequisite, proof tier, focused validation selection, expected discovery, invalidation keys, broad-gate decision, or reopen condition. Do not reject it merely because optional canonical files are absent or headings use different names.
 
 ## References
 
 - Read [references/bundle-profiles.md](references/bundle-profiles.md) when selecting content emphasis.
 - Read [references/subbundle-contract.md](references/subbundle-contract.md) while splitting work.
 - Read [references/bundle-validation-rubric.md](references/bundle-validation-rubric.md) before readiness review.
+- Read [../candoitall-bundle-execution/references/test-selection-and-invalidation.md](../candoitall-bundle-execution/references/test-selection-and-invalidation.md) before assigning test scope or a broad checkpoint.
 - For UI bundles, read `candoitall-components-mcp/references/compact-ui-composition.md`; do not duplicate its detailed heuristics in bundle files.
 - Read [../candoitall-bundle-execution/references/semantic-adequacy-proof.md](../candoitall-bundle-execution/references/semantic-adequacy-proof.md) for `Behavioral` or `Governed` proof.
 - Read [../candoitall-bundle-execution/references/artifact-backed-proof-manifest.md](../candoitall-bundle-execution/references/artifact-backed-proof-manifest.md) only for `Governed` proof.

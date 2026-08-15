@@ -12,8 +12,13 @@
 
 ## Commands
 
-- List the targeted commands and their outcomes.
-- For each subbundle, record its `Standard`, `Behavioral`, or `Governed` proof tier.
+| Subbundle / proof tier | Test project or check | Filter or topic | Selection reason | Expected / discovered | Invalidation keys | Broad-gate decision | Exact command and result |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `01-example` / `Standard` | `path/to/tests.csproj` | `FullyQualifiedName~ExampleTests` | Changed example behavior | `3 / Pending` | `ExampleContract` | `Not required` | `Pending` |
+
+- Use `N/A` with the owning static, analyzer, browser, or host check when no automated test applies.
+- Record zero or unexpected test discovery as a failed command.
+- A broad project or solution gate must name its invalidation trigger and frozen checkpoint and must run no more than once there.
 
 ## Browser Artifacts
 

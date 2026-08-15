@@ -46,6 +46,13 @@
 ## Validation Depth
 
 - Proof tier: `Standard`, `Behavioral`, or `Governed`.
+- Test project or non-test check:
+- `FullyQualifiedName`, class, namespace/topic, or trait/category filter:
+- Selection reason and changed behavior/contract:
+- Expected discovered tests or exact named cases:
+- Invalidation keys:
+- Broad-gate decision: `Not required`, or `Required once at <frozen checkpoint> because <named invalidation trigger>`.
+- Use `N/A` with the owning static, analyzer, browser, or host check when no automated test applies.
 - State whether this is a critical foundation and name the affected validation surface.
 
 ## Implementation Steps
@@ -67,6 +74,7 @@
 ## Proof Required
 
 - List the commands, screenshots, artifact paths, or DOM checks required to prove completion.
+- Record actual discovery beside the expected test count; zero or unexpected discovery fails the check.
 - For CanDoItAll application UI, require a maximized or named large-screen desktop pass and screenshot review. Do not add narrower-width proof unless explicitly requested.
 - For reusable basic `CanDoItAll.Components.BaseLib` work, require small, medium, and large viewport proof.
 - Require normal-state and relevant open-overlay screenshots, including recorded first-viewport and scroll-owner findings.

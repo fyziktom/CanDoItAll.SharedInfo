@@ -33,6 +33,7 @@ Confirm:
 - current repository evidence supports source references and assumptions;
 - dependency order, critical foundations, parallel-safe work, and reopen triggers are operational;
 - each subbundle has an observable outcome, boundary, acceptance criteria, proof tier, and progression decision;
+- each subbundle records an affected test project or non-test check, stable filter/topic, selection reason, expected discovery, invalidation keys, and broad-gate decision;
 - applicable domain overlays exist without imposing unrelated ones;
 - UI target policy is correct: CanDoItAll apps are large-screen desktop only by default; reusable basic BaseLib components cover small, medium, and large.
 - applicable UI work records the compact composition decisions defined by `candoitall-components-mcp/references/compact-ui-composition.md`, including first-viewport target and scroll owner.
@@ -43,6 +44,8 @@ Confirm:
 
 - no executed work unit remains ambiguously ready/in-progress;
 - affected builds/tests and applicable browser/host checks passed or a blocker is explicit;
+- expected test discovery matches actual discovery, and zero discovered tests do not count as proof;
+- every broad project or solution gate cites a named invalidation trigger and ran no more than once at its named frozen checkpoint;
 - UI closure includes inspected normal and relevant open-overlay screenshots, with primary-surface, sizing, first-viewport, and scroll-owner findings recorded;
 - Standard proof records commands/results, Behavioral proof contains realistic positive and meaningful negative evidence, and Governed proof contains valid manifests/artifacts;
 - later evidence has not invalidated an earlier foundation;
@@ -51,8 +54,10 @@ Confirm:
 
 ## Proof Tier Rules
 
+- Proof tier controls evidence depth and durability, not test breadth.
 - Do not demand Governed artifacts from Standard or Behavioral phases.
 - Do not let a phase lower its declared tier after implementation merely to pass closure.
+- Default to stable `FullyQualifiedName`, class, namespace/topic, or trait/category filters. Task size, proof tier, habit, and weak test taxonomy do not justify an unfiltered project or solution gate.
 - For Governed proof, use [../candoitall-bundle-execution/references/artifact-backed-proof-manifest.md](../candoitall-bundle-execution/references/artifact-backed-proof-manifest.md) and require existing portable artifacts, hashes, transcripts, semantic invariants, and applicable red-team/downstream evidence.
 - For Behavioral/Governed proof, use [../candoitall-bundle-execution/references/semantic-adequacy-proof.md](../candoitall-bundle-execution/references/semantic-adequacy-proof.md). Status/count/file-existence-only checks cannot prove behavior.
 
@@ -76,6 +81,7 @@ Apply specialized proof only when relevant:
 ## References
 
 - Read [references/readiness-and-closure-checks.md](references/readiness-and-closure-checks.md) for the concise checklist.
+- Read [../candoitall-bundle-execution/references/test-selection-and-invalidation.md](../candoitall-bundle-execution/references/test-selection-and-invalidation.md) for focused selection, discovery, invalidation, and broad-gate rules.
 - For UI gates, read `candoitall-components-mcp/references/compact-ui-composition.md` rather than duplicating its decision rules here.
 - Use `candoitall-subbundle-validator` for work-unit gates.
 

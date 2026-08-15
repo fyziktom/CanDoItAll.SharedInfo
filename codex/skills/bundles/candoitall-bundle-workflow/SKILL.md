@@ -49,7 +49,9 @@ Select proof per subbundle. Dependency-critical does not automatically mean gove
 - `Behavioral`: Standard proof plus a realistic positive case and a meaningful negative, boundary, or regression case. Use when behavior or user-visible state changes.
 - `Governed`: Behavioral proof plus `proof/SBxx/manifest.md`, durable transcripts, hashes, source assertions, semantic invariants, and any required red-team or downstream evidence. Use for security/privacy boundaries, migrations, destructive or irreversible behavior, production orchestration, disputed acceptance, high-cost rework, cross-agent auditability, or when the user explicitly requests forensic proof.
 
-Increase the tier when evidence shows risk; do not increase it because the task is merely large. Read [../candoitall-bundle-execution/references/artifact-backed-proof-manifest.md](../candoitall-bundle-execution/references/artifact-backed-proof-manifest.md) only for `Governed` proof.
+Proof tier controls evidence depth, not test breadth. At every tier, default to the affected test project with a stable `FullyQualifiedName`, class, namespace/topic, or trait/category filter and verify expected discovery. A broad project or solution gate requires a named invalidation trigger and runs once at a named frozen checkpoint; size, tier, habit, and weak test taxonomy are not triggers.
+
+Increase the tier when evidence shows risk; do not increase it because the task is merely large. Read [../candoitall-bundle-execution/references/test-selection-and-invalidation.md](../candoitall-bundle-execution/references/test-selection-and-invalidation.md) before planning test scope and [../candoitall-bundle-execution/references/artifact-backed-proof-manifest.md](../candoitall-bundle-execution/references/artifact-backed-proof-manifest.md) only for `Governed` proof.
 
 ## Workflow
 
@@ -61,7 +63,7 @@ Increase the tier when evidence shows risk; do not increase it because the task 
 6. Execute one dependency-ready subbundle at a time with `candoitall-bundle-execution`.
 7. Run `candoitall-subbundle-validator` before and after each subbundle at its selected proof tier.
 8. Reopen a prerequisite when later evidence invalidates it.
-9. Audit original inputs note by note, run final closure validation, and synchronize all status and proof surfaces.
+9. Audit original inputs note by note, run final closure validation, execute any authorized broad gate once at its frozen checkpoint, and synchronize all status and proof surfaces.
 10. If bundle skills or validators changed, synchronize the repo-owned copy to the active Codex skill root and verify hashes before relying on the new contract.
 
 ## CanDoItAll UI Target Policy

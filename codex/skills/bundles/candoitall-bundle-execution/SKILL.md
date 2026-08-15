@@ -36,6 +36,9 @@ Treat bundle meaning as the contract. Preserve the existing compatible shape and
 
 ## Proof Tiers
 
+Proof tier controls evidence depth and durability, not test breadth. Use the focused
+selection rules below at every tier.
+
 ### Standard
 
 - Run the most relevant affected build, analyzer/static check, targeted test, or minimal smoke.
@@ -58,11 +61,15 @@ Read [references/semantic-adequacy-proof.md](references/semantic-adequacy-proof.
 
 ## Validation Rules
 
-- Prefer targeted tests for changed behavior, type/analyzer checks when applicable, affected-package builds, and a minimal smoke when full validation is too expensive.
+- Default to the affected test project with a stable `FullyQualifiedName`, class, namespace/topic, or trait/category filter; record the expected discovery and fail the check on zero or unexpected discovery.
+- Prefer targeted tests for changed behavior, type/analyzer checks when applicable, affected-package builds, and one dependent-flow smoke only when a critical foundation needs it.
+- An unfiltered project or solution gate requires a named invalidation trigger and must run once at a named frozen checkpoint after affected checks pass. Proof tier, task size, habit, and weak test taxonomy are not triggers.
 - A missing full-solution build does not block a low-risk phase when affected-scope validation is sufficient and the report explains the boundary.
 - Missing evidence that is required by the selected tier is a blocker or reopen condition.
 - Production-only behavior must be proven through its real producer/lifecycle path when that behavior is in scope; manually seeded consumer tests are supporting evidence only.
 - Use Microsoft Testing Platform hot reload only for iteration; finish with a clean confirmation run.
+
+Read [references/test-selection-and-invalidation.md](references/test-selection-and-invalidation.md) before selecting or expanding test scope.
 
 ## CanDoItAll UI Rule
 
@@ -113,6 +120,7 @@ If the bundle contract materially changes, rerun canonical prepared validation o
 
 - Read [references/execution-loop.md](references/execution-loop.md) for the concise phase loop.
 - Read [references/proof-and-status-updates.md](references/proof-and-status-updates.md) before closure updates.
+- Read [references/test-selection-and-invalidation.md](references/test-selection-and-invalidation.md) for focused selection, discovery, invalidation, and broad-gate rules.
 - For UI execution, read `candoitall-components-mcp/references/compact-ui-composition.md`.
 - Use `candoitall-subbundle-validator` for entry/closure and `candoitall-bundle-validator` for final closure.
 - Activate architecture, Components MCP, Playwright, screenshot, or host skills only when the current phase needs them.
