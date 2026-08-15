@@ -1,6 +1,6 @@
 ---
 name: candoitall-codeanalytics-mcp
-description: Use when inspecting C# solutions through the CanDoItAll codeanalytics MCP, especially for scoped snapshots, dashboard health, solution/project inventory, dependency and cycle analysis, findings and hotspots, DI registrations, persistence facts, type/member lookup, symbol definitions/references/implementations, file inspection, focused context walking, and SharpTools-style read-only analysis while keeping SharpTools as a disabled backup only.
+description: Use when inspecting C# solutions through the CanDoItAll codeanalytics MCP, especially for impacted-test selection from actual code changes, scoped snapshots, dashboard health, solution/project inventory, dependency and cycle analysis, findings and hotspots, DI registrations, persistence facts, type/member lookup, symbol definitions/references/implementations, file inspection, focused context walking, and SharpTools-style read-only analysis while keeping SharpTools as a disabled backup only.
 ---
 
 # CanDoItAll CodeAnalytics MCP
@@ -51,6 +51,18 @@ Tool discovery may expose deferred wrapper names, but the tool description and r
 - File inspection:
   Use `code_analytics_document_symbols_get` for the type/member outline of a file.
   Use `code_analytics_document_source_get` for raw source text from a file.
+- Impacted tests:
+  Use `code_analytics_impacted_tests_get` to resolve actual changed source paths and
+  one-based line ranges to required and conditional test selectors across one or more
+  primary/test workspaces. This is a live workspace query and does not require an
+  architecture snapshot.
+  Put only files present in the actual diff under `changes`. Put helpers or files that
+  were inspected but not changed under `contextOnlyPaths`; the tool reports and ignores
+  them as impact seeds.
+  Supply every runnable test `.sln`, `.slnx`, or `.csproj` needed for the affected area.
+  When tests share the primary solution, supply that solution as the test workspace.
+  When suites are separated, supply their separate solution paths instead of assuming
+  the production solution contains them.
 - Broader stitched investigation:
   Use `code_analytics_focused_context_get` for trouble paths, usage summaries, representative consumers, or implementation overviews once the seed symbol is known.
   Prefer `TroublePath` explicitly; `Behavior` is legacy compatibility only.
@@ -104,6 +116,36 @@ Tool discovery may expose deferred wrapper names, but the tool description and r
 - Prompt names a file and a symbol:
   `snapshot_build` -> `document_symbols_get` for the file -> `symbols_search` or `symbol_definition_get`.
   Use `document_source_get` only if the symbol excerpt is insufficient.
+- Focused development-test proof:
+  1. Call `impacted_tests_get` with the repository root, all relevant test workspaces,
+     actual changed paths/ranges, and `behaviorIntent=Unknown`.
+  2. Confirm every workspace is healthy, source-test discovery is non-zero, and every
+     changed range resolved to the intended symbol and shape.
+  3. Only for a genuinely behavior-preserving implementation change, call it again with
+     `behaviorIntent=BehaviorPreservingImplementation`. This value is the agent's
+     assertion; it is not proof of semantic equivalence.
+  4. Run every required selector and verify non-zero discovery before accepting test
+     results. Conditional selectors may stay deferred only while all reported
+     containment assumptions remain true.
+     `AllSuppliedSuites` is an executable instruction: run every workspace path returned
+     under workspace health; its selector list is intentionally empty.
+     Treat `FullyQualifiedName` as an exact method selector, `Class` and `Namespace` as
+     fully-qualified prefixes, and `Project` or `Workspace` as an unfiltered run of the
+     returned path. Translate that typed scope to the repository's actual test runner.
+  5. Promote conditional selectors into required proof when a reported promotion trigger
+     occurs, a required owner test fails, the change expands, workspace health degrades,
+     or DI, serialization, reflection, dynamic dispatch, generated code, public contract,
+     or observable behavior becomes uncertain.
+
+  Request fields are `repositoryRootPath`, `testWorkspaces`, `changes`,
+  `contextOnlyPaths`, `maxVisitedMembers`, `maxSelectors`, and `maxReasonPaths`.
+  Each change accepts `path`, optional `lineRanges` with one-based inclusive
+  `startLine`/`endLine`, and `behaviorIntent`. Supported intent values are `Unknown`,
+  `BehaviorChange`, `ContractOrShapeChange`, and
+  `BehaviorPreservingImplementation`.
+  `maxSelectors` and `maxReasonPaths` are global across required and conditional output.
+  The service promotes or broadens when a safe selection cannot fit; it never truncates
+  impacted tests to satisfy those limits.
 
 ## Do Not
 
@@ -117,6 +159,16 @@ Tool discovery may expose deferred wrapper names, but the tool description and r
 - Do not increase depth to fight noise. Add or tighten `FocusTags`, `RelationHints`, `ProjectName`, or snapshot scope first.
 - Do not use full-solution snapshots for routine symbol lookup in this repo. Scope to projects or namespaces unless the request is explicitly architecture-wide.
 - Do not fall back to SharpTools merely because CodeAnalytics needs a restart or reinstall. Use SharpTools only for a real capability gap.
+- Do not seed impacted-test analysis with every file opened during development. Only the
+  actual diff belongs in `changes`; inspected context belongs in `contextOnlyPaths`.
+- Do not claim behavior-preserving intent merely because a signature is unchanged. Use it
+  only when observable input/output behavior is intentionally preserved and the first
+  conservative result resolved the expected body-only change.
+- Do not interpret a large impacted percentage as permission to discard consumer tests.
+  Defer them only when the response applies containment and returns explicit promotion
+  triggers.
+- Do not trust a narrow selector that discovers zero tests. Treat zero or unexpected
+  discovery as invalid proof and broaden or correct the selector.
 
 ## Output Expectations
 
@@ -124,3 +176,7 @@ Tool discovery may expose deferred wrapper names, but the tool description and r
 - Return concrete files, symbols, and direct evidence, not only narrative summaries.
 - Say when you had to fall back from a narrow tool to a broader context tool, and why.
 - If snapshot diagnostics or counts make the result unreliable, say that explicitly and recommend the narrower rebuild.
+- For impacted-test analysis, report workspace health, resolved changes, required and
+  conditional selectors, confidence, fallback scope/reason, ignored context-only paths,
+  containment rationale, and promotion triggers. State which selectors were actually
+  discovered and run; the static response alone is not test-execution proof.
