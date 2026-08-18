@@ -56,6 +56,9 @@ install, name both the desired skill and `_candoitall-api-shared`:
     -PackageName candoitall-api-agents,_candoitall-api-shared
 ```
 
+For ordinary Simple Chat definitions, conversations, and durable turns, install
+`candoitall-api-llm-chats` with the same `_candoitall-api-shared` support package.
+
 Use the bundled snapshot when it matches the target source version. Otherwise, use the
 running web host's `/openapi/v1.json` or `/swagger/v1/swagger.json` document.
 

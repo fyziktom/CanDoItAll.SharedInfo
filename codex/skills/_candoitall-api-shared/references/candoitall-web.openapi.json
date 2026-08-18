@@ -350,6 +350,30 @@
         }
       }
     },
+    "/api/runtime/capabilities": {
+      "get": {
+        "tags": [
+          "CanDoItAll.Web"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/runtime/operations": {
+      "get": {
+        "tags": [
+          "CanDoItAll.Web"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/project-structure/node-catalog": {
       "get": {
         "tags": [
@@ -15901,6 +15925,1358 @@
           }
         }
       }
+    },
+    "/api/llm-chats/provider-options": {
+      "get": {
+        "tags": [
+          "LLM Chats"
+        ],
+        "description": "Lists credential-free provider, model, and thinking-effort options available to LLM Chat definitions.",
+        "operationId": "ListLlmChatProviderOptions",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LlmChatProviderOptionApiResponse"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/llm-chats": {
+      "get": {
+        "tags": [
+          "LLM Chats"
+        ],
+        "description": "Lists a bounded page of LLM Chat definitions, optionally filtered by lifecycle status.",
+        "operationId": "ListLlmChatDefinitions",
+        "parameters": [
+          {
+            "name": "take",
+            "in": "query",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LlmChatApiPageOfLlmChatDefinitionApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "LLM Chats"
+        ],
+        "description": "Creates a revisioned LLM Chat definition after validating its provider, model, thinking effort, and response format.",
+        "operationId": "CreateLlmChatDefinition",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LlmChatDefinitionMutationApiRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LlmChatDefinitionApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/llm-chats/{definitionId}": {
+      "get": {
+        "tags": [
+          "LLM Chats"
+        ],
+        "description": "Gets the safe definition detail without returning the system prompt or provider credentials.",
+        "operationId": "GetLlmChatDefinition",
+        "parameters": [
+          {
+            "name": "definitionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LlmChatDefinitionApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "LLM Chats"
+        ],
+        "description": "Appends a validated immutable definition revision using the expected concurrency token from the body or If-Match header.",
+        "operationId": "UpdateLlmChatDefinition",
+        "parameters": [
+          {
+            "name": "definitionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LlmChatDefinitionMutationApiRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LlmChatDefinitionApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/llm-chats/{definitionId}/editor": {
+      "get": {
+        "tags": [
+          "LLM Chats"
+        ],
+        "description": "Gets the manage-scoped editable revision, including the system prompt and current concurrency token.",
+        "operationId": "GetLlmChatDefinitionEditor",
+        "parameters": [
+          {
+            "name": "definitionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LlmChatDefinitionEditorApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/llm-chats/{definitionId}/activate": {
+      "post": {
+        "tags": [
+          "LLM Chats"
+        ],
+        "description": "Activates the definition using the expected concurrency token from the body or If-Match header.",
+        "operationId": "ActivateLlmChatDefinition",
+        "parameters": [
+          {
+            "name": "definitionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LlmChatExpectedConcurrencyApiRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LlmChatDefinitionApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/llm-chats/{definitionId}/suspend": {
+      "post": {
+        "tags": [
+          "LLM Chats"
+        ],
+        "description": "Suspends the definition using the expected concurrency token from the body or If-Match header.",
+        "operationId": "SuspendLlmChatDefinition",
+        "parameters": [
+          {
+            "name": "definitionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LlmChatExpectedConcurrencyApiRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LlmChatDefinitionApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/llm-chats/{definitionId}/archive": {
+      "post": {
+        "tags": [
+          "LLM Chats"
+        ],
+        "description": "Archives the definition using the expected concurrency token from the body or If-Match header.",
+        "operationId": "ArchiveLlmChatDefinition",
+        "parameters": [
+          {
+            "name": "definitionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LlmChatExpectedConcurrencyApiRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LlmChatDefinitionApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/llm-chats/{definitionId}/conversations": {
+      "post": {
+        "tags": [
+          "LLM Chats"
+        ],
+        "description": "Creates an API-origin conversation. Creation is not idempotent; callers must not blindly retry an ambiguous response.",
+        "operationId": "CreateLlmChatConversation",
+        "parameters": [
+          {
+            "name": "definitionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateLlmChatConversationApiRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LlmChatConversationApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/llm-conversations": {
+      "get": {
+        "tags": [
+          "LLM Chat Conversations"
+        ],
+        "description": "Lists a bounded page of conversations, optionally filtered by definition, using an opaque cursor.",
+        "operationId": "ListLlmChatConversations",
+        "parameters": [
+          {
+            "name": "take",
+            "in": "query",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "definitionId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LlmChatApiPageOfLlmChatConversationApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/llm-conversations/{conversationId}": {
+      "get": {
+        "tags": [
+          "LLM Chat Conversations"
+        ],
+        "description": "Gets a conversation and a bounded page of its non-system transcript messages.",
+        "operationId": "GetLlmChatConversation",
+        "parameters": [
+          {
+            "name": "conversationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "messageTake",
+            "in": "query",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          },
+          {
+            "name": "messageCursor",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LlmChatConversationApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/llm-conversations/{conversationId}/title": {
+      "patch": {
+        "tags": [
+          "LLM Chat Conversations"
+        ],
+        "description": "Renames a conversation using its expected transcript revision and concurrency token.",
+        "operationId": "RenameLlmChatConversation",
+        "parameters": [
+          {
+            "name": "conversationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RenameLlmChatConversationApiRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LlmChatConversationApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/llm-conversations/{conversationId}/archive": {
+      "post": {
+        "tags": [
+          "LLM Chat Conversations"
+        ],
+        "description": "Archives a conversation using the expected concurrency token from the body or If-Match header.",
+        "operationId": "ArchiveLlmChatConversation",
+        "parameters": [
+          {
+            "name": "conversationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LlmChatExpectedConcurrencyApiRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LlmChatConversationApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/llm-conversations/{conversationId}/turns": {
+      "post": {
+        "tags": [
+          "LLM Chat Turns"
+        ],
+        "description": "Admits one retry-safe turn. Retry the same logical request with the same operationId and identical body; use a new operationId only for an intentionally distinct turn. expectedTranscriptRevision is the optimistic transcript token.",
+        "operationId": "SendLlmChatTurn",
+        "parameters": [
+          {
+            "name": "conversationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendLlmChatTurnApiRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LlmChatOperationApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Gateway Timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/llm-conversations/{conversationId}/active-turns/{turnId}/abandon": {
+      "post": {
+        "tags": [
+          "LLM Chat Turns"
+        ],
+        "description": "Abandons only the exact RecoveryRequired turn after its live execution owner has drained.",
+        "operationId": "AbandonLlmChatActiveTurn",
+        "parameters": [
+          {
+            "name": "conversationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "turnId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LlmChatOperationApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/llm-chat-operations/{operationId}": {
+      "get": {
+        "tags": [
+          "LLM Chat Operations"
+        ],
+        "description": "Gets durable operation state, result metadata, and bounded provider invocation evidence.",
+        "operationId": "GetLlmChatOperation",
+        "parameters": [
+          {
+            "name": "operationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LlmChatOperationApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/llm-chat-operations/{operationId}/events": {
+      "get": {
+        "tags": [
+          "LLM Chat Operations"
+        ],
+        "description": "Replays durable operation events after Last-Event-ID or the after query cursor and follows committed updates until a terminal operation event. Bearer credentials are accepted only through the normal Authorization header, never query parameters.",
+        "operationId": "StreamLlmChatOperationEvents",
+        "parameters": [
+          {
+            "name": "operationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/llm-chat-operations/{operationId}/cancel": {
+      "post": {
+        "tags": [
+          "LLM Chat Operations"
+        ],
+        "description": "Durably requests cancellation and signals a live in-process provider call when owned here.",
+        "operationId": "CancelLlmChatOperation",
+        "parameters": [
+          {
+            "name": "operationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LlmChatOperationApiResponse"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LlmChatOperationApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/llm-chat-operations/{operationId}/reconcile": {
+      "post": {
+        "tags": [
+          "LLM Chat Operations"
+        ],
+        "description": "Reconciles an operation only from durable transcript, invocation, dispatch, and lease evidence. Ambiguous post-dispatch work remains recovery-required and is never redispatched.",
+        "operationId": "ReconcileLlmChatOperation",
+        "parameters": [
+          {
+            "name": "operationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LlmChatOperationApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -18777,6 +20153,12 @@
               "type": "string"
             }
           },
+          "externalTargetRootBindings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExternalTargetRootBinding"
+            }
+          },
           "canReadStorage": {
             "type": "boolean"
           },
@@ -19289,6 +20671,18 @@
           }
         }
       },
+      "CreateLlmChatConversationApiRequest": {
+        "required": [
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "ErrorSeverity": {
         "type": "integer"
       },
@@ -19390,6 +20784,25 @@
       },
       "ExecutionState": {
         "type": "integer"
+      },
+      "ExternalTargetRootBinding": {
+        "required": [
+          "rootId",
+          "hostPlatform",
+          "protectedRootToken"
+        ],
+        "type": "object",
+        "properties": {
+          "rootId": {
+            "type": "string"
+          },
+          "hostPlatform": {
+            "type": "string"
+          },
+          "protectedRootToken": {
+            "type": "string"
+          }
+        }
       },
       "GanttScheduleGesture": {
         "type": "integer"
@@ -19621,6 +21034,1001 @@
             "format": "uuid"
           }
         }
+      },
+      "LlmChatApiPageOfLlmChatConversationApiResponse": {
+        "required": [
+          "items",
+          "nextCursor"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LlmChatConversationApiResponse"
+            }
+          },
+          "nextCursor": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "LlmChatApiPageOfLlmChatDefinitionApiResponse": {
+        "required": [
+          "items",
+          "nextCursor"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LlmChatDefinitionApiResponse"
+            }
+          },
+          "nextCursor": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "LlmChatConversationApiResponse": {
+        "required": [
+          "id",
+          "definitionId",
+          "definitionRevision",
+          "definitionName",
+          "title",
+          "status",
+          "origin",
+          "transcriptRevision",
+          "hasActiveTurn",
+          "concurrencyToken",
+          "createdAtUtc",
+          "updatedAtUtc"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "definitionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "definitionRevision": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "definitionName": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/LlmChatConversationStatus"
+          },
+          "origin": {
+            "$ref": "#/components/schemas/LlmChatConversationOrigin"
+          },
+          "transcriptRevision": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int64"
+          },
+          "hasActiveTurn": {
+            "type": "boolean"
+          },
+          "concurrencyToken": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int64"
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "activeOperationId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
+          },
+          "messages": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/LlmChatMessageApiResponse"
+            }
+          },
+          "nextMessageCursor": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "LlmChatConversationOrigin": {
+        "enum": [
+          "application",
+          "api"
+        ]
+      },
+      "LlmChatConversationStatus": {
+        "enum": [
+          "active",
+          "archived"
+        ]
+      },
+      "LlmChatDefinitionApiResponse": {
+        "required": [
+          "id",
+          "name",
+          "summary",
+          "avatarImageUrl",
+          "status",
+          "currentRevision",
+          "providerProfileId",
+          "providerName",
+          "providerKind",
+          "model",
+          "thinkingEffort",
+          "tags",
+          "concurrencyToken",
+          "createdAtUtc",
+          "updatedAtUtc"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "avatarImageUrl": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/LlmChatDefinitionStatus"
+          },
+          "currentRevision": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "providerProfileId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "providerName": {
+            "type": "string"
+          },
+          "providerKind": {
+            "$ref": "#/components/schemas/ProviderKind"
+          },
+          "model": {
+            "type": "string"
+          },
+          "thinkingEffort": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/AgentReasoningEffortLevel"
+              }
+            ]
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "concurrencyToken": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int64"
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modelSettings": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/LlmChatModelSettingsApiResponse"
+              }
+            ]
+          },
+          "responseFormat": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/LlmChatResponseFormatApiResponse"
+              }
+            ]
+          },
+          "revisionReason": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "LlmChatDefinitionEditorApiResponse": {
+        "required": [
+          "id",
+          "name",
+          "summary",
+          "avatarImageUrl",
+          "status",
+          "revision",
+          "systemPrompt",
+          "providerProfileId",
+          "providerName",
+          "providerKind",
+          "model",
+          "thinkingEffort",
+          "modelSettings",
+          "responseFormat",
+          "tags",
+          "revisionReason",
+          "concurrencyToken",
+          "createdAtUtc",
+          "updatedAtUtc"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "avatarImageUrl": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/LlmChatDefinitionStatus"
+          },
+          "revision": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "systemPrompt": {
+            "type": "string"
+          },
+          "providerProfileId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "providerName": {
+            "type": "string"
+          },
+          "providerKind": {
+            "$ref": "#/components/schemas/ProviderKind"
+          },
+          "model": {
+            "type": "string"
+          },
+          "thinkingEffort": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/AgentReasoningEffortLevel"
+              }
+            ]
+          },
+          "modelSettings": {
+            "$ref": "#/components/schemas/LlmChatModelSettingsApiResponse"
+          },
+          "responseFormat": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/LlmChatResponseFormatApiResponse"
+              }
+            ]
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "revisionReason": {
+            "type": "string"
+          },
+          "concurrencyToken": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int64"
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "LlmChatDefinitionMutationApiRequest": {
+        "required": [
+          "name",
+          "summary",
+          "avatarImageUrl",
+          "systemPrompt",
+          "providerProfileId",
+          "model",
+          "thinkingEffort",
+          "modelSettings",
+          "tags",
+          "revisionReason"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "avatarImageUrl": {
+            "type": "string"
+          },
+          "systemPrompt": {
+            "type": "string"
+          },
+          "providerProfileId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "model": {
+            "type": "string"
+          },
+          "thinkingEffort": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/AgentReasoningEffortLevel"
+              }
+            ]
+          },
+          "modelSettings": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/LlmChatModelSettingsApiRequest"
+              }
+            ]
+          },
+          "tags": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "type": "string"
+            }
+          },
+          "revisionReason": {
+            "type": "string"
+          },
+          "responseFormat": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/LlmChatResponseFormatApiRequest"
+              }
+            ]
+          },
+          "expectedConcurrencyToken": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LlmChatDefinitionStatus": {
+        "enum": [
+          "draft",
+          "active",
+          "suspended",
+          "archived"
+        ]
+      },
+      "LlmChatExpectedConcurrencyApiRequest": {
+        "required": [
+          "expectedConcurrencyToken"
+        ],
+        "type": "object",
+        "properties": {
+          "expectedConcurrencyToken": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LlmChatInvocationAttemptApiResponse": {
+        "required": [
+          "ordinal",
+          "providerKind",
+          "model",
+          "deliveryMode",
+          "finishReason",
+          "requestedThinkingEffort",
+          "effectiveThinkingEffort",
+          "outcome",
+          "usage",
+          "failure",
+          "startedAtUtc",
+          "completedAtUtc"
+        ],
+        "type": "object",
+        "properties": {
+          "ordinal": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "providerKind": {
+            "$ref": "#/components/schemas/ProviderKind"
+          },
+          "model": {
+            "type": "string"
+          },
+          "deliveryMode": {
+            "$ref": "#/components/schemas/LlmStreamingDeliveryMode"
+          },
+          "finishReason": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "requestedThinkingEffort": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/AgentReasoningEffortLevel"
+              }
+            ]
+          },
+          "effectiveThinkingEffort": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/AgentReasoningEffortLevel"
+              }
+            ]
+          },
+          "outcome": {
+            "$ref": "#/components/schemas/LlmChatInvocationOutcome"
+          },
+          "usage": {
+            "$ref": "#/components/schemas/LlmChatUsageApiResponse"
+          },
+          "failure": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/LlmChatOperationFailureApiResponse"
+              }
+            ]
+          },
+          "startedAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "completedAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "LlmChatInvocationOutcome": {
+        "type": "integer"
+      },
+      "LlmChatMessageApiResponse": {
+        "required": [
+          "entryId",
+          "turnId",
+          "role",
+          "content",
+          "createdAtUtc",
+          "model",
+          "usage"
+        ],
+        "type": "object",
+        "properties": {
+          "entryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "turnId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "role": {
+            "$ref": "#/components/schemas/LlmMessageRole"
+          },
+          "content": {
+            "type": "string"
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "model": {
+            "type": "string"
+          },
+          "usage": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/LlmChatUsageApiResponse"
+              }
+            ]
+          }
+        }
+      },
+      "LlmChatModelOptionApiResponse": {
+        "required": [
+          "model",
+          "thinkingEffort"
+        ],
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string"
+          },
+          "thinkingEffort": {
+            "$ref": "#/components/schemas/LlmChatThinkingEffortOptionApiResponse"
+          }
+        }
+      },
+      "LlmChatModelSettingsApiRequest": {
+        "required": [
+          "temperature",
+          "modelParameterConfiguration",
+          "timeoutSeconds"
+        ],
+        "type": "object",
+        "properties": {
+          "temperature": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "modelParameterConfiguration": {
+            "$ref": "#/components/schemas/JsonElement"
+          },
+          "timeoutSeconds": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LlmChatModelSettingsApiResponse": {
+        "required": [
+          "temperature",
+          "modelParameterConfiguration",
+          "timeoutSeconds"
+        ],
+        "type": "object",
+        "properties": {
+          "temperature": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "modelParameterConfiguration": {
+            "$ref": "#/components/schemas/JsonElement"
+          },
+          "timeoutSeconds": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
+            "format": "double"
+          }
+        }
+      },
+      "LlmChatOperationApiResponse": {
+        "required": [
+          "schema",
+          "operationId",
+          "conversationId",
+          "status",
+          "replayed",
+          "expectedTranscriptRevision",
+          "resultingTranscriptRevision",
+          "lastEventSequence",
+          "statusUrl",
+          "eventsUrl",
+          "cancelUrl",
+          "invocationAttempts",
+          "assistantMessage",
+          "failure",
+          "startedAtUtc",
+          "completedAtUtc"
+        ],
+        "type": "object",
+        "properties": {
+          "schema": {
+            "type": "string"
+          },
+          "operationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "conversationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "$ref": "#/components/schemas/LlmChatOperationStatus"
+          },
+          "replayed": {
+            "type": "boolean"
+          },
+          "expectedTranscriptRevision": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int64"
+          },
+          "resultingTranscriptRevision": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int64"
+          },
+          "lastEventSequence": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int64"
+          },
+          "statusUrl": {
+            "type": "string"
+          },
+          "eventsUrl": {
+            "type": "string"
+          },
+          "cancelUrl": {
+            "type": "string"
+          },
+          "invocationAttempts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LlmChatInvocationAttemptApiResponse"
+            }
+          },
+          "assistantMessage": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/LlmChatMessageApiResponse"
+              }
+            ]
+          },
+          "failure": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/LlmChatOperationFailureApiResponse"
+              }
+            ]
+          },
+          "startedAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "completedAtUtc": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          }
+        }
+      },
+      "LlmChatOperationFailureApiResponse": {
+        "required": [
+          "code",
+          "retryable"
+        ],
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "retryable": {
+            "type": "boolean"
+          }
+        }
+      },
+      "LlmChatOperationStatus": {
+        "enum": [
+          "pending",
+          "running",
+          "succeeded",
+          "failed",
+          "cancellationRequested",
+          "cancelled",
+          "recoveryRequired"
+        ]
+      },
+      "LlmChatProviderOptionApiResponse": {
+        "required": [
+          "providerProfileId",
+          "providerName",
+          "providerKind",
+          "models"
+        ],
+        "type": "object",
+        "properties": {
+          "providerProfileId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "providerName": {
+            "type": "string"
+          },
+          "providerKind": {
+            "$ref": "#/components/schemas/ProviderKind"
+          },
+          "models": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LlmChatModelOptionApiResponse"
+            }
+          }
+        }
+      },
+      "LlmChatResponseFormatApiRequest": {
+        "required": [
+          "requireJson",
+          "schema",
+          "schemaName",
+          "schemaDescription"
+        ],
+        "type": "object",
+        "properties": {
+          "requireJson": {
+            "type": "boolean"
+          },
+          "schema": {
+            "$ref": "#/components/schemas/JsonElement"
+          },
+          "schemaName": {
+            "type": "string"
+          },
+          "schemaDescription": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LlmChatResponseFormatApiResponse": {
+        "required": [
+          "requireJson",
+          "schema",
+          "schemaName",
+          "schemaDescription"
+        ],
+        "type": "object",
+        "properties": {
+          "requireJson": {
+            "type": "boolean"
+          },
+          "schema": {
+            "$ref": "#/components/schemas/JsonElement"
+          },
+          "schemaName": {
+            "type": "string"
+          },
+          "schemaDescription": {
+            "type": "string"
+          }
+        }
+      },
+      "LlmChatThinkingEffortOptionApiResponse": {
+        "required": [
+          "status",
+          "controlMode",
+          "allowedEfforts",
+          "providerDefault"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/AgentThinkingEffortSupportStatus"
+          },
+          "controlMode": {
+            "$ref": "#/components/schemas/AgentThinkingEffortControlMode"
+          },
+          "allowedEfforts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AgentReasoningEffortLevel"
+            }
+          },
+          "providerDefault": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/AgentReasoningEffortLevel"
+              }
+            ]
+          }
+        }
+      },
+      "LlmChatUsageApiResponse": {
+        "required": [
+          "inputTokens",
+          "outputTokens",
+          "cachedInputTokens"
+        ],
+        "type": "object",
+        "properties": {
+          "inputTokens": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "outputTokens": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "cachedInputTokens": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          }
+        }
+      },
+      "LlmMessageRole": {
+        "enum": [
+          "system",
+          "user",
+          "assistant"
+        ]
+      },
+      "LlmStreamingDeliveryMode": {
+        "type": "integer"
       },
       "MemoryAcceptedOperationApiResponse": {
         "required": [
@@ -21060,6 +23468,44 @@
             "type": [
               "null",
               "boolean"
+            ]
+          }
+        }
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "title": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "status": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "detail": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "instance": {
+            "type": [
+              "null",
+              "string"
             ]
           }
         }
@@ -22707,6 +25153,13 @@
           }
         }
       },
+      "ProjectStructureManagedStorageDisposition": {
+        "enum": [
+          "Unspecified",
+          "RetainManagedFiles",
+          "DeleteOwnedManagedFiles"
+        ]
+      },
       "ProjectStructureMarkerBatchInput": {
         "required": [
           "nodeIds",
@@ -23219,7 +25672,8 @@
       },
       "ProjectStructureNodeDeleteBatchInput": {
         "required": [
-          "nodeIds"
+          "nodeIds",
+          "managedStorageDisposition"
         ],
         "type": "object",
         "properties": {
@@ -23228,6 +25682,9 @@
             "items": {
               "type": "string"
             }
+          },
+          "managedStorageDisposition": {
+            "$ref": "#/components/schemas/ProjectStructureManagedStorageDisposition"
           },
           "leaseToken": {
             "type": [
@@ -23238,8 +25695,14 @@
         }
       },
       "ProjectStructureNodeDeleteInput": {
+        "required": [
+          "managedStorageDisposition"
+        ],
         "type": "object",
         "properties": {
+          "managedStorageDisposition": {
+            "$ref": "#/components/schemas/ProjectStructureManagedStorageDisposition"
+          },
           "leaseToken": {
             "type": [
               "null",
@@ -26086,8 +28549,64 @@
           }
         }
       },
+      "RenameLlmChatConversationApiRequest": {
+        "required": [
+          "title",
+          "expectedTranscriptRevision"
+        ],
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "expectedTranscriptRevision": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int64"
+          },
+          "expectedConcurrencyToken": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false
+      },
       "RunOutcome": {
         "type": "integer"
+      },
+      "SendLlmChatTurnApiRequest": {
+        "required": [
+          "operationId",
+          "expectedTranscriptRevision",
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "operationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "expectedTranscriptRevision": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int64"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
       },
       "SkillDefinitionSaveApiRequest": {
         "type": "object",
@@ -28250,6 +30769,18 @@
     },
     {
       "name": "CRM / HR"
+    },
+    {
+      "name": "LLM Chats"
+    },
+    {
+      "name": "LLM Chat Conversations"
+    },
+    {
+      "name": "LLM Chat Turns"
+    },
+    {
+      "name": "LLM Chat Operations"
     }
   ]
 }

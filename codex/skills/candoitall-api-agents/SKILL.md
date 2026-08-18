@@ -7,6 +7,11 @@ description: Use when managing CanDoItAll agents, SSE activity, provider complet
 
 Use this skill when a task needs agent catalog, provider, chat, execution, approval, or diagnostics control through the CanDoItAll web API.
 
+Agent chat sessions are governed agent executions under `/api/agents`. For provider-neutral ordinary
+conversations under `/api/llm-chats`, use
+[`candoitall-api-llm-chats`](../candoitall-api-llm-chats/SKILL.md); do not substitute one chat contract
+for the other.
+
 ## Access
 
 - Start the CanDoItAll web app and inspect Swagger/OpenAPI at `/swagger`.
