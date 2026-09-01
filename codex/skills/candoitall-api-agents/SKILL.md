@@ -46,6 +46,19 @@ for the other.
 - Capabilities: `/api/agents/capabilities`, `/capabilities/{capabilityId}/editor`, create/delete, per-agent capability verification, tool setup tests, MCP setup tests, and access-policy previews.
 - Memory: `/api/agents/{agentId}/memory`, `POST /api/agents/memory`, and delete memory routes.
 
+## Shared providers and request evidence
+
+Provider/model selection can include imported shared publications. Preserve returned
+profile/model identities and capability/thinking constraints; an unavailable import
+must not silently select a local provider. For direct shared-provider HTTP invocation,
+use [shared providers](../candoitall-api-shared-providers/SKILL.md).
+
+Caller and managed credential attribution are derived by the server. Do not place a
+forged history/caller object in a command payload. Provider history counts
+application-visible attempts and freezes usage/price evidence; canonical agent execution
+content remains owned by the agent run. Metadata access does not grant content access,
+and `api.provider-history.*` does not imply a new general history HTTP route.
+
 ## Chat And Execution
 
 - Chat sessions: `/api/agents/{agentId}/chat-sessions`, rename, chat workspace, `/chat`, and `/chat/stream`.

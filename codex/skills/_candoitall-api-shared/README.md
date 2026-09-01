@@ -1,81 +1,59 @@
 # CanDoItAll Web API Contract Support
 
-This non-discoverable support package contains the shared OpenAPI snapshot used by the
-CanDoItAll API skills.
+This non-discoverable support package contains the shared OpenAPI snapshot used by the CanDoItAll API skills.
 
 ## Current Snapshot
 
-- Artifact: [`references/candoitall-web.openapi.json`](references/candoitall-web.openapi.json)
-- Provenance: [`manifest.json`](manifest.json)
-- Source repository: `CanDoItAll`
-- Source branch: `simple-chats`
-- Baseline source commit: `827fa425c30404ab910a363962d00fd1479f87c1`
-- Source state: uncommitted merge-preparation tree; `workingTreeClean: false`
-- Document server: `http://localhost:5032/`
-- Runtime endpoints: `/openapi/v1.json` and `/swagger/v1/swagger.json`
-- OpenAPI version: `3.1.1`
-- Paths: `270`
-- Operations: `302`
-- Component schemas: `467`
-- SHA-256:
-  `376E5EA35D4C5FF99FEDC32012E67F18033F54245C10CE0C054FF0FAE997B797`
+- Artifact: [references/candoitall-web.openapi.json](references/candoitall-web.openapi.json)
+- Provenance: [manifest.json](manifest.json)
+- Source repository: CanDoItAll
+- Source branch: providers-shared
+- Baseline source commit: aadd953150e7f659e4060ced6505621c705ea61f
+- Source state: committed provider/history repairs plus uncommitted finishing changes; workingTreeClean: false
+- Document server: http://localhost:5032/
+- Runtime endpoints: /openapi/v1.json and /swagger/v1/swagger.json
+- OpenAPI version: 3.1.1
+- Paths: 276
+- Operations: 308
+- Component schemas: 486
+- SHA-256: 14FE4C527863FF84948ED96D3D7A3B16FD46D3E315E673E96EEF3911C3D2A52B
 
-> **Provenance limitation:** this is a merge-preparation capture from an uncommitted product
-> working tree. The commit above is the baseline, not a commit-clean artifact identity. Use the
-> manifest's working-tree status fingerprint to verify the exact source state until the product changes
-> are committed and the snapshot is recaptured.
+> Provenance limitation: the commit identifies the baseline. Product SB09 finishing proof records the uncommitted changes and identified Release host. The manifest records the capture-time working-tree fingerprint. No automatic commit was made.
 
-The snapshot was captured from a Debug build because pre-existing `CanDoItAll.Web` processes locked the
-normal Release output. Repository-local runtime roots and the configured Development PostgreSQL profile
-served the canonical 5032 URL. Both runtime document endpoints returned byte-identical 817,035-byte
-content. An earlier clean Release baseline build passed before the Swagger description edits.
+Captured on 2026-08-31 from the rebuilt Release host at canonical port 5032. Both document endpoints returned byte-identical 963,289-byte content. The normal HTTP launch profile and existing runtime data were preserved.
 
 | Route family | Paths | Operations |
 | --- | ---: | ---: |
-| `/_dev` | 10 | 10 |
-| `/api/access` | 2 | 2 |
-| `/api/agent-recruiting` | 6 | 6 |
-| `/api/agents` | 59 | 72 |
-| `/api/llm-chats` | 8 | 10 |
-| `/api/llm-conversations` | 6 | 6 |
-| `/api/llm-chat-operations` | 4 | 4 |
-| `/api/memory-providers` | 4 | 5 |
-| `/api/crm-hr` | 15 | 19 |
-| `/api/plugins` | 18 | 20 |
-| `/api/processes` | 15 | 15 |
-| `/api/projects` | 10 | 13 |
-| `/api/project-structure` | 58 | 59 |
-| `/api/prompt-gallery` | 10 | 11 |
-| `/api/runtime` | 2 | 2 |
-| `/api/workflows` | 38 | 43 |
-| `/authorized-files` | 2 | 2 |
-| `/managed-files` | 1 | 1 |
-| `/storage` | 2 | 2 |
+| /_dev | 10 | 10 |
+| /api/access | 2 | 2 |
+| /api/agent-recruiting | 6 | 6 |
+| /api/agents | 59 | 72 |
+| /api/crm-hr | 15 | 19 |
+| /api/llm-conversations | 6 | 6 |
+| /api/llm-chat-operations | 4 | 4 |
+| /api/llm-chats | 8 | 10 |
+| /api/memory-providers | 4 | 5 |
+| /api/plugins | 18 | 20 |
+| /api/processes | 15 | 15 |
+| /api/project-structure | 58 | 59 |
+| /api/projects | 10 | 13 |
+| /api/prompt-gallery | 10 | 11 |
+| /api/runtime | 2 | 2 |
+| /api/shared-providers | 5 | 5 |
+| /api/workflows | 39 | 44 |
+| /authorized-files | 2 | 2 |
+| /managed-files | 1 | 1 |
+| /storage | 2 | 2 |
 
-These families account for every path and operation in the document. The Development
-document intentionally includes the `/_dev` surface. Static files, Blazor routes, and
-other non-API application routes are not OpenAPI operations.
+These families account for every path and operation. The Development document intentionally includes the /_dev surface. Blazor pages and static files are not API operations.
 
-The manifest records complete LLM Chat Definitions, Conversations, and Operations sets alongside
-Agents, Agent Recruiting, Memory Providers, Processes, Projects, Project Structure, and Workflows,
-including operation identifiers. Validation compares every set with the generated document and its
-skill route appendix so these API and skill contracts cannot drift silently.
+This capture adds the five shared-provider operations and current workflow route drift to the August 18 snapshot. Shared-provider request schemas, qualified component identities, identifiers and enum wire values reflect the generated contract. Provider-history browsing and provider source/publication management remain UI/application-service surfaces; no public history or source CRUD API is implied.
 
-The main host now exposes only the experimental, provider-neutral
-`/api/memory-providers` surface for profile configuration, context queries, and
-caller-owned operation status. Native Cognitive Memory belongs to the separate
-`CanDoItAll.CognitiveMemory` repository, which remains WIP and unpublished; the main
-host does not expose a `/api/cognitive-memory` compatibility family.
+Complete documented operation sets cover Agents, Agent Recruiting, Memory Providers, Processes, Projects, Project Structure, Workflows, Shared Providers, LLM Chat Definitions, Conversations and Operations. Validation compares every recorded set and skill route appendix against this single generated document.
 
-Relative to the preceding artifact, this snapshot adds the complete provider-neutral Simple Chats API:
-definition lifecycle and editor contracts, conversation and transcript paging, retry-safe durable turn
-admission, operation status, replayable SSE, cancellation, reconciliation, and exact abandon recovery.
-Every Simple Chats operation now publishes a non-empty Swagger description. The snapshot also adds the
-runtime capability and bounded operation-readiness routes. Simple Chats remain distinct from governed
-agent chat sessions and agent execution runs.
+The main host exposes the experimental provider-neutral /api/memory-providers surface. Native Cognitive Memory remains separate; no /api/cognitive-memory compatibility family is exposed. Simple Chats remain distinct from governed agent chat sessions and execution runs.
 
-Use the [partner API migration matrix](references/partner-api-migration.md) when upgrading
-an integration that still uses the superseded partner-side workarounds.
+Use the [partner API migration matrix](references/partner-api-migration.md) for integrations using superseded workarounds.
 
 ## Usage
 

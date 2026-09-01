@@ -57,6 +57,33 @@ Use this skill when a task needs workflow authoring, lifecycle control, runtime 
 - Human or external input: `GET /api/workflows/runs/{runId}/pending-requests`, `POST /api/workflows/external-requests/{requestId}/response`.
 - Analytics: `GET /api/workflows/analytics`.
 
+### Durable human/external responses
+
+Read the current pending request or run-detail projection first. It supplies the request
+version, safe prompt and bounded response contract; `schemaAvailable:false` means the
+public schema was deliberately omitted, not that arbitrary input is accepted.
+
+Submit `POST /api/workflows/external-requests/{requestId}/response` with one
+`Idempotency-Key` header and a body containing `expectedRequestVersion` and `response`.
+The response is a JSON value, not a string containing encoded JSON. Preserve the key and
+same semantics after an ambiguous result; do not create a second logical response.
+
+Read accepted-operation status at
+`GET /api/workflows/external-response-operations/{operationId}`.
+The exact `api.workflows.respond` authority, authenticated actor, current profile and
+persisted workspace scope apply. Disabling global API authentication does not create an
+anonymous response actor. Responses expose allowlisted status, never raw request/response
+JSON, checkpoint material, leases or authorization internals.
+
+Completed/waiting-again/denied results use 200; active resumption uses 202. Handle
+400/401/403/404/409/410/422 explicitly; 503 is retryable infrastructure failure and 500 is
+a redacted terminal failure. This response boundary does not use 502.
+
+Provider invocations retain canonical workflow ownership and server-derived caller
+attribution. History metadata permission does not grant canonical content access.
+Shared provider choices keep publication/model identity and capability constraints;
+see [shared providers](../candoitall-api-shared-providers/SKILL.md) for direct invocation.
+
 ### Workflow SSE Contract
 
 Use `GET /api/workflows/events/stream` for fleet-level workflow signals or
@@ -197,6 +224,7 @@ Workflows API route appendix. Generated from Minimal API registrations; refresh 
 | `GET` | `/api/workflows/executor-catalog` |
 | `GET` | `/api/workflows/events/stream` |
 | `POST` | `/api/workflows/external-requests/{requestId:guid}/response` |
+| `GET` | `/api/workflows/external-response-operations/{operationId:guid}` |
 | `GET` | `/api/workflows/provider-options` |
 | `GET` | `/api/workflows/runs` |
 | `GET` | `/api/workflows/runs/by-idempotency-key/{key}` |

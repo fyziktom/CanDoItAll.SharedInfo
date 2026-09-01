@@ -47,6 +47,18 @@ provider/model capability; do not put a duplicate effort value in free-form mode
 A conversation pins the definition revision current at creation. Later definition edits do not mutate
 existing conversations.
 
+## Shared providers and request history
+
+Provider options may include imported shared publications. Keep the returned model ID,
+availability and thinking-effort constraints; never substitute an upstream model name or
+silently replace an unavailable shared provider with a local one. Direct compatible
+inference uses the [shared-provider API skill](../candoitall-api-shared-providers/SKILL.md).
+
+Simple Chat invocation history links to canonical conversation/operation evidence.
+Usage and frozen prices are evidence, not estimates inferred from text. Caller/managed
+credential identity is server-derived. Do not supply internal history context in HTTP
+commands or treat history metadata scope as permission to read canonical chat content.
+
 ## Conversation Workflow
 
 - Create through `POST /api/llm-chats/{definitionId}/conversations` with a title. HTTP creation always

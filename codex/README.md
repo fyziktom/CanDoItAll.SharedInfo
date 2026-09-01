@@ -56,6 +56,9 @@ install, name both the desired skill and `_candoitall-api-shared`:
     -PackageName candoitall-api-agents,_candoitall-api-shared
 ```
 
+For shared-provider catalog discovery and compatible inference, install
+`candoitall-api-shared-providers` with `_candoitall-api-shared`.
+
 For ordinary Simple Chat definitions, conversations, and durable turns, install
 `candoitall-api-llm-chats` with the same `_candoitall-api-shared` support package.
 
