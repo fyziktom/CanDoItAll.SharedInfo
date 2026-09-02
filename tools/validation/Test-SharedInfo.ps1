@@ -43,6 +43,7 @@ $requiredPaths = @(
     'templates/repository/docker/compose.production.yaml.example',
     'templates/repository/docker/Dockerfile.dotnet',
     'templates/repository/docker/README.md',
+    'templates/repository/AGENTS.md',
     'templates/repository/CONTRIBUTING.md',
     'templates/repository/LICENSE',
     'templates/repository/THIRD-PARTY-NOTICES.md',

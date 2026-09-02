@@ -1,4 +1,4 @@
 interface:
   display_name: "CanDoItAll Shared Standards"
-  short_description: "Apply shared repository and tooling standards"
-  default_prompt: "Use $apply-candoitall-shared-standards to align this repository with shared CanDoItAll standards."
+  short_description: "Apply shared standards and portability validation"
+  default_prompt: "Use $apply-candoitall-shared-standards to apply shared conventions and complete required validation, including portability-static when present."

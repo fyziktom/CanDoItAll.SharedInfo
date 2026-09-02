@@ -20,6 +20,17 @@ SharedInfo is a child of this repository or that every machine uses the same roo
 - Test: `${TEST_COMMAND}`
 - Validate: `${VALIDATION_COMMAND}`
 
+## Validation Closure
+
+Read this repository's testing guide and current CI workflow before choosing validation
+for a CI/test repair or changes to source, build/configuration, or tooling. Use the
+shared-standards skill to identify applicable gates.
+
+If this repository owns `portability-static` or another reviewed source baseline,
+complete its review-and-refresh procedure in the same change. Focused tests or leaving
+the full suite to CI do not waive that gate. Review every delta before writing the
+baseline, include new protected files in the scan, and require final no-write enforcement.
+
 ## Safety
 
 - Keep sibling repositories read-only unless the user explicitly requests a multi-repo

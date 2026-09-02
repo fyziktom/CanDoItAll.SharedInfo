@@ -35,6 +35,36 @@ developed primarily on Windows. Shared scripts must:
 
 Use lower-case directory names and approved PowerShell verbs in file names.
 
+## Reviewed Source Baseline Gates
+
+Repositories that own `portability-static` or an equivalent source-fingerprint gate must
+include it in CI/test repairs and changes to protected source, build/configuration, or
+validation tooling. Check the complete proposed change, including supporting production
+edits, shared test fixtures, and merged changes. A request to run only affected tests or
+leave the full suite to CI does not waive this static gate.
+
+The owning repository defines the commands, protected paths, patterns, and baseline.
+Agents read its testing guide and current CI workflow; SharedInfo owns the review
+process, not a copy of each product's scanner or allowances:
+
+1. Run the gate's tooling checks and generate a fresh, complete scan with the same
+   policy as CI. Use a unique ignored artifact or temporary output path. Confirm the
+   scan is not truncated and account for new protected files that a tracked-only scan
+   would omit.
+2. Run enforcement without writing. Inspect every added and stale finding against
+   source and the diff. Fingerprints can change after a signature, dependency version,
+   or shell-step edit without introducing a portability defect.
+3. Repair genuine defects first and regenerate the scan after any source edit. When
+   remaining deltas are intentional and reviewed, explicitly refresh the baseline from
+   that complete scan using the owning tool (for example, `--write-baseline`).
+4. Inspect the baseline diff, keep it in the same change as its source, and rerun
+   enforcement without the write flag. Leave the baseline unchanged if there is no
+   delta. Report the gate result alongside focused test results.
+
+Never accept an unexplained finding, use a partial/stale scan to refresh a baseline,
+weaken scanner coverage to obtain a pass, or treat added/stale allowances as CI-only
+work. If the gate cannot run, report the missing proof rather than claiming closure.
+
 ## Cross-Repository Pattern
 
 SharedInfo defines a stable relative entry point and orchestrator. Each repository provides

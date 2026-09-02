@@ -41,6 +41,9 @@ Apply these even before loading a task-specific document:
   Prefer user-facing entry packages over Abstractions, Core, or provider packages.
 - When a shared contract changes, update its standard, copy-ready template, tooling, and
   validation together.
+- In repositories with `portability-static` or another reviewed source baseline, include
+  that gate in CI/test repairs and affected source/build/tooling changes. Focused tests
+  do not waive it. Review deltas before refreshing; require final no-write enforcement.
 
 ## Routing Table
 
@@ -56,6 +59,7 @@ Paths are relative to the resolved `CanDoItAll.SharedInfo` root.
 | SDK pinning, MSBuild defaults, solution layout | `docs/standards/dotnet.md` | `templates/repository/dotnet` |
 | Dockerfile, Compose, ports, networks, volumes, secrets, health, runtime | `docs/standards/docker.md` | `templates/repository/docker`; `tools/validation/Test-DockerConventions.ps1` |
 | PowerShell or cross-repository automation | `docs/standards/tooling.md` | `tools/<area>` and local adapter contract |
+| CI/test repair, portability-static, or reviewed source baseline | `docs/standards/tooling.md` | target testing guide, CI workflow, scanner policy and baseline; inspect the complete proposed diff |
 | NuGet build/package coordination | `docs/standards/nuget-packaging.md` | NuGet tool template and orchestrator |
 | Reusable Codex skills, agents, plugins | `docs/standards/codex.md` | `codex`, package validator, installer |
 | Current family evidence | latest relevant file in `docs/inventory` | confirm target state; inventory is not normative |

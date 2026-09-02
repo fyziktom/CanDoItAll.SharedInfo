@@ -1,6 +1,6 @@
 ---
 name: apply-candoitall-shared-standards
-description: Use whenever planning, creating, changing, or reviewing a CanDoItAll repository's root layout, documentation, README badges, licensing, Git files, .NET defaults, Docker assets, shared tooling, NuGet packaging, or reusable Codex assets. Locates CanDoItAll.SharedInfo, loads only the relevant reviewed standards and templates, preserves repository-owned exceptions, and runs the applicable validation without silently changing sibling repositories.
+description: Use for CanDoItAll CI or test repairs, portability-static baseline review, and planning, creating, changing, or reviewing repository root layout, documentation, README badges, licensing, Git files, .NET defaults, Docker assets, shared tooling, NuGet packaging, or reusable Codex assets. Locates CanDoItAll.SharedInfo, loads only the relevant reviewed standards and templates, preserves repository-owned exceptions, and runs the applicable validation without silently changing sibling repositories.
 ---
 
 # Apply CanDoItAll Shared Standards
@@ -73,6 +73,18 @@ user. Validate each target independently and report exceptions rather than norma
 them without review.
 
 ## Validate Proportionally
+
+For CI or test repairs, and changes to source, build/configuration, or validation
+tooling, read the target repository's testing guidance and current CI workflow before
+selecting proof. Apply the source baseline gate rules in `docs/standards/tooling.md`
+when that repository owns such a gate.
+
+A focused test run or an instruction to leave the full suite to CI does not waive
+`portability-static`. Scan the final proposed source, review every added/stale finding,
+repair genuine defects, then explicitly refresh an intentional delta in the same change.
+Account for new untracked protected files and regenerate the scan after source edits.
+Inspect the baseline diff and require a passing final enforcement without the write
+flag. If no delta exists, do not rewrite the baseline.
 
 Run the target repository's documented validation first. Use SharedInfo validators as
 additional read-only checks when applicable:
