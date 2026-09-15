@@ -29,6 +29,7 @@ API.
 | Contract | `GET /api/processes/contract` |
 | Launch preflight | `POST /api/processes/launch/check` |
 | Durable launch | `POST /api/processes/launch` |
+| Prepared launch status | `GET /api/processes/launch/{admissionId}` |
 | Dispatch | `POST /api/processes/runs/{runId}/dispatch` |
 | Cancel | `POST /api/processes/runs/{runId}/cancel` |
 | Rework | `POST /api/processes/runs/{runId}/steps/{stepInstanceId}/rework` |
@@ -62,6 +63,13 @@ Use `POST /api/processes/launch` only when a durable run is intended. Request fi
 
 `execute: false` avoids enqueuing immediate dispatcher execution but is not a dry run.
 The launch endpoint still creates a durable run when readiness allows launch.
+
+A launch is admitted before it is committed: `GET /api/processes/launch/{admissionId}`
+reads the prepared-launch status by the admission id returned from the launch routes,
+so a client that lost the launch response polls the admission instead of launching
+again. The preflight asks every runtime tool provider for an inert tool inventory of
+the step's declared operations; a tool listed there is a discoverable capability, not
+an executable grant, and dispatch composes its own tools from the saved execution.
 
 ## Operator Actions
 
@@ -199,18 +207,18 @@ the project-structure operation result and process readback.
 | --- | --- |
 | `GET` | `/api/processes/contract` |
 | `GET` | `/api/processes/events/stream` |
-| `POST` | `/api/processes/launch/check` |
 | `POST` | `/api/processes/launch` |
-| `POST` | `/api/processes/runs/{runId:guid}/dispatch` |
-| `POST` | `/api/processes/runs/{runId:guid}/cancel` |
-| `POST` | `/api/processes/runs/{runId:guid}/steps/{stepInstanceId:guid}/rework` |
+| `POST` | `/api/processes/launch/check` |
+| `GET` | `/api/processes/launch/{admissionId}` |
 | `GET` | `/api/processes/live` |
 | `GET` | `/api/processes/runs` |
 | `GET` | `/api/processes/runs/analytics` |
-| `GET` | `/api/processes/runs/{runId:guid}` |
-| `GET` | `/api/processes/runs/{runId:guid}/graph` |
-| `GET` | `/api/processes/runs/{runId:guid}/history` |
-| `GET` | `/api/processes/runs/{runId:guid}/events/stream` |
-| `GET` | `/api/processes/runs/{runId:guid}/summary` |
-
+| `GET` | `/api/processes/runs/{runId}` |
+| `POST` | `/api/processes/runs/{runId}/cancel` |
+| `POST` | `/api/processes/runs/{runId}/dispatch` |
+| `GET` | `/api/processes/runs/{runId}/events/stream` |
+| `GET` | `/api/processes/runs/{runId}/graph` |
+| `GET` | `/api/processes/runs/{runId}/history` |
+| `POST` | `/api/processes/runs/{runId}/steps/{stepInstanceId}/rework` |
+| `GET` | `/api/processes/runs/{runId}/summary` |
 <!-- api-docs-skills-parity:routes:end -->

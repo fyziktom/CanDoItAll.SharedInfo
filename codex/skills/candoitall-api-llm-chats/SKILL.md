@@ -139,15 +139,14 @@ raw provider exceptions, internal request fingerprints, or server filesystem pat
 | --- | --- |
 | `GET` | `/api/llm-chats` |
 | `POST` | `/api/llm-chats` |
-| `GET` | `/api/llm-chats/{definitionId:guid}` |
-| `PUT` | `/api/llm-chats/{definitionId:guid}` |
-| `POST` | `/api/llm-chats/{definitionId:guid}/activate` |
-| `POST` | `/api/llm-chats/{definitionId:guid}/archive` |
-| `POST` | `/api/llm-chats/{definitionId:guid}/conversations` |
-| `GET` | `/api/llm-chats/{definitionId:guid}/editor` |
-| `POST` | `/api/llm-chats/{definitionId:guid}/suspend` |
 | `GET` | `/api/llm-chats/provider-options` |
-
+| `GET` | `/api/llm-chats/{definitionId}` |
+| `PUT` | `/api/llm-chats/{definitionId}` |
+| `POST` | `/api/llm-chats/{definitionId}/activate` |
+| `POST` | `/api/llm-chats/{definitionId}/archive` |
+| `POST` | `/api/llm-chats/{definitionId}/conversations` |
+| `GET` | `/api/llm-chats/{definitionId}/editor` |
+| `POST` | `/api/llm-chats/{definitionId}/suspend` |
 <!-- api-docs-skills-parity:llm-chat-definition-routes:end -->
 
 ## Conversation Route Appendix
@@ -157,12 +156,11 @@ raw provider exceptions, internal request fingerprints, or server filesystem pat
 | Method | Route |
 | --- | --- |
 | `GET` | `/api/llm-conversations` |
-| `GET` | `/api/llm-conversations/{conversationId:guid}` |
-| `POST` | `/api/llm-conversations/{conversationId:guid}/active-turns/{turnId:guid}/abandon` |
-| `POST` | `/api/llm-conversations/{conversationId:guid}/archive` |
-| `PATCH` | `/api/llm-conversations/{conversationId:guid}/title` |
-| `POST` | `/api/llm-conversations/{conversationId:guid}/turns` |
-
+| `GET` | `/api/llm-conversations/{conversationId}` |
+| `POST` | `/api/llm-conversations/{conversationId}/active-turns/{turnId}/abandon` |
+| `POST` | `/api/llm-conversations/{conversationId}/archive` |
+| `PATCH` | `/api/llm-conversations/{conversationId}/title` |
+| `POST` | `/api/llm-conversations/{conversationId}/turns` |
 <!-- api-docs-skills-parity:llm-chat-conversation-routes:end -->
 
 ## Operation Route Appendix
@@ -171,9 +169,8 @@ raw provider exceptions, internal request fingerprints, or server filesystem pat
 
 | Method | Route |
 | --- | --- |
-| `GET` | `/api/llm-chat-operations/{operationId:guid}` |
-| `POST` | `/api/llm-chat-operations/{operationId:guid}/cancel` |
-| `GET` | `/api/llm-chat-operations/{operationId:guid}/events` |
-| `POST` | `/api/llm-chat-operations/{operationId:guid}/reconcile` |
-
+| `GET` | `/api/llm-chat-operations/{operationId}` |
+| `POST` | `/api/llm-chat-operations/{operationId}/cancel` |
+| `GET` | `/api/llm-chat-operations/{operationId}/events` |
+| `POST` | `/api/llm-chat-operations/{operationId}/reconcile` |
 <!-- api-docs-skills-parity:llm-chat-operation-routes:end -->

@@ -4364,6 +4364,86 @@
                                 }
                               }
                             ]
+                          },
+                          "processAssetReceipt": {
+                            "oneOf": [
+                              {
+                                "type": "null"
+                              },
+                              {
+                                "required": [
+                                  "receipt",
+                                  "wasReplay",
+                                  "targetDeleted"
+                                ],
+                                "type": "object",
+                                "properties": {
+                                  "receipt": {
+                                    "required": [
+                                      "intentId",
+                                      "nativeObjectId",
+                                      "nodeId",
+                                      "storageIntentId",
+                                      "fingerprint",
+                                      "committedAtUtc"
+                                    ],
+                                    "type": "object",
+                                    "properties": {
+                                      "intentId": {
+                                        "required": [
+                                          "value"
+                                        ],
+                                        "type": "object",
+                                        "properties": {
+                                          "value": {
+                                            "type": "string",
+                                            "format": "uuid"
+                                          }
+                                        }
+                                      },
+                                      "nativeObjectId": {
+                                        "type": "string",
+                                        "format": "uuid"
+                                      },
+                                      "nodeId": {
+                                        "type": "string"
+                                      },
+                                      "storageIntentId": {
+                                        "required": [
+                                          "value"
+                                        ],
+                                        "type": "object",
+                                        "properties": {
+                                          "value": {
+                                            "type": "string",
+                                            "format": "uuid"
+                                          }
+                                        }
+                                      },
+                                      "fingerprint": {
+                                        "type": "string"
+                                      },
+                                      "committedAtUtc": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                      }
+                                    }
+                                  },
+                                  "wasReplay": {
+                                    "type": "boolean"
+                                  },
+                                  "targetDeleted": {
+                                    "type": "boolean"
+                                  },
+                                  "storageObservationWarning": {
+                                    "type": [
+                                      "null",
+                                      "string"
+                                    ]
+                                  }
+                                }
+                              }
+                            ]
                           }
                         }
                       }
@@ -4399,6 +4479,35 @@
                       "items": {
                         "type": "string"
                       }
+                    },
+                    "expectedProjectAdmission": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "required": [
+                            "databaseProfileId",
+                            "projectId",
+                            "lifetimeId"
+                          ],
+                          "type": "object",
+                          "properties": {
+                            "databaseProfileId": {
+                              "type": "string",
+                              "format": "uuid"
+                            },
+                            "projectId": {
+                              "type": "string",
+                              "format": "uuid"
+                            },
+                            "lifetimeId": {
+                              "type": "string",
+                              "format": "uuid"
+                            }
+                          }
+                        }
+                      ]
                     }
                   }
                 }
@@ -4920,6 +5029,86 @@
                           }
                         }
                       ]
+                    },
+                    "processAssetReceipt": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "required": [
+                            "receipt",
+                            "wasReplay",
+                            "targetDeleted"
+                          ],
+                          "type": "object",
+                          "properties": {
+                            "receipt": {
+                              "required": [
+                                "intentId",
+                                "nativeObjectId",
+                                "nodeId",
+                                "storageIntentId",
+                                "fingerprint",
+                                "committedAtUtc"
+                              ],
+                              "type": "object",
+                              "properties": {
+                                "intentId": {
+                                  "required": [
+                                    "value"
+                                  ],
+                                  "type": "object",
+                                  "properties": {
+                                    "value": {
+                                      "type": "string",
+                                      "format": "uuid"
+                                    }
+                                  }
+                                },
+                                "nativeObjectId": {
+                                  "type": "string",
+                                  "format": "uuid"
+                                },
+                                "nodeId": {
+                                  "type": "string"
+                                },
+                                "storageIntentId": {
+                                  "required": [
+                                    "value"
+                                  ],
+                                  "type": "object",
+                                  "properties": {
+                                    "value": {
+                                      "type": "string",
+                                      "format": "uuid"
+                                    }
+                                  }
+                                },
+                                "fingerprint": {
+                                  "type": "string"
+                                },
+                                "committedAtUtc": {
+                                  "type": "string",
+                                  "format": "date-time"
+                                }
+                              }
+                            },
+                            "wasReplay": {
+                              "type": "boolean"
+                            },
+                            "targetDeleted": {
+                              "type": "boolean"
+                            },
+                            "storageObservationWarning": {
+                              "type": [
+                                "null",
+                                "string"
+                              ]
+                            }
+                          }
+                        }
+                      ]
                     }
                   }
                 }
@@ -5297,6 +5486,86 @@
                               "items": {
                                 "type": "string"
                               }
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    "processAssetReceipt": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "required": [
+                            "receipt",
+                            "wasReplay",
+                            "targetDeleted"
+                          ],
+                          "type": "object",
+                          "properties": {
+                            "receipt": {
+                              "required": [
+                                "intentId",
+                                "nativeObjectId",
+                                "nodeId",
+                                "storageIntentId",
+                                "fingerprint",
+                                "committedAtUtc"
+                              ],
+                              "type": "object",
+                              "properties": {
+                                "intentId": {
+                                  "required": [
+                                    "value"
+                                  ],
+                                  "type": "object",
+                                  "properties": {
+                                    "value": {
+                                      "type": "string",
+                                      "format": "uuid"
+                                    }
+                                  }
+                                },
+                                "nativeObjectId": {
+                                  "type": "string",
+                                  "format": "uuid"
+                                },
+                                "nodeId": {
+                                  "type": "string"
+                                },
+                                "storageIntentId": {
+                                  "required": [
+                                    "value"
+                                  ],
+                                  "type": "object",
+                                  "properties": {
+                                    "value": {
+                                      "type": "string",
+                                      "format": "uuid"
+                                    }
+                                  }
+                                },
+                                "fingerprint": {
+                                  "type": "string"
+                                },
+                                "committedAtUtc": {
+                                  "type": "string",
+                                  "format": "date-time"
+                                }
+                              }
+                            },
+                            "wasReplay": {
+                              "type": "boolean"
+                            },
+                            "targetDeleted": {
+                              "type": "boolean"
+                            },
+                            "storageObservationWarning": {
+                              "type": [
+                                "null",
+                                "string"
+                              ]
                             }
                           }
                         }
@@ -5682,6 +5951,86 @@
                           }
                         }
                       ]
+                    },
+                    "processAssetReceipt": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "required": [
+                            "receipt",
+                            "wasReplay",
+                            "targetDeleted"
+                          ],
+                          "type": "object",
+                          "properties": {
+                            "receipt": {
+                              "required": [
+                                "intentId",
+                                "nativeObjectId",
+                                "nodeId",
+                                "storageIntentId",
+                                "fingerprint",
+                                "committedAtUtc"
+                              ],
+                              "type": "object",
+                              "properties": {
+                                "intentId": {
+                                  "required": [
+                                    "value"
+                                  ],
+                                  "type": "object",
+                                  "properties": {
+                                    "value": {
+                                      "type": "string",
+                                      "format": "uuid"
+                                    }
+                                  }
+                                },
+                                "nativeObjectId": {
+                                  "type": "string",
+                                  "format": "uuid"
+                                },
+                                "nodeId": {
+                                  "type": "string"
+                                },
+                                "storageIntentId": {
+                                  "required": [
+                                    "value"
+                                  ],
+                                  "type": "object",
+                                  "properties": {
+                                    "value": {
+                                      "type": "string",
+                                      "format": "uuid"
+                                    }
+                                  }
+                                },
+                                "fingerprint": {
+                                  "type": "string"
+                                },
+                                "committedAtUtc": {
+                                  "type": "string",
+                                  "format": "date-time"
+                                }
+                              }
+                            },
+                            "wasReplay": {
+                              "type": "boolean"
+                            },
+                            "targetDeleted": {
+                              "type": "boolean"
+                            },
+                            "storageObservationWarning": {
+                              "type": [
+                                "null",
+                                "string"
+                              ]
+                            }
+                          }
+                        }
+                      ]
                     }
                   }
                 }
@@ -6054,6 +6403,86 @@
                               "items": {
                                 "type": "string"
                               }
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    "processAssetReceipt": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "required": [
+                            "receipt",
+                            "wasReplay",
+                            "targetDeleted"
+                          ],
+                          "type": "object",
+                          "properties": {
+                            "receipt": {
+                              "required": [
+                                "intentId",
+                                "nativeObjectId",
+                                "nodeId",
+                                "storageIntentId",
+                                "fingerprint",
+                                "committedAtUtc"
+                              ],
+                              "type": "object",
+                              "properties": {
+                                "intentId": {
+                                  "required": [
+                                    "value"
+                                  ],
+                                  "type": "object",
+                                  "properties": {
+                                    "value": {
+                                      "type": "string",
+                                      "format": "uuid"
+                                    }
+                                  }
+                                },
+                                "nativeObjectId": {
+                                  "type": "string",
+                                  "format": "uuid"
+                                },
+                                "nodeId": {
+                                  "type": "string"
+                                },
+                                "storageIntentId": {
+                                  "required": [
+                                    "value"
+                                  ],
+                                  "type": "object",
+                                  "properties": {
+                                    "value": {
+                                      "type": "string",
+                                      "format": "uuid"
+                                    }
+                                  }
+                                },
+                                "fingerprint": {
+                                  "type": "string"
+                                },
+                                "committedAtUtc": {
+                                  "type": "string",
+                                  "format": "date-time"
+                                }
+                              }
+                            },
+                            "wasReplay": {
+                              "type": "boolean"
+                            },
+                            "targetDeleted": {
+                              "type": "boolean"
+                            },
+                            "storageObservationWarning": {
+                              "type": [
+                                "null",
+                                "string"
+                              ]
                             }
                           }
                         }
@@ -6796,6 +7225,86 @@
                           }
                         }
                       ]
+                    },
+                    "processAssetReceipt": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "required": [
+                            "receipt",
+                            "wasReplay",
+                            "targetDeleted"
+                          ],
+                          "type": "object",
+                          "properties": {
+                            "receipt": {
+                              "required": [
+                                "intentId",
+                                "nativeObjectId",
+                                "nodeId",
+                                "storageIntentId",
+                                "fingerprint",
+                                "committedAtUtc"
+                              ],
+                              "type": "object",
+                              "properties": {
+                                "intentId": {
+                                  "required": [
+                                    "value"
+                                  ],
+                                  "type": "object",
+                                  "properties": {
+                                    "value": {
+                                      "type": "string",
+                                      "format": "uuid"
+                                    }
+                                  }
+                                },
+                                "nativeObjectId": {
+                                  "type": "string",
+                                  "format": "uuid"
+                                },
+                                "nodeId": {
+                                  "type": "string"
+                                },
+                                "storageIntentId": {
+                                  "required": [
+                                    "value"
+                                  ],
+                                  "type": "object",
+                                  "properties": {
+                                    "value": {
+                                      "type": "string",
+                                      "format": "uuid"
+                                    }
+                                  }
+                                },
+                                "fingerprint": {
+                                  "type": "string"
+                                },
+                                "committedAtUtc": {
+                                  "type": "string",
+                                  "format": "date-time"
+                                }
+                              }
+                            },
+                            "wasReplay": {
+                              "type": "boolean"
+                            },
+                            "targetDeleted": {
+                              "type": "boolean"
+                            },
+                            "storageObservationWarning": {
+                              "type": [
+                                "null",
+                                "string"
+                              ]
+                            }
+                          }
+                        }
+                      ]
                     }
                   }
                 }
@@ -7160,6 +7669,86 @@
                               "items": {
                                 "type": "string"
                               }
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    "processAssetReceipt": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "required": [
+                            "receipt",
+                            "wasReplay",
+                            "targetDeleted"
+                          ],
+                          "type": "object",
+                          "properties": {
+                            "receipt": {
+                              "required": [
+                                "intentId",
+                                "nativeObjectId",
+                                "nodeId",
+                                "storageIntentId",
+                                "fingerprint",
+                                "committedAtUtc"
+                              ],
+                              "type": "object",
+                              "properties": {
+                                "intentId": {
+                                  "required": [
+                                    "value"
+                                  ],
+                                  "type": "object",
+                                  "properties": {
+                                    "value": {
+                                      "type": "string",
+                                      "format": "uuid"
+                                    }
+                                  }
+                                },
+                                "nativeObjectId": {
+                                  "type": "string",
+                                  "format": "uuid"
+                                },
+                                "nodeId": {
+                                  "type": "string"
+                                },
+                                "storageIntentId": {
+                                  "required": [
+                                    "value"
+                                  ],
+                                  "type": "object",
+                                  "properties": {
+                                    "value": {
+                                      "type": "string",
+                                      "format": "uuid"
+                                    }
+                                  }
+                                },
+                                "fingerprint": {
+                                  "type": "string"
+                                },
+                                "committedAtUtc": {
+                                  "type": "string",
+                                  "format": "date-time"
+                                }
+                              }
+                            },
+                            "wasReplay": {
+                              "type": "boolean"
+                            },
+                            "targetDeleted": {
+                              "type": "boolean"
+                            },
+                            "storageObservationWarning": {
+                              "type": [
+                                "null",
+                                "string"
+                              ]
                             }
                           }
                         }
@@ -7787,6 +8376,86 @@
                               }
                             }
                           ]
+                        },
+                        "processAssetReceipt": {
+                          "oneOf": [
+                            {
+                              "type": "null"
+                            },
+                            {
+                              "required": [
+                                "receipt",
+                                "wasReplay",
+                                "targetDeleted"
+                              ],
+                              "type": "object",
+                              "properties": {
+                                "receipt": {
+                                  "required": [
+                                    "intentId",
+                                    "nativeObjectId",
+                                    "nodeId",
+                                    "storageIntentId",
+                                    "fingerprint",
+                                    "committedAtUtc"
+                                  ],
+                                  "type": "object",
+                                  "properties": {
+                                    "intentId": {
+                                      "required": [
+                                        "value"
+                                      ],
+                                      "type": "object",
+                                      "properties": {
+                                        "value": {
+                                          "type": "string",
+                                          "format": "uuid"
+                                        }
+                                      }
+                                    },
+                                    "nativeObjectId": {
+                                      "type": "string",
+                                      "format": "uuid"
+                                    },
+                                    "nodeId": {
+                                      "type": "string"
+                                    },
+                                    "storageIntentId": {
+                                      "required": [
+                                        "value"
+                                      ],
+                                      "type": "object",
+                                      "properties": {
+                                        "value": {
+                                          "type": "string",
+                                          "format": "uuid"
+                                        }
+                                      }
+                                    },
+                                    "fingerprint": {
+                                      "type": "string"
+                                    },
+                                    "committedAtUtc": {
+                                      "type": "string",
+                                      "format": "date-time"
+                                    }
+                                  }
+                                },
+                                "wasReplay": {
+                                  "type": "boolean"
+                                },
+                                "targetDeleted": {
+                                  "type": "boolean"
+                                },
+                                "storageObservationWarning": {
+                                  "type": [
+                                    "null",
+                                    "string"
+                                  ]
+                                }
+                              }
+                            }
+                          ]
                         }
                       }
                     },
@@ -8347,6 +9016,86 @@
                                   "items": {
                                     "type": "string"
                                   }
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        "processAssetReceipt": {
+                          "oneOf": [
+                            {
+                              "type": "null"
+                            },
+                            {
+                              "required": [
+                                "receipt",
+                                "wasReplay",
+                                "targetDeleted"
+                              ],
+                              "type": "object",
+                              "properties": {
+                                "receipt": {
+                                  "required": [
+                                    "intentId",
+                                    "nativeObjectId",
+                                    "nodeId",
+                                    "storageIntentId",
+                                    "fingerprint",
+                                    "committedAtUtc"
+                                  ],
+                                  "type": "object",
+                                  "properties": {
+                                    "intentId": {
+                                      "required": [
+                                        "value"
+                                      ],
+                                      "type": "object",
+                                      "properties": {
+                                        "value": {
+                                          "type": "string",
+                                          "format": "uuid"
+                                        }
+                                      }
+                                    },
+                                    "nativeObjectId": {
+                                      "type": "string",
+                                      "format": "uuid"
+                                    },
+                                    "nodeId": {
+                                      "type": "string"
+                                    },
+                                    "storageIntentId": {
+                                      "required": [
+                                        "value"
+                                      ],
+                                      "type": "object",
+                                      "properties": {
+                                        "value": {
+                                          "type": "string",
+                                          "format": "uuid"
+                                        }
+                                      }
+                                    },
+                                    "fingerprint": {
+                                      "type": "string"
+                                    },
+                                    "committedAtUtc": {
+                                      "type": "string",
+                                      "format": "date-time"
+                                    }
+                                  }
+                                },
+                                "wasReplay": {
+                                  "type": "boolean"
+                                },
+                                "targetDeleted": {
+                                  "type": "boolean"
+                                },
+                                "storageObservationWarning": {
+                                  "type": [
+                                    "null",
+                                    "string"
+                                  ]
                                 }
                               }
                             }
@@ -8917,6 +9666,86 @@
                               "items": {
                                 "type": "string"
                               }
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    "processAssetReceipt": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "required": [
+                            "receipt",
+                            "wasReplay",
+                            "targetDeleted"
+                          ],
+                          "type": "object",
+                          "properties": {
+                            "receipt": {
+                              "required": [
+                                "intentId",
+                                "nativeObjectId",
+                                "nodeId",
+                                "storageIntentId",
+                                "fingerprint",
+                                "committedAtUtc"
+                              ],
+                              "type": "object",
+                              "properties": {
+                                "intentId": {
+                                  "required": [
+                                    "value"
+                                  ],
+                                  "type": "object",
+                                  "properties": {
+                                    "value": {
+                                      "type": "string",
+                                      "format": "uuid"
+                                    }
+                                  }
+                                },
+                                "nativeObjectId": {
+                                  "type": "string",
+                                  "format": "uuid"
+                                },
+                                "nodeId": {
+                                  "type": "string"
+                                },
+                                "storageIntentId": {
+                                  "required": [
+                                    "value"
+                                  ],
+                                  "type": "object",
+                                  "properties": {
+                                    "value": {
+                                      "type": "string",
+                                      "format": "uuid"
+                                    }
+                                  }
+                                },
+                                "fingerprint": {
+                                  "type": "string"
+                                },
+                                "committedAtUtc": {
+                                  "type": "string",
+                                  "format": "date-time"
+                                }
+                              }
+                            },
+                            "wasReplay": {
+                              "type": "boolean"
+                            },
+                            "targetDeleted": {
+                              "type": "boolean"
+                            },
+                            "storageObservationWarning": {
+                              "type": [
+                                "null",
+                                "string"
+                              ]
                             }
                           }
                         }
@@ -9704,6 +10533,86 @@
                         "null",
                         "string"
                       ]
+                    },
+                    "processAssetReceipt": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "required": [
+                            "receipt",
+                            "wasReplay",
+                            "targetDeleted"
+                          ],
+                          "type": "object",
+                          "properties": {
+                            "receipt": {
+                              "required": [
+                                "intentId",
+                                "nativeObjectId",
+                                "nodeId",
+                                "storageIntentId",
+                                "fingerprint",
+                                "committedAtUtc"
+                              ],
+                              "type": "object",
+                              "properties": {
+                                "intentId": {
+                                  "required": [
+                                    "value"
+                                  ],
+                                  "type": "object",
+                                  "properties": {
+                                    "value": {
+                                      "type": "string",
+                                      "format": "uuid"
+                                    }
+                                  }
+                                },
+                                "nativeObjectId": {
+                                  "type": "string",
+                                  "format": "uuid"
+                                },
+                                "nodeId": {
+                                  "type": "string"
+                                },
+                                "storageIntentId": {
+                                  "required": [
+                                    "value"
+                                  ],
+                                  "type": "object",
+                                  "properties": {
+                                    "value": {
+                                      "type": "string",
+                                      "format": "uuid"
+                                    }
+                                  }
+                                },
+                                "fingerprint": {
+                                  "type": "string"
+                                },
+                                "committedAtUtc": {
+                                  "type": "string",
+                                  "format": "date-time"
+                                }
+                              }
+                            },
+                            "wasReplay": {
+                              "type": "boolean"
+                            },
+                            "targetDeleted": {
+                              "type": "boolean"
+                            },
+                            "storageObservationWarning": {
+                              "type": [
+                                "null",
+                                "string"
+                              ]
+                            }
+                          }
+                        }
+                      ]
                     }
                   }
                 }
@@ -9843,6 +10752,86 @@
                           "type": [
                             "null",
                             "string"
+                          ]
+                        },
+                        "processAssetReceipt": {
+                          "oneOf": [
+                            {
+                              "type": "null"
+                            },
+                            {
+                              "required": [
+                                "receipt",
+                                "wasReplay",
+                                "targetDeleted"
+                              ],
+                              "type": "object",
+                              "properties": {
+                                "receipt": {
+                                  "required": [
+                                    "intentId",
+                                    "nativeObjectId",
+                                    "nodeId",
+                                    "storageIntentId",
+                                    "fingerprint",
+                                    "committedAtUtc"
+                                  ],
+                                  "type": "object",
+                                  "properties": {
+                                    "intentId": {
+                                      "required": [
+                                        "value"
+                                      ],
+                                      "type": "object",
+                                      "properties": {
+                                        "value": {
+                                          "type": "string",
+                                          "format": "uuid"
+                                        }
+                                      }
+                                    },
+                                    "nativeObjectId": {
+                                      "type": "string",
+                                      "format": "uuid"
+                                    },
+                                    "nodeId": {
+                                      "type": "string"
+                                    },
+                                    "storageIntentId": {
+                                      "required": [
+                                        "value"
+                                      ],
+                                      "type": "object",
+                                      "properties": {
+                                        "value": {
+                                          "type": "string",
+                                          "format": "uuid"
+                                        }
+                                      }
+                                    },
+                                    "fingerprint": {
+                                      "type": "string"
+                                    },
+                                    "committedAtUtc": {
+                                      "type": "string",
+                                      "format": "date-time"
+                                    }
+                                  }
+                                },
+                                "wasReplay": {
+                                  "type": "boolean"
+                                },
+                                "targetDeleted": {
+                                  "type": "boolean"
+                                },
+                                "storageObservationWarning": {
+                                  "type": [
+                                    "null",
+                                    "string"
+                                  ]
+                                }
+                              }
+                            }
                           ]
                         }
                       }
@@ -10236,6 +11225,86 @@
                           }
                         }
                       ]
+                    },
+                    "processAssetReceipt": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "required": [
+                            "receipt",
+                            "wasReplay",
+                            "targetDeleted"
+                          ],
+                          "type": "object",
+                          "properties": {
+                            "receipt": {
+                              "required": [
+                                "intentId",
+                                "nativeObjectId",
+                                "nodeId",
+                                "storageIntentId",
+                                "fingerprint",
+                                "committedAtUtc"
+                              ],
+                              "type": "object",
+                              "properties": {
+                                "intentId": {
+                                  "required": [
+                                    "value"
+                                  ],
+                                  "type": "object",
+                                  "properties": {
+                                    "value": {
+                                      "type": "string",
+                                      "format": "uuid"
+                                    }
+                                  }
+                                },
+                                "nativeObjectId": {
+                                  "type": "string",
+                                  "format": "uuid"
+                                },
+                                "nodeId": {
+                                  "type": "string"
+                                },
+                                "storageIntentId": {
+                                  "required": [
+                                    "value"
+                                  ],
+                                  "type": "object",
+                                  "properties": {
+                                    "value": {
+                                      "type": "string",
+                                      "format": "uuid"
+                                    }
+                                  }
+                                },
+                                "fingerprint": {
+                                  "type": "string"
+                                },
+                                "committedAtUtc": {
+                                  "type": "string",
+                                  "format": "date-time"
+                                }
+                              }
+                            },
+                            "wasReplay": {
+                              "type": "boolean"
+                            },
+                            "targetDeleted": {
+                              "type": "boolean"
+                            },
+                            "storageObservationWarning": {
+                              "type": [
+                                "null",
+                                "string"
+                              ]
+                            }
+                          }
+                        }
+                      ]
                     }
                   }
                 }
@@ -10377,6 +11446,86 @@
                       "type": [
                         "null",
                         "string"
+                      ]
+                    },
+                    "processAssetReceipt": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "required": [
+                            "receipt",
+                            "wasReplay",
+                            "targetDeleted"
+                          ],
+                          "type": "object",
+                          "properties": {
+                            "receipt": {
+                              "required": [
+                                "intentId",
+                                "nativeObjectId",
+                                "nodeId",
+                                "storageIntentId",
+                                "fingerprint",
+                                "committedAtUtc"
+                              ],
+                              "type": "object",
+                              "properties": {
+                                "intentId": {
+                                  "required": [
+                                    "value"
+                                  ],
+                                  "type": "object",
+                                  "properties": {
+                                    "value": {
+                                      "type": "string",
+                                      "format": "uuid"
+                                    }
+                                  }
+                                },
+                                "nativeObjectId": {
+                                  "type": "string",
+                                  "format": "uuid"
+                                },
+                                "nodeId": {
+                                  "type": "string"
+                                },
+                                "storageIntentId": {
+                                  "required": [
+                                    "value"
+                                  ],
+                                  "type": "object",
+                                  "properties": {
+                                    "value": {
+                                      "type": "string",
+                                      "format": "uuid"
+                                    }
+                                  }
+                                },
+                                "fingerprint": {
+                                  "type": "string"
+                                },
+                                "committedAtUtc": {
+                                  "type": "string",
+                                  "format": "date-time"
+                                }
+                              }
+                            },
+                            "wasReplay": {
+                              "type": "boolean"
+                            },
+                            "targetDeleted": {
+                              "type": "boolean"
+                            },
+                            "storageObservationWarning": {
+                              "type": [
+                                "null",
+                                "string"
+                              ]
+                            }
+                          }
+                        }
                       ]
                     }
                   }
@@ -10537,6 +11686,348 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/ProjectStructureAnalyticsQueryRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/storage-placement-recovery/context": {
+      "get": {
+        "tags": [
+          "Storage recovery"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/storage-placement-recovery/pending": {
+      "get": {
+        "tags": [
+          "Storage recovery"
+        ],
+        "parameters": [
+          {
+            "name": "databaseProfileId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "generation",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int64"
+            }
+          },
+          {
+            "name": "projectId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "storageId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "take",
+            "in": "query",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/storage-placement-recovery/pending-continuations": {
+      "get": {
+        "tags": [
+          "Storage recovery"
+        ],
+        "parameters": [
+          {
+            "name": "databaseProfileId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "generation",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int64"
+            }
+          },
+          {
+            "name": "projectId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "storageId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "take",
+            "in": "query",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/storage-placement-recovery/{intentId}": {
+      "get": {
+        "tags": [
+          "Storage recovery"
+        ],
+        "parameters": [
+          {
+            "name": "intentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "databaseProfileId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "generation",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/storage-placement-recovery/reconcile": {
+      "post": {
+        "tags": [
+          "Storage recovery"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StoragePlacementRecoveryCommand"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/storage-placement-recovery/verify-external-termination": {
+      "post": {
+        "tags": [
+          "Storage recovery"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StoragePlacementExternalTerminationVerification"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/storage-placement-recovery/{intentId}/owner-continuation": {
+      "get": {
+        "tags": [
+          "Storage recovery"
+        ],
+        "parameters": [
+          {
+            "name": "intentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "databaseProfileId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "generation",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/storage-placement-recovery/reconcile-cancelled-run-receipts": {
+      "post": {
+        "tags": [
+          "Storage recovery"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StoragePlacementRecoveryCommand"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/storage-placement-recovery/continue-workflow-asset": {
+      "post": {
+        "tags": [
+          "Storage recovery"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StoragePlacementWorkflowContinuationCommand"
               }
             }
           },
@@ -11942,6 +13433,46 @@
         }
       }
     },
+    "/api/agents/providers/mutations/verify": {
+      "post": {
+        "tags": [
+          "Agents"
+        ],
+        "operationId": "VerifyAgentProviderMutation",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProviderMutationAttempt"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProviderVerificationApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/agents/providers": {
       "get": {
         "tags": [
@@ -12021,6 +13552,26 @@
               }
             }
           },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal Server Error",
             "content": {
@@ -12052,8 +13603,25 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -12077,7 +13645,34 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiAck"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -12101,7 +13696,74 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProviderHealthResult"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProviderCommittedApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Bad Gateway",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -12186,7 +13848,64 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProviderModelMaintenanceEditorResult"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProviderCommittedApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -12301,7 +14020,34 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiAck"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CapabilityVerificationApiResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CapabilityVerificationApiResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -12676,6 +14422,228 @@
           },
           "422": {
             "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/agents/execution-runs/{executionRunId}/recover": {
+      "post": {
+        "tags": [
+          "Agents"
+        ],
+        "operationId": "RecoverAgentExecutionRun",
+        "parameters": [
+          {
+            "name": "executionRunId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AgentExecutionRecoveryApiRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentExecutionRunResultApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Gone",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/agents/execution-runs/{executionRunId}/reconcile-cancellation": {
+      "post": {
+        "tags": [
+          "Agents"
+        ],
+        "operationId": "ReconcileCancelledAgentExecutionRun",
+        "parameters": [
+          {
+            "name": "executionRunId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AgentExecutionRecoveryApiRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentCancellationReconciliationApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Gone",
             "content": {
               "application/json": {
                 "schema": {
@@ -17703,6 +19671,30 @@
         }
       }
     },
+    "/api/processes/launch/{admissionId}": {
+      "get": {
+        "tags": [
+          "Processes"
+        ],
+        "operationId": "GetProcessLaunchStatus",
+        "parameters": [
+          {
+            "name": "admissionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/processes/runs/{runId}/dispatch": {
       "post": {
         "tags": [
@@ -20803,6 +22795,41 @@
           }
         }
       },
+      "AgentCancellationReconciliationApiResponse": {
+        "required": [
+          "executionRunId",
+          "chatSessionId",
+          "hasUnknownEffects",
+          "outcomes",
+          "providerDispatches"
+        ],
+        "type": "object",
+        "properties": {
+          "executionRunId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "chatSessionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "hasUnknownEffects": {
+            "type": "boolean"
+          },
+          "outcomes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AgentToolCancellationOutcomeApiResponse"
+            }
+          },
+          "providerDispatches": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AgentProviderDispatchOutcomeApiResponse"
+            }
+          }
+        }
+      },
       "AgentCapabilityAssignment": {
         "required": [
           "capabilityId",
@@ -20889,6 +22916,21 @@
         "type": "object",
         "properties": {
           "cloneName": {
+            "type": "string"
+          }
+        }
+      },
+      "AgentCommittedEffectApiResponse": {
+        "required": [
+          "sourceKind",
+          "sourceId"
+        ],
+        "type": "object",
+        "properties": {
+          "sourceKind": {
+            "type": "string"
+          },
+          "sourceId": {
             "type": "string"
           }
         }
@@ -21294,6 +23336,12 @@
           }
         }
       },
+      "AgentExecutionRecoveryApiRequest": {
+        "type": "object",
+        "properties": {
+          "activityOperationId": { }
+        }
+      },
       "AgentExecutionRunApiRequest": {
         "required": [
           "agentId",
@@ -21644,7 +23692,14 @@
           "startedAtUtc",
           "completedAtUtc",
           "runtimeToolProviderName",
-          "declaredSideEffectMode"
+          "declaredSideEffectMode",
+          "invocationOutcome",
+          "effectState",
+          "failureCode",
+          "failureMessage",
+          "canRetryWithCorrectedInput",
+          "effectSourceKind",
+          "effectSourceId"
         ],
         "type": "object",
         "properties": {
@@ -21684,6 +23739,27 @@
           },
           "declaredSideEffectMode": {
             "$ref": "#/components/schemas/ToolExecutionSideEffectMode"
+          },
+          "invocationOutcome": {
+            "$ref": "#/components/schemas/AgentToolInvocationOutcome"
+          },
+          "effectState": {
+            "$ref": "#/components/schemas/AgentToolEffectState"
+          },
+          "failureCode": {
+            "type": "string"
+          },
+          "failureMessage": {
+            "type": "string"
+          },
+          "canRetryWithCorrectedInput": {
+            "type": "boolean"
+          },
+          "effectSourceKind": {
+            "type": "string"
+          },
+          "effectSourceId": {
+            "type": "string"
           }
         }
       },
@@ -22651,6 +24727,50 @@
               "type": "string",
               "format": "uuid"
             }
+          },
+          "allowedProjectLifetimes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AgentProjectStructureLifetime"
+            }
+          }
+        }
+      },
+      "AgentProjectStructureLifetime": {
+        "required": [
+          "databaseProfileId",
+          "projectId",
+          "lifetimeId"
+        ],
+        "type": "object",
+        "properties": {
+          "databaseProfileId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "lifetimeId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "AgentProviderDispatchOutcomeApiResponse": {
+        "required": [
+          "dispatchId",
+          "state"
+        ],
+        "type": "object",
+        "properties": {
+          "dispatchId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "state": {
+            "$ref": "#/components/schemas/AgentToolProviderDispatchState"
           }
         }
       },
@@ -23588,6 +25708,86 @@
       "AgentThinkingEffortSupportStatus": {
         "type": "integer"
       },
+      "AgentToolBusinessIntentId": {
+        "required": [
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "AgentToolCancellationDisposition": {
+        "type": "integer"
+      },
+      "AgentToolCancellationOutcomeApiResponse": {
+        "required": [
+          "intentId",
+          "toolName",
+          "effectState",
+          "disposition",
+          "reason",
+          "committedEffect"
+        ],
+        "type": "object",
+        "properties": {
+          "intentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "toolName": {
+            "type": "string"
+          },
+          "effectState": {
+            "$ref": "#/components/schemas/AgentToolEffectState"
+          },
+          "disposition": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/AgentToolCancellationDisposition"
+              }
+            ]
+          },
+          "reason": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/AgentToolCancellationReason"
+              }
+            ]
+          },
+          "committedEffect": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/AgentCommittedEffectApiResponse"
+              }
+            ]
+          }
+        }
+      },
+      "AgentToolCancellationReason": {
+        "type": "integer"
+      },
+      "AgentToolEffectState": {
+        "type": "integer"
+      },
+      "AgentToolInvocationOutcome": {
+        "type": "integer"
+      },
+      "AgentToolProviderDispatchState": {
+        "type": "integer"
+      },
       "AgentVoiceAccessSettings": {
         "type": "object",
         "properties": {
@@ -24084,6 +26284,60 @@
             "type": "string"
           }
         }
+      },
+      "CapabilityVerificationApiResponse": {
+        "required": [
+          "agentId",
+          "capabilityId",
+          "outcome",
+          "proofAttemptId",
+          "proofCheckedAtUtc",
+          "automaticReplaySafe"
+        ],
+        "type": "object",
+        "properties": {
+          "agentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "capabilityId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "outcome": {
+            "$ref": "#/components/schemas/CapabilityVerificationDisposition"
+          },
+          "proofAttemptId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
+          },
+          "proofCheckedAtUtc": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "automaticReplaySafe": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CapabilityVerificationDisposition": {
+        "enum": [
+          "Rejected",
+          "CanceledBeforeDiagnostic",
+          "DiagnosticInterrupted",
+          "Superseded",
+          "PublicationCanceled",
+          "PublicationNotStarted",
+          "Committed",
+          "Unconfirmed",
+          "InfrastructureUnavailable"
+        ]
       },
       "CapacityBlockKind": {
         "type": "integer"
@@ -27076,6 +29330,20 @@
           "execute": {
             "type": "boolean",
             "default": false
+          },
+          "callerIntentId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
+          },
+          "preparedAdmissionId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
           }
         }
       },
@@ -27358,6 +29626,13 @@
             ],
             "format": "uuid"
           },
+          "expectedLifetimeId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
+          },
           "name": {
             "type": "string"
           },
@@ -27540,6 +29815,64 @@
             ],
             "format": "double",
             "default": 8
+          }
+        }
+      },
+      "ProjectProcessAssetReceipt": {
+        "required": [
+          "intentId",
+          "nativeObjectId",
+          "nodeId",
+          "storageIntentId",
+          "fingerprint",
+          "committedAtUtc"
+        ],
+        "type": "object",
+        "properties": {
+          "intentId": {
+            "$ref": "#/components/schemas/AgentToolBusinessIntentId"
+          },
+          "nativeObjectId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "nodeId": {
+            "type": "string"
+          },
+          "storageIntentId": {
+            "$ref": "#/components/schemas/StoragePlacementIntentId"
+          },
+          "fingerprint": {
+            "type": "string"
+          },
+          "committedAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ProjectProcessAssetReceiptObservation": {
+        "required": [
+          "receipt",
+          "wasReplay",
+          "targetDeleted"
+        ],
+        "type": "object",
+        "properties": {
+          "receipt": {
+            "$ref": "#/components/schemas/ProjectProcessAssetReceipt"
+          },
+          "wasReplay": {
+            "type": "boolean"
+          },
+          "targetDeleted": {
+            "type": "boolean"
+          },
+          "storageObservationWarning": {
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
@@ -27902,6 +30235,16 @@
             "type": [
               "null",
               "string"
+            ]
+          },
+          "processAssetReceipt": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ProjectProcessAssetReceiptObservation"
+              }
             ]
           }
         }
@@ -29193,6 +31536,16 @@
               "null",
               "string"
             ]
+          },
+          "expectedProjectAdmission": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ProjectWriteAdmission"
+              }
+            ]
           }
         }
       },
@@ -29217,6 +31570,16 @@
               "string"
             ],
             "format": "uuid"
+          },
+          "expectedProjectAdmission": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ProjectWriteAdmission"
+              }
+            ]
           }
         }
       },
@@ -29739,6 +32102,16 @@
                 "$ref": "#/components/schemas/ProjectStructureNodeActionCapabilities"
               }
             ]
+          },
+          "processAssetReceipt": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ProjectProcessAssetReceiptObservation"
+              }
+            ]
           }
         }
       },
@@ -30253,6 +32626,16 @@
             "items": {
               "type": "string"
             }
+          },
+          "expectedProjectAdmission": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ProjectWriteAdmission"
+              }
+            ]
           }
         }
       },
@@ -30395,6 +32778,16 @@
               }
             ]
           },
+          "expectedProjectAdmission": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ProjectWriteAdmission"
+              }
+            ]
+          },
           "duration": {
             "pattern": "^-?(\\d+\\.)?\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,7})?$",
             "type": "string"
@@ -30497,6 +32890,16 @@
               "string"
             ],
             "format": "int64"
+          },
+          "expectedProjectAdmission": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ProjectWriteAdmission"
+              }
+            ]
           }
         }
       },
@@ -30520,6 +32923,16 @@
               },
               {
                 "$ref": "#/components/schemas/ProjectStructureWorkflowInputSettings"
+              }
+            ]
+          },
+          "expectedProjectAdmission": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ProjectWriteAdmission"
               }
             ]
           }
@@ -30929,6 +33342,13 @@
             "items": {
               "type": "string"
             }
+          },
+          "intentId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
           }
         }
       },
@@ -31028,6 +33448,28 @@
       },
       "ProjectWorkItemEffortUnit": {
         "type": "integer"
+      },
+      "ProjectWriteAdmission": {
+        "required": [
+          "databaseProfileId",
+          "projectId",
+          "lifetimeId"
+        ],
+        "type": "object",
+        "properties": {
+          "databaseProfileId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "lifetimeId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
       },
       "PromptArtifactStatus": {
         "type": "integer"
@@ -31316,6 +33758,30 @@
           }
         }
       },
+      "ProviderCommittedApiResponse": {
+        "required": [
+          "providerId",
+          "canonicalCommitSucceeded",
+          "reconciliationRequired",
+          "warning"
+        ],
+        "type": "object",
+        "properties": {
+          "providerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "canonicalCommitSucceeded": {
+            "type": "boolean"
+          },
+          "reconciliationRequired": {
+            "type": "boolean"
+          },
+          "warning": {
+            "type": "string"
+          }
+        }
+      },
       "ProviderCredentialBinding": {
         "required": [
           "secretId",
@@ -31379,6 +33845,37 @@
           "allowsParallelFunctionTools": {
             "type": "boolean",
             "default": true
+          }
+        }
+      },
+      "ProviderHealthResult": {
+        "required": [
+          "success",
+          "summary",
+          "suggestedModels"
+        ],
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "suggestedModels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "modelThinkingEffortCapabilities": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/ProviderModelThinkingEffortCapability"
+            }
           }
         }
       },
@@ -31451,6 +33948,45 @@
               "string"
             ],
             "format": "int32"
+          }
+        }
+      },
+      "ProviderModelMaintenanceEditorResult": {
+        "required": [
+          "modelName",
+          "baseModel",
+          "systemPrompt",
+          "contextLength",
+          "modelfile",
+          "statusMessage"
+        ],
+        "type": "object",
+        "properties": {
+          "modelName": {
+            "type": "string"
+          },
+          "baseModel": {
+            "type": "string"
+          },
+          "systemPrompt": {
+            "type": "string"
+          },
+          "contextLength": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "modelfile": {
+            "type": "string"
+          },
+          "statusMessage": {
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
@@ -31705,6 +34241,54 @@
           }
         }
       },
+      "ProviderMutationAttempt": {
+        "required": [
+          "attemptId",
+          "providerId",
+          "kind",
+          "expectedConcurrencyToken"
+        ],
+        "type": "object",
+        "properties": {
+          "attemptId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "providerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/ProviderMutationKind"
+          },
+          "expectedConcurrencyToken": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
+          },
+          "intendedConcurrencyToken": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
+          },
+          "submissionFingerprint": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "isCreate": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ProviderMutationKind": {
+        "type": "integer"
+      },
       "ProviderNetworkAccessPolicy": {
         "type": "integer"
       },
@@ -31876,6 +34460,13 @@
             ],
             "format": "uuid"
           },
+          "expectedConcurrencyToken": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
+          },
           "name": {
             "type": "string"
           },
@@ -32038,6 +34629,41 @@
       },
       "ProviderTransportKind": {
         "type": "integer"
+      },
+      "ProviderVerificationApiResponse": {
+        "required": [
+          "providerId",
+          "outcome",
+          "concurrencyToken",
+          "automaticReplaySafe"
+        ],
+        "type": "object",
+        "properties": {
+          "providerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "outcome": {
+            "$ref": "#/components/schemas/ProviderVerificationDisposition"
+          },
+          "concurrencyToken": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
+          },
+          "automaticReplaySafe": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ProviderVerificationDisposition": {
+        "enum": [
+          "Committed",
+          "DefinitelyNotCommitted",
+          "StillUnconfirmed"
+        ]
       },
       "RecruitmentApplicationSaveApiRequest": {
         "type": "object",
@@ -32818,6 +35444,128 @@
       },
       "StorageLocatorKind": {
         "type": "integer"
+      },
+      "StoragePlacementExternalTerminationVerification": {
+        "required": [
+          "context",
+          "intentId",
+          "verifiedExternalDispatchStopped"
+        ],
+        "type": "object",
+        "properties": {
+          "context": {
+            "$ref": "#/components/schemas/StoragePlacementRecoveryContext"
+          },
+          "intentId": {
+            "$ref": "#/components/schemas/StoragePlacementIntentId"
+          },
+          "verifiedExternalDispatchStopped": {
+            "type": "boolean"
+          }
+        }
+      },
+      "StoragePlacementIntentId": {
+        "required": [
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "StoragePlacementOwnerContinuationAction": {
+        "type": "integer"
+      },
+      "StoragePlacementRecoveryCommand": {
+        "required": [
+          "context",
+          "intentId"
+        ],
+        "type": "object",
+        "properties": {
+          "context": {
+            "$ref": "#/components/schemas/StoragePlacementRecoveryContext"
+          },
+          "intentId": {
+            "$ref": "#/components/schemas/StoragePlacementIntentId"
+          }
+        }
+      },
+      "StoragePlacementRecoveryContext": {
+        "required": [
+          "databaseProfileId",
+          "generation"
+        ],
+        "type": "object",
+        "properties": {
+          "databaseProfileId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "generation": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int64"
+          }
+        }
+      },
+      "StoragePlacementWorkflowContinuationCommand": {
+        "required": [
+          "context",
+          "intentId",
+          "action",
+          "expectedIntent"
+        ],
+        "type": "object",
+        "properties": {
+          "context": {
+            "$ref": "#/components/schemas/StoragePlacementRecoveryContext"
+          },
+          "intentId": {
+            "$ref": "#/components/schemas/StoragePlacementIntentId"
+          },
+          "action": {
+            "$ref": "#/components/schemas/StoragePlacementOwnerContinuationAction"
+          },
+          "expectedIntent": {
+            "$ref": "#/components/schemas/StoragePlacementWorkflowContinuationIntent"
+          }
+        }
+      },
+      "StoragePlacementWorkflowContinuationIntent": {
+        "required": [
+          "runId",
+          "occurrencePath",
+          "slot",
+          "fingerprint"
+        ],
+        "type": "object",
+        "properties": {
+          "runId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "occurrencePath": {
+            "type": "string"
+          },
+          "slot": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "fingerprint": {
+            "type": "string"
+          }
+        }
       },
       "StorageProviderKind": {
         "type": "integer"
@@ -33877,6 +36625,9 @@
       "WorkflowLaunchIdempotencyRecordState": {
         "type": "integer"
       },
+      "WorkflowLaunchObservation": {
+        "type": "integer"
+      },
       "WorkflowLifecycleStatus": {
         "type": "integer"
       },
@@ -34416,6 +37167,12 @@
           },
           "replayed": {
             "type": "boolean"
+          },
+          "detailsComplete": {
+            "type": "boolean"
+          },
+          "observation": {
+            "$ref": "#/components/schemas/WorkflowLaunchObservation"
           }
         }
       },
@@ -34783,6 +37540,9 @@
     },
     {
       "name": "Shared Providers"
+    },
+    {
+      "name": "Storage recovery"
     },
     {
       "name": "API"

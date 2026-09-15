@@ -2,15 +2,13 @@
   "schemaVersion": 1,
   "source": {
     "repository": "CanDoItAll",
-    "branch": "providers-shared",
-    "commit": "aadd953150e7f659e4060ced6505621c705ea61f",
-    "workingTreeClean": false,
-    "workingTreeNote": "Pre-merge capture from the committed repair baseline plus uncommitted finishing changes. Product SB09 finishing proof identifies changed-file hashes. No automatic commit was made.",
-    "workingTreeStatusSha256": "BBF54FE9ACAD745170CED31895E786A05238291FA5C2BD577F93BB217B914C9B",
-    "captureNote": "Identified Release host PID 58036; Web assembly SHA-256 60F188E37C58754076D6F462C236120EA7B63FB55ADC55C0A8924428F603A83D. Both canonical endpoints returned identical 963289-byte documents. Runtime details remain in product proof.",
+    "branch": "modules-decoupling",
+    "commit": "160616c8256594257d00612b4e7dbadd567c024e",
+    "workingTreeClean": true,
+    "captureNote": "Pre-merge branch contract of modules-decoupling: captured from the audited fix13 publication C:/mdo-qa-160616c8 (app manifest SHA-256 5424d9064fc3d879f7fd6ff2afaa86ae6c71a5577e982fbdb992d3fd8f4d011d; Web assembly SHA-256 73506915C9B050AD06FF40CC8E2220FBB4813FA801975798AB6853A36E16382C) run as an isolated Development host (InMemory database provider, private workspace and control-plane roots, PID 11144) bound to the canonical localhost:5032 while that port was free; the operator's Production hosts (5038, 5052) were untouched and no development-only endpoint was enabled on them. Components dependency 7b618cdac5570e806832e3f5ff65ddf1439eb868 (tree 35a4d090, equal to the repaired worktree 780e9a30), FileTools 498b36825bd5a5222429972af120b04becf4b3f6. Both runtime endpoints returned identical 1,053,750-byte documents. A first capture of the same publication on the free loopback port 127.0.0.1:58992 (SHA-256 C419F1697A9257C1EA8317DC876B91878B6C2185E410ED11F470054954D0EC59) differs only in the servers entry; port identity is not source identity.",
     "webProject": "src/App/CanDoItAll.Web/CanDoItAll.Web.csproj",
     "environment": "Development",
-    "generatedUtc": "2026-08-31T10:47:07.3587989Z",
+    "generatedUtc": "2026-09-15T14:37:15.4885969Z",
     "runtimeDocumentPaths": [
       "/openapi/v1.json",
       "/swagger/v1/swagger.json"
@@ -18,14 +16,14 @@
   },
   "artifact": {
     "file": "references/candoitall-web.openapi.json",
-    "sha256": "14FE4C527863FF84948ED96D3D7A3B16FD46D3E315E673E96EEF3911C3D2A52B",
+    "sha256": "4A72044B333CA60F18139F5256910087E258D6488C5D3A395F50D68BFE0EF355",
     "openapiVersion": "3.1.1",
     "documentTitle": "CanDoItAll.Web | v1",
     "documentVersion": "1.0.0",
     "serverUrl": "http://localhost:5032/",
-    "pathCount": 276,
-    "operationCount": 308,
-    "schemaCount": 486
+    "pathCount": 289,
+    "operationCount": 321,
+    "schemaCount": 518
   },
   "routeFamilies": [
     {
@@ -45,18 +43,13 @@
     },
     {
       "prefix": "/api/agents",
-      "pathCount": 59,
-      "operationCount": 72
+      "pathCount": 62,
+      "operationCount": 75
     },
     {
       "prefix": "/api/crm-hr",
       "pathCount": 15,
       "operationCount": 19
-    },
-    {
-      "prefix": "/api/llm-conversations",
-      "pathCount": 6,
-      "operationCount": 6
     },
     {
       "prefix": "/api/llm-chat-operations",
@@ -67,6 +60,11 @@
       "prefix": "/api/llm-chats",
       "pathCount": 8,
       "operationCount": 10
+    },
+    {
+      "prefix": "/api/llm-conversations",
+      "pathCount": 6,
+      "operationCount": 6
     },
     {
       "prefix": "/api/memory-providers",
@@ -80,8 +78,8 @@
     },
     {
       "prefix": "/api/processes",
-      "pathCount": 15,
-      "operationCount": 15
+      "pathCount": 16,
+      "operationCount": 16
     },
     {
       "prefix": "/api/project-structure",
@@ -107,6 +105,11 @@
       "prefix": "/api/shared-providers",
       "pathCount": 5,
       "operationCount": 5
+    },
+    {
+      "prefix": "/api/storage-placement-recovery",
+      "pathCount": 9,
+      "operationCount": 9
     },
     {
       "prefix": "/api/workflows",
@@ -147,6 +150,11 @@
         },
         {
           "method": "GET",
+          "path": "/api/llm-chats/provider-options",
+          "operationId": "ListLlmChatProviderOptions"
+        },
+        {
+          "method": "GET",
           "path": "/api/llm-chats/{definitionId}",
           "operationId": "GetLlmChatDefinition"
         },
@@ -179,11 +187,6 @@
           "method": "POST",
           "path": "/api/llm-chats/{definitionId}/suspend",
           "operationId": "SuspendLlmChatDefinition"
-        },
-        {
-          "method": "GET",
-          "path": "/api/llm-chats/provider-options",
-          "operationId": "ListLlmChatProviderOptions"
         }
       ],
       "routeAppendix": "api-docs-skills-parity:llm-chat-definition-routes"
@@ -308,9 +311,239 @@
           "operationId": "SaveAgent"
         },
         {
+          "method": "POST",
+          "path": "/api/agents/attachments/images",
+          "operationId": "StageAgentImageAttachment"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/bootstrap",
+          "operationId": "GetAgentBootstrap"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/by-external-key/{externalNamespace}/{key}",
+          "operationId": "GetAgentByExternalKey"
+        },
+        {
+          "method": "PUT",
+          "path": "/api/agents/by-external-key/{externalNamespace}/{key}",
+          "operationId": "ProvisionAgentByExternalKey"
+        },
+        {
           "method": "DELETE",
-          "path": "/api/agents/{agentId}",
-          "operationId": "DeleteAgent"
+          "path": "/api/agents/by-external-key/{externalNamespace}/{key}",
+          "operationId": "ArchiveAgentByExternalKey"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/capabilities",
+          "operationId": "ListAgentCapabilities"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/capabilities",
+          "operationId": "SaveAgentCapability"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/capabilities/access-preview",
+          "operationId": "PreviewAgentCapabilityAccess"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/capabilities/setup-tests/mcp",
+          "operationId": "TestAgentMcpCapabilitySetup"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/capabilities/setup-tests/tool",
+          "operationId": "TestAgentToolCapabilitySetup"
+        },
+        {
+          "method": "DELETE",
+          "path": "/api/agents/capabilities/{capabilityId}",
+          "operationId": "DeleteAgentCapability"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/capabilities/{capabilityId}/editor",
+          "operationId": "GetAgentCapabilityEditor"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/execution-operations/{operationId}/events/stream",
+          "operationId": "StreamAgentExecutionOperationEvents"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/execution-runs",
+          "operationId": "ListAgentExecutionRuns"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/execution-runs",
+          "operationId": "StartAgentExecutionRun"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/execution-runs/stream",
+          "operationId": "StreamAgentExecutionRun"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/execution-runs/{executionRunId}",
+          "operationId": "GetAgentExecutionRunDetail"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/execution-runs/{executionRunId}/approvals",
+          "operationId": "ListAgentExecutionApprovals"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/execution-runs/{executionRunId}/artifacts",
+          "operationId": "ListAgentExecutionArtifacts"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/execution-runs/{executionRunId}/checkpoints",
+          "operationId": "ListAgentExecutionCheckpoints"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/execution-runs/{executionRunId}/pending-approvals",
+          "operationId": "RespondToAgentExecutionApprovals"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/execution-runs/{executionRunId}/pending-approvals/stream",
+          "operationId": "StreamAgentExecutionApprovalResponse"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/execution-runs/{executionRunId}/reconcile-cancellation",
+          "operationId": "ReconcileCancelledAgentExecutionRun"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/execution-runs/{executionRunId}/recover",
+          "operationId": "RecoverAgentExecutionRun"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/execution-runs/{executionRunId}/tool-receipts",
+          "operationId": "ListAgentExecutionToolReceipts"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/import",
+          "operationId": "ImportAgent"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/import-package",
+          "operationId": "ImportAgentPackage"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/memory",
+          "operationId": "SaveAgentMemory"
+        },
+        {
+          "method": "DELETE",
+          "path": "/api/agents/memory/{memoryId}",
+          "operationId": "DeleteAgentMemory"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/providers",
+          "operationId": "ListAgentProviders"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/providers",
+          "operationId": "SaveAgentProvider"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/providers/mutations/verify",
+          "operationId": "VerifyAgentProviderMutation"
+        },
+        {
+          "method": "DELETE",
+          "path": "/api/agents/providers/{providerId}",
+          "operationId": "DeleteAgentProvider"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/providers/{providerId}/chat-completions/stream",
+          "operationId": "StreamAgentProviderChatCompletion"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/providers/{providerId}/editor",
+          "operationId": "GetAgentProviderEditor"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/providers/{providerId}/ollama-modelfile",
+          "operationId": "CreateAgentProviderModelMaintenance"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/providers/{providerId}/test",
+          "operationId": "TestAgentProvider"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/providers/{providerId}/test-chat",
+          "operationId": "RunAgentProviderTestChat"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/teams",
+          "operationId": "ListAgentTeams"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/teams",
+          "operationId": "SaveAgentTeam"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/teams/{teamId}",
+          "operationId": "GetAgentTeam"
+        },
+        {
+          "method": "PUT",
+          "path": "/api/agents/teams/{teamId}",
+          "operationId": "UpdateAgentTeam"
+        },
+        {
+          "method": "DELETE",
+          "path": "/api/agents/teams/{teamId}",
+          "operationId": "DeleteAgentTeam"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/teams/{teamId}/agents",
+          "operationId": "ListAgentTeamAgents"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/teams/{teamId}/editor",
+          "operationId": "GetAgentTeamEditor"
+        },
+        {
+          "method": "PUT",
+          "path": "/api/agents/teams/{teamId}/members",
+          "operationId": "ReplaceAgentTeamMembers"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/teams/{teamId}/members",
+          "operationId": "UpdateAgentTeamMembers"
         },
         {
           "method": "GET",
@@ -318,9 +551,44 @@
           "operationId": "GetAgentEditor"
         },
         {
+          "method": "DELETE",
+          "path": "/api/agents/{agentId}",
+          "operationId": "DeleteAgent"
+        },
+        {
           "method": "POST",
           "path": "/api/agents/{agentId}/capabilities/{capabilityId}/verify",
           "operationId": "VerifyAgentCapability"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/{agentId}/chat",
+          "operationId": "SendAgentChatMessage"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/{agentId}/chat-sessions",
+          "operationId": "ListAgentChatSessions"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/{agentId}/chat-sessions",
+          "operationId": "CreateAgentChatSession"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/{agentId}/chat-sessions/{chatSessionId}/rename",
+          "operationId": "RenameAgentChatSession"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/{agentId}/chat-workspace",
+          "operationId": "GetAgentChatWorkspace"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/{agentId}/chat/stream",
+          "operationId": "StreamAgentChatMessage"
         },
         {
           "method": "POST",
@@ -346,6 +614,11 @@
           "method": "POST",
           "path": "/api/agents/{agentId}/execution-runs",
           "operationId": "StartAgentScopedExecutionRun"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/{agentId}/execution-runs/stream",
+          "operationId": "StreamAgentScopedExecutionRun"
         },
         {
           "method": "GET",
@@ -383,44 +656,9 @@
           "operationId": "ListAgentScopedExecutionToolReceipts"
         },
         {
-          "method": "POST",
-          "path": "/api/agents/{agentId}/execution-runs/stream",
-          "operationId": "StreamAgentScopedExecutionRun"
-        },
-        {
           "method": "GET",
           "path": "/api/agents/{agentId}/export",
           "operationId": "ExportAgent"
-        },
-        {
-          "method": "POST",
-          "path": "/api/agents/{agentId}/chat",
-          "operationId": "SendAgentChatMessage"
-        },
-        {
-          "method": "GET",
-          "path": "/api/agents/{agentId}/chat-sessions",
-          "operationId": "ListAgentChatSessions"
-        },
-        {
-          "method": "POST",
-          "path": "/api/agents/{agentId}/chat-sessions",
-          "operationId": "CreateAgentChatSession"
-        },
-        {
-          "method": "POST",
-          "path": "/api/agents/{agentId}/chat-sessions/{chatSessionId}/rename",
-          "operationId": "RenameAgentChatSession"
-        },
-        {
-          "method": "GET",
-          "path": "/api/agents/{agentId}/chat-workspace",
-          "operationId": "GetAgentChatWorkspace"
-        },
-        {
-          "method": "POST",
-          "path": "/api/agents/{agentId}/chat/stream",
-          "operationId": "StreamAgentChatMessage"
         },
         {
           "method": "GET",
@@ -436,226 +674,6 @@
           "method": "GET",
           "path": "/api/agents/{agentId}/runtime-snapshot",
           "operationId": "GetAgentRuntimeSnapshot"
-        },
-        {
-          "method": "POST",
-          "path": "/api/agents/attachments/images",
-          "operationId": "StageAgentImageAttachment"
-        },
-        {
-          "method": "GET",
-          "path": "/api/agents/bootstrap",
-          "operationId": "GetAgentBootstrap"
-        },
-        {
-          "method": "DELETE",
-          "path": "/api/agents/by-external-key/{externalNamespace}/{key}",
-          "operationId": "ArchiveAgentByExternalKey"
-        },
-        {
-          "method": "GET",
-          "path": "/api/agents/by-external-key/{externalNamespace}/{key}",
-          "operationId": "GetAgentByExternalKey"
-        },
-        {
-          "method": "PUT",
-          "path": "/api/agents/by-external-key/{externalNamespace}/{key}",
-          "operationId": "ProvisionAgentByExternalKey"
-        },
-        {
-          "method": "GET",
-          "path": "/api/agents/capabilities",
-          "operationId": "ListAgentCapabilities"
-        },
-        {
-          "method": "POST",
-          "path": "/api/agents/capabilities",
-          "operationId": "SaveAgentCapability"
-        },
-        {
-          "method": "DELETE",
-          "path": "/api/agents/capabilities/{capabilityId}",
-          "operationId": "DeleteAgentCapability"
-        },
-        {
-          "method": "GET",
-          "path": "/api/agents/capabilities/{capabilityId}/editor",
-          "operationId": "GetAgentCapabilityEditor"
-        },
-        {
-          "method": "POST",
-          "path": "/api/agents/capabilities/access-preview",
-          "operationId": "PreviewAgentCapabilityAccess"
-        },
-        {
-          "method": "POST",
-          "path": "/api/agents/capabilities/setup-tests/mcp",
-          "operationId": "TestAgentMcpCapabilitySetup"
-        },
-        {
-          "method": "POST",
-          "path": "/api/agents/capabilities/setup-tests/tool",
-          "operationId": "TestAgentToolCapabilitySetup"
-        },
-        {
-          "method": "GET",
-          "path": "/api/agents/execution-operations/{operationId}/events/stream",
-          "operationId": "StreamAgentExecutionOperationEvents"
-        },
-        {
-          "method": "GET",
-          "path": "/api/agents/execution-runs",
-          "operationId": "ListAgentExecutionRuns"
-        },
-        {
-          "method": "POST",
-          "path": "/api/agents/execution-runs",
-          "operationId": "StartAgentExecutionRun"
-        },
-        {
-          "method": "GET",
-          "path": "/api/agents/execution-runs/{executionRunId}",
-          "operationId": "GetAgentExecutionRunDetail"
-        },
-        {
-          "method": "GET",
-          "path": "/api/agents/execution-runs/{executionRunId}/approvals",
-          "operationId": "ListAgentExecutionApprovals"
-        },
-        {
-          "method": "GET",
-          "path": "/api/agents/execution-runs/{executionRunId}/artifacts",
-          "operationId": "ListAgentExecutionArtifacts"
-        },
-        {
-          "method": "GET",
-          "path": "/api/agents/execution-runs/{executionRunId}/checkpoints",
-          "operationId": "ListAgentExecutionCheckpoints"
-        },
-        {
-          "method": "POST",
-          "path": "/api/agents/execution-runs/{executionRunId}/pending-approvals",
-          "operationId": "RespondToAgentExecutionApprovals"
-        },
-        {
-          "method": "POST",
-          "path": "/api/agents/execution-runs/{executionRunId}/pending-approvals/stream",
-          "operationId": "StreamAgentExecutionApprovalResponse"
-        },
-        {
-          "method": "GET",
-          "path": "/api/agents/execution-runs/{executionRunId}/tool-receipts",
-          "operationId": "ListAgentExecutionToolReceipts"
-        },
-        {
-          "method": "POST",
-          "path": "/api/agents/execution-runs/stream",
-          "operationId": "StreamAgentExecutionRun"
-        },
-        {
-          "method": "POST",
-          "path": "/api/agents/import",
-          "operationId": "ImportAgent"
-        },
-        {
-          "method": "POST",
-          "path": "/api/agents/import-package",
-          "operationId": "ImportAgentPackage"
-        },
-        {
-          "method": "POST",
-          "path": "/api/agents/memory",
-          "operationId": "SaveAgentMemory"
-        },
-        {
-          "method": "DELETE",
-          "path": "/api/agents/memory/{memoryId}",
-          "operationId": "DeleteAgentMemory"
-        },
-        {
-          "method": "GET",
-          "path": "/api/agents/providers",
-          "operationId": "ListAgentProviders"
-        },
-        {
-          "method": "POST",
-          "path": "/api/agents/providers",
-          "operationId": "SaveAgentProvider"
-        },
-        {
-          "method": "DELETE",
-          "path": "/api/agents/providers/{providerId}",
-          "operationId": "DeleteAgentProvider"
-        },
-        {
-          "method": "GET",
-          "path": "/api/agents/providers/{providerId}/editor",
-          "operationId": "GetAgentProviderEditor"
-        },
-        {
-          "method": "POST",
-          "path": "/api/agents/providers/{providerId}/chat-completions/stream",
-          "operationId": "StreamAgentProviderChatCompletion"
-        },
-        {
-          "method": "POST",
-          "path": "/api/agents/providers/{providerId}/ollama-modelfile",
-          "operationId": "CreateAgentProviderModelMaintenance"
-        },
-        {
-          "method": "POST",
-          "path": "/api/agents/providers/{providerId}/test",
-          "operationId": "TestAgentProvider"
-        },
-        {
-          "method": "POST",
-          "path": "/api/agents/providers/{providerId}/test-chat",
-          "operationId": "RunAgentProviderTestChat"
-        },
-        {
-          "method": "GET",
-          "path": "/api/agents/teams",
-          "operationId": "ListAgentTeams"
-        },
-        {
-          "method": "POST",
-          "path": "/api/agents/teams",
-          "operationId": "SaveAgentTeam"
-        },
-        {
-          "method": "DELETE",
-          "path": "/api/agents/teams/{teamId}",
-          "operationId": "DeleteAgentTeam"
-        },
-        {
-          "method": "GET",
-          "path": "/api/agents/teams/{teamId}",
-          "operationId": "GetAgentTeam"
-        },
-        {
-          "method": "PUT",
-          "path": "/api/agents/teams/{teamId}",
-          "operationId": "UpdateAgentTeam"
-        },
-        {
-          "method": "GET",
-          "path": "/api/agents/teams/{teamId}/agents",
-          "operationId": "ListAgentTeamAgents"
-        },
-        {
-          "method": "GET",
-          "path": "/api/agents/teams/{teamId}/editor",
-          "operationId": "GetAgentTeamEditor"
-        },
-        {
-          "method": "POST",
-          "path": "/api/agents/teams/{teamId}/members",
-          "operationId": "UpdateAgentTeamMembers"
-        },
-        {
-          "method": "PUT",
-          "path": "/api/agents/teams/{teamId}/members",
-          "operationId": "ReplaceAgentTeamMembers"
         }
       ]
     },
@@ -671,6 +689,11 @@
         },
         {
           "method": "GET",
+          "path": "/api/memory-providers/operations/{operationId}",
+          "operationId": "GetMemoryProviderOperation"
+        },
+        {
+          "method": "GET",
           "path": "/api/memory-providers/{providerId}",
           "operationId": "GetMemoryProvider"
         },
@@ -683,11 +706,6 @@
           "method": "POST",
           "path": "/api/memory-providers/{providerId}/queries",
           "operationId": "QueryMemoryProvider"
-        },
-        {
-          "method": "GET",
-          "path": "/api/memory-providers/operations/{operationId}",
-          "operationId": "GetMemoryProviderOperation"
         }
       ]
     },
@@ -718,6 +736,11 @@
         },
         {
           "method": "GET",
+          "path": "/api/processes/launch/{admissionId}",
+          "operationId": "GetProcessLaunchStatus"
+        },
+        {
+          "method": "GET",
           "path": "/api/processes/live",
           "operationId": "ListLiveProcesses"
         },
@@ -725,6 +748,11 @@
           "method": "GET",
           "path": "/api/processes/runs",
           "operationId": "ListProcessRunRecords"
+        },
+        {
+          "method": "GET",
+          "path": "/api/processes/runs/analytics",
+          "operationId": "GetProcessRunRecordAnalytics"
         },
         {
           "method": "GET",
@@ -765,11 +793,6 @@
           "method": "GET",
           "path": "/api/processes/runs/{runId}/summary",
           "operationId": "GetProcessRunRecordSummary"
-        },
-        {
-          "method": "GET",
-          "path": "/api/processes/runs/analytics",
-          "operationId": "GetProcessRunRecordAnalytics"
         }
       ]
     },
@@ -787,41 +810,6 @@
           "method": "POST",
           "path": "/api/projects",
           "operationId": "SaveProject"
-        },
-        {
-          "method": "POST",
-          "path": "/api/projects/{childProjectId}/reconnect-subproject",
-          "operationId": "ReconnectProjectSubproject"
-        },
-        {
-          "method": "DELETE",
-          "path": "/api/projects/{parentProjectId}/subprojects/{childProjectId}",
-          "operationId": "DetachProjectSubproject"
-        },
-        {
-          "method": "POST",
-          "path": "/api/projects/{parentProjectId}/subprojects/{childProjectId}",
-          "operationId": "AttachProjectSubproject"
-        },
-        {
-          "method": "DELETE",
-          "path": "/api/projects/{projectId}",
-          "operationId": "DeleteProject"
-        },
-        {
-          "method": "GET",
-          "path": "/api/projects/{projectId}",
-          "operationId": "GetProjectEditor"
-        },
-        {
-          "method": "POST",
-          "path": "/api/projects/{projectId}/deletion-cleanups/{participantId}/{recoveryId}/retry",
-          "operationId": "RetryPendingProjectDeletionCleanup"
-        },
-        {
-          "method": "GET",
-          "path": "/api/projects/{projectId}/hierarchy",
-          "operationId": "GetProjectHierarchy"
         },
         {
           "method": "GET",
@@ -842,6 +830,41 @@
           "method": "GET",
           "path": "/api/projects/hierarchy-links",
           "operationId": "ListProjectHierarchyLinks"
+        },
+        {
+          "method": "POST",
+          "path": "/api/projects/{childProjectId}/reconnect-subproject",
+          "operationId": "ReconnectProjectSubproject"
+        },
+        {
+          "method": "POST",
+          "path": "/api/projects/{parentProjectId}/subprojects/{childProjectId}",
+          "operationId": "AttachProjectSubproject"
+        },
+        {
+          "method": "DELETE",
+          "path": "/api/projects/{parentProjectId}/subprojects/{childProjectId}",
+          "operationId": "DetachProjectSubproject"
+        },
+        {
+          "method": "GET",
+          "path": "/api/projects/{projectId}",
+          "operationId": "GetProjectEditor"
+        },
+        {
+          "method": "DELETE",
+          "path": "/api/projects/{projectId}",
+          "operationId": "DeleteProject"
+        },
+        {
+          "method": "POST",
+          "path": "/api/projects/{projectId}/deletion-cleanups/{participantId}/{recoveryId}/retry",
+          "operationId": "RetryPendingProjectDeletionCleanup"
+        },
+        {
+          "method": "GET",
+          "path": "/api/projects/{projectId}/hierarchy",
+          "operationId": "GetProjectHierarchy"
         }
       ],
       "routeAppendix": "api-docs-skills-parity:projects-routes"
@@ -937,6 +960,11 @@
           "operationId": null
         },
         {
+          "method": "POST",
+          "path": "/api/project-structure/projects/{projectId}/checklists/query",
+          "operationId": null
+        },
+        {
           "method": "GET",
           "path": "/api/project-structure/projects/{projectId}/deletion-cleanups",
           "operationId": null
@@ -968,11 +996,6 @@
         },
         {
           "method": "POST",
-          "path": "/api/project-structure/projects/{projectId}/checklists/query",
-          "operationId": null
-        },
-        {
-          "method": "POST",
           "path": "/api/project-structure/projects/{projectId}/links",
           "operationId": null
         },
@@ -984,6 +1007,56 @@
         {
           "method": "POST",
           "path": "/api/project-structure/projects/{projectId}/nodes",
+          "operationId": null
+        },
+        {
+          "method": "POST",
+          "path": "/api/project-structure/projects/{projectId}/nodes/copy",
+          "operationId": null
+        },
+        {
+          "method": "POST",
+          "path": "/api/project-structure/projects/{projectId}/nodes/delete",
+          "operationId": null
+        },
+        {
+          "method": "POST",
+          "path": "/api/project-structure/projects/{projectId}/nodes/markers",
+          "operationId": null
+        },
+        {
+          "method": "POST",
+          "path": "/api/project-structure/projects/{projectId}/nodes/move",
+          "operationId": null
+        },
+        {
+          "method": "POST",
+          "path": "/api/project-structure/projects/{projectId}/nodes/move-to-new-subproject",
+          "operationId": null
+        },
+        {
+          "method": "POST",
+          "path": "/api/project-structure/projects/{projectId}/nodes/priorities",
+          "operationId": null
+        },
+        {
+          "method": "POST",
+          "path": "/api/project-structure/projects/{projectId}/nodes/progress",
+          "operationId": null
+        },
+        {
+          "method": "POST",
+          "path": "/api/project-structure/projects/{projectId}/nodes/recompose",
+          "operationId": null
+        },
+        {
+          "method": "POST",
+          "path": "/api/project-structure/projects/{projectId}/nodes/reparent",
+          "operationId": null
+        },
+        {
+          "method": "POST",
+          "path": "/api/project-structure/projects/{projectId}/nodes/statuses",
           "operationId": null
         },
         {
@@ -1073,56 +1146,6 @@
         },
         {
           "method": "POST",
-          "path": "/api/project-structure/projects/{projectId}/nodes/copy",
-          "operationId": null
-        },
-        {
-          "method": "POST",
-          "path": "/api/project-structure/projects/{projectId}/nodes/delete",
-          "operationId": null
-        },
-        {
-          "method": "POST",
-          "path": "/api/project-structure/projects/{projectId}/nodes/markers",
-          "operationId": null
-        },
-        {
-          "method": "POST",
-          "path": "/api/project-structure/projects/{projectId}/nodes/move",
-          "operationId": null
-        },
-        {
-          "method": "POST",
-          "path": "/api/project-structure/projects/{projectId}/nodes/move-to-new-subproject",
-          "operationId": null
-        },
-        {
-          "method": "POST",
-          "path": "/api/project-structure/projects/{projectId}/nodes/priorities",
-          "operationId": null
-        },
-        {
-          "method": "POST",
-          "path": "/api/project-structure/projects/{projectId}/nodes/progress",
-          "operationId": null
-        },
-        {
-          "method": "POST",
-          "path": "/api/project-structure/projects/{projectId}/nodes/recompose",
-          "operationId": null
-        },
-        {
-          "method": "POST",
-          "path": "/api/project-structure/projects/{projectId}/nodes/reparent",
-          "operationId": null
-        },
-        {
-          "method": "POST",
-          "path": "/api/project-structure/projects/{projectId}/nodes/statuses",
-          "operationId": null
-        },
-        {
-          "method": "POST",
           "path": "/api/project-structure/projects/{projectId}/plan/summary",
           "operationId": null
         },
@@ -1169,14 +1192,14 @@
           "operationId": "SaveWorkflowComponent"
         },
         {
-          "method": "DELETE",
-          "path": "/api/workflows/components/{componentId}",
-          "operationId": "DeleteWorkflowComponent"
-        },
-        {
           "method": "GET",
           "path": "/api/workflows/components/{componentId}",
           "operationId": "GetWorkflowComponent"
+        },
+        {
+          "method": "DELETE",
+          "path": "/api/workflows/components/{componentId}",
+          "operationId": "DeleteWorkflowComponent"
         },
         {
           "method": "GET",
@@ -1194,14 +1217,29 @@
           "operationId": "SaveWorkflowDefinition"
         },
         {
-          "method": "DELETE",
-          "path": "/api/workflows/definitions/{workflowId}",
-          "operationId": "DeleteWorkflowDefinition"
+          "method": "GET",
+          "path": "/api/workflows/definitions/by-external-key/{externalNamespace}/{externalKey}",
+          "operationId": "GetWorkflowDefinitionByExternalKey"
+        },
+        {
+          "method": "GET",
+          "path": "/api/workflows/definitions/by-template-key/{templateKey}",
+          "operationId": "GetWorkflowDefinitionByTemplateKey"
+        },
+        {
+          "method": "POST",
+          "path": "/api/workflows/definitions/import",
+          "operationId": "ImportWorkflowDefinition"
         },
         {
           "method": "GET",
           "path": "/api/workflows/definitions/{workflowId}",
           "operationId": "GetWorkflowDefinition"
+        },
+        {
+          "method": "DELETE",
+          "path": "/api/workflows/definitions/{workflowId}",
+          "operationId": "DeleteWorkflowDefinition"
         },
         {
           "method": "POST",
@@ -1240,21 +1278,6 @@
         },
         {
           "method": "GET",
-          "path": "/api/workflows/definitions/by-external-key/{externalNamespace}/{externalKey}",
-          "operationId": "GetWorkflowDefinitionByExternalKey"
-        },
-        {
-          "method": "GET",
-          "path": "/api/workflows/definitions/by-template-key/{templateKey}",
-          "operationId": "GetWorkflowDefinitionByTemplateKey"
-        },
-        {
-          "method": "POST",
-          "path": "/api/workflows/definitions/import",
-          "operationId": "ImportWorkflowDefinition"
-        },
-        {
-          "method": "GET",
           "path": "/api/workflows/events/stream",
           "operationId": "StreamWorkflowRunEvents"
         },
@@ -1285,6 +1308,21 @@
         },
         {
           "method": "GET",
+          "path": "/api/workflows/runs/by-idempotency-key/{key}",
+          "operationId": "GetWorkflowRunByIdempotencyKey"
+        },
+        {
+          "method": "GET",
+          "path": "/api/workflows/runs/page",
+          "operationId": "ListWorkflowRunPage"
+        },
+        {
+          "method": "POST",
+          "path": "/api/workflows/runs/start",
+          "operationId": "StartWorkflowRun"
+        },
+        {
+          "method": "GET",
           "path": "/api/workflows/runs/{runId}",
           "operationId": "GetWorkflowRun"
         },
@@ -1302,6 +1340,11 @@
           "method": "POST",
           "path": "/api/workflows/runs/{runId}/cancel",
           "operationId": "CancelWorkflowRun"
+        },
+        {
+          "method": "GET",
+          "path": "/api/workflows/runs/{runId}/checkpoints",
+          "operationId": "ListWorkflowRunCheckpoints"
         },
         {
           "method": "GET",
@@ -1325,28 +1368,8 @@
         },
         {
           "method": "GET",
-          "path": "/api/workflows/runs/{runId}/checkpoints",
-          "operationId": "ListWorkflowRunCheckpoints"
-        },
-        {
-          "method": "GET",
           "path": "/api/workflows/runs/{runId}/pending-requests",
           "operationId": "ListWorkflowRunPendingRequests"
-        },
-        {
-          "method": "GET",
-          "path": "/api/workflows/runs/by-idempotency-key/{key}",
-          "operationId": "GetWorkflowRunByIdempotencyKey"
-        },
-        {
-          "method": "GET",
-          "path": "/api/workflows/runs/page",
-          "operationId": "ListWorkflowRunPage"
-        },
-        {
-          "method": "POST",
-          "path": "/api/workflows/runs/start",
-          "operationId": "StartWorkflowRun"
         },
         {
           "method": "GET",

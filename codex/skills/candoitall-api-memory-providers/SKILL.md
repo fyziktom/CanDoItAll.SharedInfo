@@ -108,9 +108,8 @@ catalog or operation ledger by calling provider-specific infrastructure directly
 | Method | Route |
 | --- | --- |
 | `GET` | `/api/memory-providers` |
+| `GET` | `/api/memory-providers/operations/{operationId}` |
 | `GET` | `/api/memory-providers/{providerId}` |
 | `PUT` | `/api/memory-providers/{providerId}` |
 | `POST` | `/api/memory-providers/{providerId}/queries` |
-| `GET` | `/api/memory-providers/operations/{operationId:guid}` |
-
 <!-- api-docs-skills-parity:routes:end -->
