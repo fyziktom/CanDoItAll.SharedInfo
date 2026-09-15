@@ -15,6 +15,21 @@ traffic.
 | Store all AI-agent evaluation lineage only in a partner scorecard or CRM-HR feedback | `/api/agent-recruiting` owns typed interviews, attempts, reviews, comparison, and readiness | Create an interview for the exact candidate configuration, append typed terminal-run evidence and a human review, then read readiness; keep CRM-HR people/applications separate |
 | Infer response or error bodies from prose | OpenAPI publishes typed success and `ApiErrorResponse` schemas | Regenerate the client, preserve `errors[].code`, and add negative tests for `400`, `401`, `403`, `404`, `409`, and `412` as applicable |
 
+## Additive Delta (commit 160616c8, modules-decoupling)
+
+The 2026-09-15 snapshot (289 paths, 321 operations, 518 schemas) removed or renamed
+nothing relative to the 2026-08-31 snapshot (commit aadd9531). Adapters built against
+the older contract keep working; the rows below are opportunities, not required
+migrations.
+
+| Superseded integration behavior | Current contract | Optional migration |
+| --- | --- | --- |
+| Re-launch a process when the launch response was lost | `GET /api/processes/launch/{admissionId}` returns the prepared-launch status | Persist the admission id from the launch routes and poll it instead of launching again |
+| Re-run a retained agent run after a host restart or a cancelled tool call | `POST /api/agents/execution-runs/{executionRunId}/recover` and `POST /api/agents/execution-runs/{executionRunId}/reconcile-cancellation` | Recover the same run under current authority; treat a recovery denial as terminal rather than retrying with a new run, and read the typed cancellation reconciliation instead of inferring committed effects |
+| Repeat a provider create/update/delete after an uncertain response | `POST /api/agents/providers/mutations/verify` | Verify the earlier mutation attempt by its identity before repeating it |
+| Inspect storage placement recovery only through host logs | `/api/storage-placement-recovery` (context, pending intents, owner continuations, reconcile, cancelled-run receipts, external-termination verification, workflow asset continuation) | Read pending intents and continuations through the typed family; the reconcile routes are owner-scoped operator actions, not partner automation |
+| Send Project Structure task and node inputs from the August schemas | `ProjectStructureTaskCreateRequest`, task/node update requests and `ProjectStructureNodeSummary` gained execution-state, expected-cost and deletion-disposition fields; `ProcessLaunchApiRequest`, `WorkflowRunStartApiResponse` and the provider editor models also grew | Regenerate the typed client; the added fields are optional on input and additive on output, so older clients keep working but do not observe the recorded execution state or the cost snapshot |
+
 ## Upgrade Gate
 
 Before removing a workaround:

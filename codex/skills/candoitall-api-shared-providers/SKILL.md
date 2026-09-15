@@ -56,10 +56,9 @@ API from the `api.provider-history.*` service/UI scopes.
 
 | Method | Route |
 | --- | --- |
-| `GET` | `/api/shared-providers/v1/catalog` |
-| `GET` | `/api/shared-providers/openai/v1/models` |
 | `POST` | `/api/shared-providers/openai/v1/chat/completions` |
-| `POST` | `/api/shared-providers/openai/v1/responses` |
 | `POST` | `/api/shared-providers/openai/v1/images/generations` |
-
+| `GET` | `/api/shared-providers/openai/v1/models` |
+| `POST` | `/api/shared-providers/openai/v1/responses` |
+| `GET` | `/api/shared-providers/v1/catalog` |
 <!-- api-docs-skills-parity:routes:end -->

@@ -66,6 +66,8 @@ and `api.provider-history.*` does not imply a new general history HTTP route.
 - Approvals: global approval listing and blocking/SSE response commands under `/api/agents/execution-runs/{executionRunId}`.
 - Attachments: upload a bounded image with `POST /api/agents/attachments/images`, then pass the returned `relativePath` in `attachmentPaths` or `inputAttachmentPaths`.
 - Evidence: execution artifacts, checkpoints, tool receipts, execution log, runtime snapshot, and metrics routes.
+- Recovery: `POST /api/agents/execution-runs/{executionRunId}/recover` resumes a retained run under current authority without repeating committed effects; the owner re-authorizes every saved private result before disclosure, so a run whose original read targets are gone stays failed (the typed denial currently surfaces as a generic `agents.run-failed` 500). `POST /api/agents/execution-runs/{executionRunId}/reconcile-cancellation` records the typed cancellation disposition of a cancelled run's tool effects (`AgentCancellationReconciliationApiResponse`); neither route creates a new grant or a new run.
+- Provider mutations: `POST /api/agents/providers/mutations/verify` verifies an earlier create/update/delete attempt by its mutation attempt identity (`ProviderVerificationApiResponse`) instead of repeating it after an uncertain response.
 - Recruiting evidence: create/read `/api/agent-recruiting/interviews`, list a
   candidate's interviews through
   `/api/agent-recruiting/candidates/{candidateAgentId}/interviews`, append typed
@@ -256,77 +258,79 @@ Agents API route appendix. Generated from Minimal API registrations; refresh fro
 | --- | --- |
 | `GET` | `/api/agents` |
 | `POST` | `/api/agents` |
-| `DELETE` | `/api/agents/{agentId:guid}` |
-| `GET` | `/api/agents/{agentId:guid}` |
-| `POST` | `/api/agents/{agentId:guid}/capabilities/{capabilityId:guid}/verify` |
-| `POST` | `/api/agents/{agentId:guid}/clone` |
-| `POST` | `/api/agents/{agentId:guid}/convert-to-template` |
-| `GET` | `/api/agents/{agentId:guid}/execution-log` |
-| `GET` | `/api/agents/{agentId:guid}/execution-runs` |
-| `POST` | `/api/agents/{agentId:guid}/execution-runs` |
-| `POST` | `/api/agents/{agentId:guid}/execution-runs/stream` |
-| `GET` | `/api/agents/{agentId:guid}/execution-runs/{executionRunId:guid}` |
-| `GET` | `/api/agents/{agentId:guid}/execution-runs/{executionRunId:guid}/approvals` |
-| `GET` | `/api/agents/{agentId:guid}/execution-runs/{executionRunId:guid}/artifacts` |
-| `GET` | `/api/agents/{agentId:guid}/execution-runs/{executionRunId:guid}/checkpoints` |
-| `GET` | `/api/agents/{agentId:guid}/execution-runs/{executionRunId:guid}/log` |
-| `GET` | `/api/agents/{agentId:guid}/execution-runs/{executionRunId:guid}/metrics` |
-| `GET` | `/api/agents/{agentId:guid}/execution-runs/{executionRunId:guid}/tool-receipts` |
-| `GET` | `/api/agents/{agentId:guid}/export` |
-| `POST` | `/api/agents/{agentId:guid}/chat` |
-| `POST` | `/api/agents/{agentId:guid}/chat/stream` |
-| `GET` | `/api/agents/{agentId:guid}/chat-sessions` |
-| `POST` | `/api/agents/{agentId:guid}/chat-sessions` |
-| `POST` | `/api/agents/{agentId:guid}/chat-sessions/{chatSessionId:guid}/rename` |
-| `GET` | `/api/agents/{agentId:guid}/chat-workspace` |
-| `GET` | `/api/agents/{agentId:guid}/memory` |
-| `GET` | `/api/agents/{agentId:guid}/metrics` |
-| `GET` | `/api/agents/{agentId:guid}/runtime-snapshot` |
+| `POST` | `/api/agents/attachments/images` |
 | `GET` | `/api/agents/bootstrap` |
 | `GET` | `/api/agents/by-external-key/{externalNamespace}/{key}` |
 | `PUT` | `/api/agents/by-external-key/{externalNamespace}/{key}` |
 | `DELETE` | `/api/agents/by-external-key/{externalNamespace}/{key}` |
 | `GET` | `/api/agents/capabilities` |
 | `POST` | `/api/agents/capabilities` |
-| `DELETE` | `/api/agents/capabilities/{capabilityId:guid}` |
-| `GET` | `/api/agents/capabilities/{capabilityId:guid}/editor` |
 | `POST` | `/api/agents/capabilities/access-preview` |
 | `POST` | `/api/agents/capabilities/setup-tests/mcp` |
 | `POST` | `/api/agents/capabilities/setup-tests/tool` |
-| `POST` | `/api/agents/attachments/images` |
-| `GET` | `/api/agents/execution-operations/{operationId:guid}/events/stream` |
+| `DELETE` | `/api/agents/capabilities/{capabilityId}` |
+| `GET` | `/api/agents/capabilities/{capabilityId}/editor` |
+| `GET` | `/api/agents/execution-operations/{operationId}/events/stream` |
 | `GET` | `/api/agents/execution-runs` |
 | `POST` | `/api/agents/execution-runs` |
 | `POST` | `/api/agents/execution-runs/stream` |
-| `GET` | `/api/agents/execution-runs/{executionRunId:guid}` |
-| `GET` | `/api/agents/execution-runs/{executionRunId:guid}/approvals` |
-| `GET` | `/api/agents/execution-runs/{executionRunId:guid}/artifacts` |
-| `GET` | `/api/agents/execution-runs/{executionRunId:guid}/checkpoints` |
-| `POST` | `/api/agents/execution-runs/{executionRunId:guid}/pending-approvals` |
-| `POST` | `/api/agents/execution-runs/{executionRunId:guid}/pending-approvals/stream` |
-| `GET` | `/api/agents/execution-runs/{executionRunId:guid}/tool-receipts` |
+| `GET` | `/api/agents/execution-runs/{executionRunId}` |
+| `GET` | `/api/agents/execution-runs/{executionRunId}/approvals` |
+| `GET` | `/api/agents/execution-runs/{executionRunId}/artifacts` |
+| `GET` | `/api/agents/execution-runs/{executionRunId}/checkpoints` |
+| `POST` | `/api/agents/execution-runs/{executionRunId}/pending-approvals` |
+| `POST` | `/api/agents/execution-runs/{executionRunId}/pending-approvals/stream` |
+| `POST` | `/api/agents/execution-runs/{executionRunId}/reconcile-cancellation` |
+| `POST` | `/api/agents/execution-runs/{executionRunId}/recover` |
+| `GET` | `/api/agents/execution-runs/{executionRunId}/tool-receipts` |
 | `POST` | `/api/agents/import` |
 | `POST` | `/api/agents/import-package` |
 | `POST` | `/api/agents/memory` |
-| `DELETE` | `/api/agents/memory/{memoryId:guid}` |
+| `DELETE` | `/api/agents/memory/{memoryId}` |
 | `GET` | `/api/agents/providers` |
 | `POST` | `/api/agents/providers` |
-| `DELETE` | `/api/agents/providers/{providerId:guid}` |
-| `POST` | `/api/agents/providers/{providerId:guid}/chat-completions/stream` |
-| `GET` | `/api/agents/providers/{providerId:guid}/editor` |
-| `POST` | `/api/agents/providers/{providerId:guid}/ollama-modelfile` |
-| `POST` | `/api/agents/providers/{providerId:guid}/test` |
-| `POST` | `/api/agents/providers/{providerId:guid}/test-chat` |
+| `POST` | `/api/agents/providers/mutations/verify` |
+| `DELETE` | `/api/agents/providers/{providerId}` |
+| `POST` | `/api/agents/providers/{providerId}/chat-completions/stream` |
+| `GET` | `/api/agents/providers/{providerId}/editor` |
+| `POST` | `/api/agents/providers/{providerId}/ollama-modelfile` |
+| `POST` | `/api/agents/providers/{providerId}/test` |
+| `POST` | `/api/agents/providers/{providerId}/test-chat` |
 | `GET` | `/api/agents/teams` |
 | `POST` | `/api/agents/teams` |
-| `DELETE` | `/api/agents/teams/{teamId:guid}` |
-| `GET` | `/api/agents/teams/{teamId:guid}` |
-| `PUT` | `/api/agents/teams/{teamId:guid}` |
-| `GET` | `/api/agents/teams/{teamId:guid}/agents` |
-| `GET` | `/api/agents/teams/{teamId:guid}/editor` |
-| `POST` | `/api/agents/teams/{teamId:guid}/members` |
-| `PUT` | `/api/agents/teams/{teamId:guid}/members` |
-
+| `GET` | `/api/agents/teams/{teamId}` |
+| `PUT` | `/api/agents/teams/{teamId}` |
+| `DELETE` | `/api/agents/teams/{teamId}` |
+| `GET` | `/api/agents/teams/{teamId}/agents` |
+| `GET` | `/api/agents/teams/{teamId}/editor` |
+| `PUT` | `/api/agents/teams/{teamId}/members` |
+| `POST` | `/api/agents/teams/{teamId}/members` |
+| `GET` | `/api/agents/{agentId}` |
+| `DELETE` | `/api/agents/{agentId}` |
+| `POST` | `/api/agents/{agentId}/capabilities/{capabilityId}/verify` |
+| `POST` | `/api/agents/{agentId}/chat` |
+| `GET` | `/api/agents/{agentId}/chat-sessions` |
+| `POST` | `/api/agents/{agentId}/chat-sessions` |
+| `POST` | `/api/agents/{agentId}/chat-sessions/{chatSessionId}/rename` |
+| `GET` | `/api/agents/{agentId}/chat-workspace` |
+| `POST` | `/api/agents/{agentId}/chat/stream` |
+| `POST` | `/api/agents/{agentId}/clone` |
+| `POST` | `/api/agents/{agentId}/convert-to-template` |
+| `GET` | `/api/agents/{agentId}/execution-log` |
+| `GET` | `/api/agents/{agentId}/execution-runs` |
+| `POST` | `/api/agents/{agentId}/execution-runs` |
+| `POST` | `/api/agents/{agentId}/execution-runs/stream` |
+| `GET` | `/api/agents/{agentId}/execution-runs/{executionRunId}` |
+| `GET` | `/api/agents/{agentId}/execution-runs/{executionRunId}/approvals` |
+| `GET` | `/api/agents/{agentId}/execution-runs/{executionRunId}/artifacts` |
+| `GET` | `/api/agents/{agentId}/execution-runs/{executionRunId}/checkpoints` |
+| `GET` | `/api/agents/{agentId}/execution-runs/{executionRunId}/log` |
+| `GET` | `/api/agents/{agentId}/execution-runs/{executionRunId}/metrics` |
+| `GET` | `/api/agents/{agentId}/execution-runs/{executionRunId}/tool-receipts` |
+| `GET` | `/api/agents/{agentId}/export` |
+| `GET` | `/api/agents/{agentId}/memory` |
+| `GET` | `/api/agents/{agentId}/metrics` |
+| `GET` | `/api/agents/{agentId}/runtime-snapshot` |
 <!-- api-docs-skills-parity:routes:end -->
 
 ## Agent Recruiting Route Appendix
@@ -335,11 +339,10 @@ Agents API route appendix. Generated from Minimal API registrations; refresh fro
 
 | Method | Route |
 | --- | --- |
-| `GET` | `/api/agent-recruiting/candidates/{candidateAgentId:guid}/interviews` |
-| `GET` | `/api/agent-recruiting/candidates/{agentId:guid}/readiness` |
+| `GET` | `/api/agent-recruiting/candidates/{agentId}/readiness` |
+| `GET` | `/api/agent-recruiting/candidates/{candidateAgentId}/interviews` |
 | `POST` | `/api/agent-recruiting/interviews` |
-| `GET` | `/api/agent-recruiting/interviews/{interviewId:guid}` |
-| `POST` | `/api/agent-recruiting/interviews/{interviewId:guid}/attempts` |
-| `POST` | `/api/agent-recruiting/interviews/{interviewId:guid}/reviews` |
-
+| `GET` | `/api/agent-recruiting/interviews/{interviewId}` |
+| `POST` | `/api/agent-recruiting/interviews/{interviewId}/attempts` |
+| `POST` | `/api/agent-recruiting/interviews/{interviewId}/reviews` |
 <!-- api-docs-skills-parity:agent-recruiting-routes:end -->

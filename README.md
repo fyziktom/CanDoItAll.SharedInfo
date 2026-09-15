@@ -77,7 +77,9 @@ Validate a repository's Docker/Compose baseline without starting containers:
 ```
 
 See [`docs/architecture/source-of-truth.md`](docs/architecture/source-of-truth.md) for
-ownership boundaries and [`docs/inventory/2026-07-24-baseline.md`](docs/inventory/2026-07-24-baseline.md)
+ownership boundaries, [`docs/architecture/candoitall-owner-contracts.md`](docs/architecture/candoitall-owner-contracts.md)
+for the CanDoItAll product's owner map and the contracts that UI and integration work must
+use, and [`docs/inventory/2026-07-24-baseline.md`](docs/inventory/2026-07-24-baseline.md)
 for the initial consolidation evidence. The
 [`Docker baseline`](docs/inventory/2026-07-24-docker-baseline.md) records current
 container usage and adoption dependencies.
