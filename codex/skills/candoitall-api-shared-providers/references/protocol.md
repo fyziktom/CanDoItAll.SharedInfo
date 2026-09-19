@@ -15,7 +15,9 @@ again at dispatch.
 - Chat Completions: bounded messages, user-only data-URI images, client-executed function
   tools, tool choice, parallel tools, structured output, sampling, stop and one output
   token limit. `stream_options.include_usage` requires `stream:true`.
-  `reasoning_effort` must be allowed by that model.
+  `reasoning_effort` must be allowed by that model. For a tool-call-only assistant message,
+  omit `content` or send null. The relay also accepts `""`, although the schema requires at
+  least one character.
 - Responses: stateless foreground execution. Use `store:false` and `background:false`;
   omitted store is normalized to false. Input can be text or supported message,
   function-call/output and reasoning replay items. Thinking uses `reasoning.effort`.
@@ -28,8 +30,9 @@ again at dispatch.
 - Tools execute on the client. Named tool choice must reference a tool declared in the
   same request. Do not assume server tool execution from OpenAI compatibility.
 
-General bounds include JSON depth 32, at most 256 messages/input/content parts and 128
-tools, bounded text (up to 1,048,576 UTF-16 code units), and bounded raw JSON schemas
+General bounds include JSON depth 32, at most 256 messages/input/content parts and 1 to
+128 tools when `tools` is present (an empty array is rejected; omit the member), bounded
+text (up to 1,048,576 UTF-16 code units), and bounded raw JSON schemas
 (up to 262,144 UTF-16 code units). Name tokens allow ASCII letters, digits, underscore,
 hyphen and dot, up to 128 characters. Read the live schema and publication for actual
 request-body, output-token and image-count limits.
@@ -48,8 +51,9 @@ malformed SSE, idle deadline and upstream disconnect abort the connection; no fa
 success terminal is sent. Preserve partial text as incomplete and surface transport
 failure. A caller cancellation is distinct from an upstream deadline.
 
-Missing usage remains unavailable/partial. Missing price is unpriced; explicit zero is
-free. Invocation price provenance is frozen and is not rewritten by later catalog edits.
+Missing usage remains unavailable/partial. A model without `price` is unpriced; it is
+free only when `price.isExplicitlyFree` is true. Invocation price provenance is frozen and
+is not rewritten by later catalog edits.
 
 ## Source network policy
 

@@ -1,15 +1,21 @@
-# CRM-HR HTTP Contract
+# CRM/HR HTTP Contract
 
-Source of truth: `src/App/CanDoItAll.Web/Api/CrmHrApi.cs`.
+Contract: the operations tagged `CRM / HR` in the target build's OpenAPI document; the handlers
+are in `src/App/CanDoItAll.Web/Api/CrmHrApi.cs`.
 
-All routes are under `/api/crm-hr`. JSON uses the Web defaults: camel-case property names and numeric body enums. Query-string enums accept their names. Check the running OpenAPI document before operating a different build.
+All routes are under `/api/crm-hr`. JSON uses the Web defaults: camel-case property names and
+numeric body enums. Query-string enums accept the case-sensitive member name (for example
+`Interviewing`) or the integer. The party `scope` is a flags integer: 1 People, 2 Organizations,
+4 OrganizationUnits, 8 AiAgents; add values to combine them (15 means all). Query parameter names
+are case-insensitive, and a name the operation does not define is ignored without an error. Check
+the running OpenAPI document before operating a different build.
 
 AI-agent recruiting evidence is a separate bounded context under
 `/api/agent-recruiting`. Use the Agent API
 [partner contract](../../candoitall-api-agents/references/partner-api-contracts.md) for
 typed execution targets, challenge/rubric hashes, human authorization, and agent
-readiness. Do not write that evidence into CRM-HR application feedback, and do not treat
-CRM-HR workforce conversion as AI-agent activation.
+readiness. Do not write that evidence into CRM/HR application feedback, and do not treat
+CRM/HR workforce conversion as AI-agent activation.
 
 ## Body enum encoding
 
@@ -28,10 +34,11 @@ The current Web serializer writes and reads body enums as integers. Use the type
 - `RecruitmentDecision`: `Pending=0`, `Approved=1`, `Rejected=2`, `Withdrawn=3`.
 - `RecruitmentInterviewType`: `Screening=0`, `Technical=1`, `Manager=2`, `Panel=3`, `Culture=4`.
 - `RecruitmentInterviewOutcome`: `Pending=0`, `StrongYes=1`, `Yes=2`, `Mixed=3`, `No=4`, `StrongNo=5`.
-- `LifecycleTaskKind`: `Onboarding=0`, `Offboarding=1`.
+- `LifecycleTaskKind`: `Onboarding=0`, `Offboarding=1`, `Training=2`.
 - `LifecycleTaskStatus`: `NotStarted=0`, `InProgress=1`, `Completed=2`, `Cancelled=3`.
 
-Do not invent numeric values. Refresh this table whenever the source enum order changes.
+Do not invent numeric values. Every enum schema and enum-typed property in the live OpenAPI
+document lists each value; the document wins when this table differs.
 
 ## Bounded reads
 
@@ -41,8 +48,9 @@ Do not invent numeric values. Refresh this table whenever the source enum order 
 
 Query:
 
-- `search`: name, external code, or summary; maximum 200 characters.
-- `tags`: repeat the query parameter for conjunctive tag filters.
+- `search`: display name and, for parties that are not sensitive, external code or summary;
+  maximum 200 characters.
+- `tags`: repeat the query parameter for conjunctive tag filters. Sensitive parties never match.
 - `scope`: flags value from `PartyRecordScope`; default `All`.
 - `pageIndex`: zero based.
 - `pageSize`: 1 through 100.
@@ -58,7 +66,10 @@ Returns the safe directory projection for one party or structured 404.
 
 `GET /workforce`
 
-Uses the same bounded query fields as Parties, constrained to workforce population.
+Accepts `search`, `tags`, `pageIndex`, `pageSize` and `includeArchived` with the party-list rules,
+but no `scope`. The population is fixed: every person and organization unit, plus organizations
+that have a workforce profile or the DeliveryUnit role. AI agent parties are never listed, and a
+listed party need not have a profile.
 
 `GET /workforce/{partyId}`
 
@@ -70,8 +81,13 @@ Returns the workforce workspace for one party or structured 404.
 
 Query:
 
-- `searchText`: candidate, role, source, recruiter, manager, or unit text; maximum 200 characters.
+- `search`: text matched case-insensitively in the desired role, the source, the names of the
+  candidate, recruiter, hiring manager and target unit, and the candidate's public email
+  addresses; at most 200 characters. The document spells the parameter `Search`; a `searchText`
+  parameter is ignored.
 - `scope`: `All`, `Applied`, `Screening`, `Interviewing`, `Offer`, `Hired`, `Rejected`, or `Withdrawn`.
+  Prefer the name: the scope integers are one higher than the `RecruitmentStage` body values
+  because 0 means `All`.
 - `pageIndex`: zero based.
 - `pageSize`: 1 through 100.
 
@@ -107,13 +123,26 @@ The request is the source-backed `PartyCreateApiRequest`. Fields:
 
 `PUT /parties/{partyId}/relationships`
 
-The PUT body is `{ "relationships": [...] }` and contains the complete intended relationship list. Each row contains `relatedPartyId`, `relationshipKind`, `isOutgoing`, `isPrimary`, optional `startDateUtc`/`endDateUtc`, and `notes`. The server sets the actor and assigns relationship ids.
+The PUT body is an object whose `relationships` array contains the complete intended relationship list. Each row contains `relatedPartyId`, `relationshipKind`, `isOutgoing`, `isPrimary`, optional `startDateUtc`/`endDateUtc`, and `notes`. The server sets the actor and assigns relationship ids.
+
+The replacement deletes every relationship in which the route party is the source or the target.
+That includes rows created from the other party's side and the manager, buddy and mentor rows
+saved by `POST /recruiting/support-assignments`. It then stores exactly the submitted rows with
+new identifiers. An empty array, or an omitted `relationships` member, deletes all of them; never
+send `null` (currently HTTP 500). When copying a `Supports` row, keep its `notes` (`Buddy` or
+`Mentor`). There is no concurrency check. `POST /recruiting/support-assignments` also replaces
+manager, buddy and mentor together (an omitted or null member removes it) and deletes the party's
+outgoing ManagedBy rows, including rows written through the PUT.
 
 ## Workforce commands
 
 `POST /workforce/profiles`
 
 Body: `WorkforceProfileSaveApiRequest`. It includes `partyId`, profile fields, optional rate fields, and no client-supplied audit actor.
+
+The profile is found by `partyId` and every field is overwritten; an omitted member takes its
+default (for example `rateCurrencyCode` USD, `status` Planned). Start from `profile` in
+`GET /workforce/{partyId}` and send every field.
 
 `GET /workforce/skills`
 
@@ -157,9 +186,14 @@ Body: `RecruitmentSupportAssignmentsSaveApiRequest`.
 
 Body: `RecruitmentConversionApiRequest`.
 
-This conversion creates or updates the human workforce profile for the recruitment
-application. It does not mutate an Agent Framework candidate, interview, readiness, or
-activation state.
+Conversion saves the candidate party's workforce profile, then marks the application Hired and
+the party Active. The application must not be Rejected or Withdrawn, and its decision must
+already be Approved. An AI-agent candidate also needs a bound technical agent with a completed
+application-specific technical assessment and human approval
+(`crmhr.recruiting.convert.assessment-not-ready`). On an existing profile, the fields the request
+does not carry (employee code, end date, rates, rate unit, currency) are reset. Conversion does
+not create, approve or activate an agent, and it does not mutate Agent Framework candidate,
+interview or readiness state.
 
 Stage values: `Applied`, `Screening`, `Interviewing`, `Offer`, `Hired`, `Rejected`, `Withdrawn`.
 
@@ -169,14 +203,22 @@ Interview type values: `Screening`, `Technical`, `Manager`, `Panel`, `Culture`.
 
 Interview outcome values: `Pending`, `StrongYes`, `Yes`, `Mixed`, `No`, `StrongNo`.
 
-Lifecycle task kind values: `Onboarding`, `Offboarding`.
+Lifecycle task kind values: `Onboarding`, `Offboarding`, `Training`.
 
 Lifecycle task status values: `NotStarted`, `InProgress`, `Completed`, `Cancelled`.
 
 ## Response and error behavior
 
-- Successful save operations return the existing service result value, normally a GUID, or `{ "ok": true }` for acknowledgement commands.
-- Missing resources return 404 with the shared `errors` collection.
-- Invalid models/references return 400 with the shared `errors` collection.
+- Successful saves return one GUID as a JSON string, or `{ "ok": true }` for the relationship and
+  support-assignment replacements. The GUID is the saved record's own identifier: the profile
+  save returns the profile id, not the party id. The exception is conversion, which returns the
+  candidate's party id.
+- Failures use the general `errors` envelope; branch on `errors[].code`, not on the status. 404
+  covers a missing route resource or subject party and some missing referenced records (related
+  party, skill definition, project, application, candidate party). Other invalid references, such
+  as a manager, recruiter or interviewer that is not an existing person, and validation failures
+  return 400.
+- A body the framework cannot bind returns 400 without the `errors` envelope, and
+  `relationships: null` currently returns 500.
 - Cancellation propagates through the HTTP request to application services.
 - Handlers do not write EF entities and do not provide seed-only behavior.

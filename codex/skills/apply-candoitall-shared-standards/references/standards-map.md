@@ -44,6 +44,10 @@ Apply these even before loading a task-specific document:
 - In repositories with `portability-static` or another reviewed source baseline, include
   that gate in CI/test repairs and affected source/build/tooling changes. Focused tests
   do not waive it. Review deltas before refreshing; require final no-write enforcement.
+- HTTP API text comes from C# XML documentation on named route handlers and serialized
+  types; the generated OpenAPI document is the published contract. Use the shared API
+  domain glossary for vocabulary and never describe HTTP as a way around a denied agent
+  tool.
 
 ## Routing Table
 
@@ -61,6 +65,7 @@ Paths are relative to the resolved `CanDoItAll.SharedInfo` root.
 | PowerShell or cross-repository automation | `docs/standards/tooling.md` | `tools/<area>` and local adapter contract |
 | CI/test repair, portability-static, or reviewed source baseline | `docs/standards/tooling.md` | target testing guide, CI workflow, scanner policy and baseline; inspect the complete proposed diff |
 | NuGet build/package coordination | `docs/standards/nuget-packaging.md` | NuGet tool template and orchestrator |
+| HTTP API descriptions, OpenAPI or Swagger text, API vocabulary | `docs/standards/api-documentation.md`, `docs/architecture/candoitall-api-domain-glossary.md` | target API documentation page, generated OpenAPI document, API skills |
 | Reusable Codex skills, agents, plugins | `docs/standards/codex.md` | `codex`, package validator, installer |
 | Current family evidence | latest relevant file in `docs/inventory` | confirm target state; inventory is not normative |
 

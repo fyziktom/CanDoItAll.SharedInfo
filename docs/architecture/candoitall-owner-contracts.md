@@ -13,7 +13,10 @@ the contracts themselves; this page links to them and does not duplicate them.
 Source of truth in the product repository (`docs/architecture/modules.md`, section
 "Owner contracts and adapters", and `docs/architecture/modules-decoupling/`). The
 generated HTTP surface is the shared OpenAPI snapshot in
-[`_candoitall-api-shared`](../../codex/skills/_candoitall-api-shared/README.md).
+[`_candoitall-api-shared`](../../codex/skills/_candoitall-api-shared/README.md); its operation
+and schema descriptions come from the product's XML documentation. Use the
+[API domain glossary](candoitall-api-domain-glossary.md) for the terms on this page and in
+integration work.
 
 ## Owner map
 
@@ -66,6 +69,6 @@ generated HTTP surface is the shared OpenAPI snapshot in
 ## Snapshot status
 
 The shared OpenAPI snapshot records the exact product branch and commit it was captured
-from in its manifest. Until the `modules-decoupling` branch is integrated, that capture
-is a pre-merge branch contract; the live `/openapi/v1.json` of the target host stays
-authoritative when it differs.
+from in its manifest; it is captured from the product's `development` branch, which includes
+the module-decoupling work. A snapshot describes one build: the live `/openapi/v1.json`
+of the target host stays authoritative when it differs.

@@ -30,6 +30,42 @@ migrations.
 | Inspect storage placement recovery only through host logs | `/api/storage-placement-recovery` (context, pending intents, owner continuations, reconcile, cancelled-run receipts, external-termination verification, workflow asset continuation) | Read pending intents and continuations through the typed family; the reconcile routes are owner-scoped operator actions, not partner automation |
 | Send Project Structure task and node inputs from the August schemas | `ProjectStructureTaskCreateRequest`, task/node update requests and `ProjectStructureNodeSummary` gained execution-state, expected-cost and deletion-disposition fields; `ProcessLaunchApiRequest`, `WorkflowRunStartApiResponse` and the provider editor models also grew | Regenerate the typed client; the added fields are optional on input and additive on output, so older clients keep working but do not observe the recorded execution state or the cost snapshot |
 
+## Required Migration: Project Structure Task Update (commit d0f3c41a and later)
+
+`PUT /api/project-structure/projects/{projectId}/tasks/{taskId}` (operation of the Project
+Structure family; the agent task update tool takes the same input with its own admission) now
+binds `ProjectStructureTaskUpdateAgentInput`. The 2026-09-15 snapshot published
+`ProjectStructureTaskDetailsUpdateRequest` for this route, whose task identifiers were
+`{ "value": "<node id>" }` wrapper objects. The wrapper shape is not accepted: the framework rejects
+it with HTTP 400 before the operation runs, without the Project Structure error envelope, and
+nothing is written (product test
+`ProjectStructureTaskUpdateRawJsonTests.The_superseded_identifier_wrapper_is_rejected_without_changing_the_task`).
+No compatibility path exists; migrate the body.
+
+| Superseded integration behavior | Current contract | Required migration |
+| --- | --- | --- |
+| Send `taskId`, `scheduleChange.taskId`, `scheduleChange.affectedTasks[].taskId` and `scheduleChange.criticalTaskIds[]` as `{ "value": "<node id>" }` objects (`GanttTaskScheduleChangeRequest`, `GanttTaskDateChange`) | Every task identifier is a plain JSON string equal to `nodes[].id` from the structure read. `scheduleChange` is `ProjectStructureTaskScheduleAgentChange` (`gesture`, `affectedTasks[]` of `ProjectStructureTaskDateAgentChange`, `criticalTaskIds`) and has no task identifier of its own | Send the node identifier string in the route and in `taskId` (compared ordinally; a difference is HTTP 400 `TaskRouteMismatch`) and in every affected-task entry |
+| Build the current values from a cached copy or from the values you intend to write | Every `current*` member is an edit precondition checked against the stored task: HTTP 409 `ConcurrencyConflict` (estimate, execution state, cost basis or direct-assignment revision) or `StaleTask` (title, progress or previous interval) | Read first: call `POST .../structure/read` with `{ "includeMetadata": true }`, take title, progress, start and end from the task node and the estimate, execution, cost basis and direct-assignment revision from `workItem` in its `metadataJson` string; send unchanged current values and change only proposed values |
+| Omit `currentCostBasis` or `expectedProjectAdmission` | `currentCostBasis` must be present (send `null` when the read returned none); a missing member is rejected with HTTP 400 without an envelope. `expectedProjectAdmission` is required by the route: missing or for another project is HTTP 409 `ProjectLifetimeRefreshRequired` | Copy `expectedProjectAdmission` unchanged from the same structure read; never construct one |
+| Send enum tokens copied from `metadataJson` (`"manDays"`, `"notStarted"`) | The request expects JSON integers (`expectedEffortUnit` 0 Hours, 1 ManDays; execution `state` 0 Unknown to 4 Cancelled; cost-basis `resourceKind` and `source` integers) | Map the camel-case tokens of the read to the integers listed on each enum schema |
+| Retry a 409 by refreshing only the preconditions | A 409 means the task, its assignments or the project changed after the read | Read again, decide whether the intended change still applies, then send a new body |
+
+Runnable reference: `candoitall-api-project-structure/scripts/update-task.mjs` (Node.js 18+)
+performs this read-modify-write with literal JSON against a synthetic project.
+
+## Metadata Delta (documented contract, 2026-09-19)
+
+Routes, methods, operation ids and runtime behavior are unchanged. The document now declares
+what the handlers already return, so regenerated clients change shape:
+
+| Superseded integration behavior | Current contract | Optional migration |
+| --- | --- | --- |
+| Treat most operations as returning an untyped `200` | 425 statuses and 187 response bodies are declared with their real types and error envelopes (`errors` array, Project Structure `error` object, Problem Details) | Regenerate the typed client and branch on the documented error codes |
+| Group generated operations under one `CanDoItAll.Web` tag | 77 operations moved to their family tag (for example `Project Structure`, `Development diagnostics`, `Runtime`, `Files`) | Update client grouping or code generation settings that rely on tags |
+| Parse LLM Chat errors as `application/json` | LLM Chat errors are declared as `application/problem+json`, as the host always sent them | Accept the problem media type in generated clients |
+| Handle a declared status that never occurred | 13 unreachable declarations were removed, including recruiting review 409 (a review conflict currently fails with HTTP 500), LLM send-turn 504 (deadline failures are recorded on the asynchronous operation) and memory operation status 502/504 | Remove dead branches; keep generic 5xx handling |
+| Read enum values from the schema list | Integer enums carry no value list; every enum schema and enum-typed member describes its values in text | Map values from the descriptions or the live document |
+
 ## Upgrade Gate
 
 Before removing a workaround:

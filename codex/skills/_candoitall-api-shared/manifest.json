@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "source": {
     "repository": "CanDoItAll",
-    "branch": "modules-decoupling",
-    "commit": "160616c8256594257d00612b4e7dbadd567c024e",
+    "branch": "development",
+    "commit": "3fb71dd583f67f83efdda5f6076b522108eacff0",
     "workingTreeClean": true,
-    "captureNote": "Pre-merge branch contract of modules-decoupling: captured from the audited fix13 publication C:/mdo-qa-160616c8 (app manifest SHA-256 5424d9064fc3d879f7fd6ff2afaa86ae6c71a5577e982fbdb992d3fd8f4d011d; Web assembly SHA-256 73506915C9B050AD06FF40CC8E2220FBB4813FA801975798AB6853A36E16382C) run as an isolated Development host (InMemory database provider, private workspace and control-plane roots, PID 11144) bound to the canonical localhost:5032 while that port was free; the operator's Production hosts (5038, 5052) were untouched and no development-only endpoint was enabled on them. Components dependency 7b618cdac5570e806832e3f5ff65ddf1439eb868 (tree 35a4d090, equal to the repaired worktree 780e9a30), FileTools 498b36825bd5a5222429972af120b04becf4b3f6. Both runtime endpoints returned identical 1,053,750-byte documents. A first capture of the same publication on the free loopback port 127.0.0.1:58992 (SHA-256 C419F1697A9257C1EA8317DC876B91878B6C2185E410ED11F470054954D0EC59) differs only in the servers entry; port identity is not source identity.",
+    "captureNote": "Documented HTTP API contract of development: captured from a clean publish (UseAppHost=false, Release) of CanDoItAll tree 9a9176f21a12c6e38022833bcc7463b0ac9238f6, exported with git checkout-index from the staged state that became commit 3fb71dd583f67f83efdda5f6076b522108eacff0, built with the clean sibling checkouts Components ff5289746573a6dd6456754a7764844627ddd49f and FileTools 3a080ecd31068a77c1e1bd639f7a78e21c93db85. The publication ran as an isolated Development host (InMemory database provider, private /tmp workspace and control-plane roots, RuntimeHost__Profile=LinuxHeadless) inside a container with no network except its own loopback (mcr.microsoft.com/dotnet/aspnet:10.0.10, image sha256:f1126d438ccc359f51cc6d4701a8deae513856cf10f5fe645d29ea6403dcac6b), bound to http://localhost:5032 of that network namespace, because the operator's protected host owns localhost:5032 on Windows and was not touched. Both runtime document paths returned byte-identical 3636957-byte documents, fetched from inside the same namespace. A Windows capture of the same publication on the free loopback port 51813 (SHA-256 d31b41aab7856db4c9c74e9c4ec800d8aeb38878e3aa45b68fdf2f47136e2aaa) differs only in the servers entry; port identity is not source identity.",
     "webProject": "src/App/CanDoItAll.Web/CanDoItAll.Web.csproj",
     "environment": "Development",
-    "generatedUtc": "2026-09-15T14:37:15.4885969Z",
+    "generatedUtc": "2026-09-19T17:41:57.3280909Z",
     "runtimeDocumentPaths": [
       "/openapi/v1.json",
       "/swagger/v1/swagger.json"
@@ -16,14 +16,14 @@
   },
   "artifact": {
     "file": "references/candoitall-web.openapi.json",
-    "sha256": "4A72044B333CA60F18139F5256910087E258D6488C5D3A395F50D68BFE0EF355",
+    "sha256": "95C566D15F21C036610DA2F37D174DB7A88FE095414A866DD58B276E8A806006",
     "openapiVersion": "3.1.1",
     "documentTitle": "CanDoItAll.Web | v1",
     "documentVersion": "1.0.0",
     "serverUrl": "http://localhost:5032/",
     "pathCount": 289,
     "operationCount": 321,
-    "schemaCount": 518
+    "schemaCount": 865
   },
   "routeFamilies": [
     {

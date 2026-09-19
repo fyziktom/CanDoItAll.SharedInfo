@@ -11,7 +11,9 @@ Use this skill when a task needs workflow authoring, lifecycle control, runtime 
 
 - Start the CanDoItAll web app and inspect Swagger/OpenAPI at `/swagger` or `/openapi/v1.json`.
 - Check `/api/access/status` before assuming bearer tokens are required.
-- If JWT is active, create a token from Settings -> API Access or `POST /api/access/tokens`, then send `Authorization: Bearer <token>`.
+- When API authorization is enabled, create a token from Settings -> API Access, or with
+  `POST /api/access/tokens` using a token that has the exact `api.tokens.issue` scope, then send
+  `Authorization: Bearer <token>`.
 - Do not add or reinstall a workflow-specific MCP server; workflow control is through the HTTP API.
 
 ## Contract Source
@@ -38,24 +40,39 @@ Use this skill when a task needs workflow authoring, lifecycle control, runtime 
   `GET /api/workflows/definitions/{workflowId}`,
   `GET /api/workflows/definitions/{workflowId}/versions/{versionId}`,
   `POST /api/workflows/definitions`, and `DELETE /api/workflows/definitions/{workflowId}`.
-- Lifecycle: `POST /api/workflows/definitions/{workflowId}/publish`, `/suspend`, and `/archive`; pass `expectedVersionId` when coordinating concurrent edits.
+- Lifecycle: `POST /api/workflows/definitions/{workflowId}/publish`, `/suspend`, and `/archive`; pass `expectedVersionId` as a query parameter when coordinating concurrent edits.
 - Import/export: `GET /api/workflows/definitions/{workflowId}/export`, `POST /api/workflows/definitions/import`.
 - Validation: `POST /api/workflows/definitions/{workflowId}/validate` for saved definitions and `POST /api/workflows/validate` for drafts.
-- LLM execution bindings and providers: `GET /api/workflows/provider-options`, `GET /api/workflows/components`, `GET /api/workflows/components/{componentId}`, `POST /api/workflows/components`, `DELETE /api/workflows/components/{componentId}`. Reusable prompt content is canonical in `/api/prompt-gallery`; workflow components retain provider/model/runtime settings plus an immutable Gallery item/version reference and prompt snapshot.
+- LLM call components and providers: `GET /api/workflows/provider-options`, `GET /api/workflows/components`, `GET /api/workflows/components/{componentId}`, `POST /api/workflows/components`, `DELETE /api/workflows/components/{componentId}`. Reusable prompt content is canonical in `/api/prompt-gallery`; workflow components retain provider/model/runtime settings plus an immutable Gallery item/version reference and prompt snapshot.
 
 ## Runtime Work
 
-- Test runs: `POST /api/workflows/test-runs`.
-- Start runs: `POST /api/workflows/runs/start` or `POST /api/workflows/definitions/{workflowId}/runs/start`; send `Idempotency-Key` for safe timeout/concurrency retries.
-- Retry evidence: `GET /api/workflows/runs/by-idempotency-key/{key}` returns the
-  original run and safe hashes without exposing the raw key.
+- Test runs: `POST /api/workflows/test-runs` validates a draft or exact version or, without
+  `validateOnly`, creates a real preview run that executes its nodes, including executors with
+  external effects, except the nodes replaced by `previewSimulationPlan`. It has no idempotency
+  key, and its result contains stored run records (event payloads, artifact storage paths, raw
+  request and response JSON, launch origin); use it only from trusted authoring clients.
+- Start runs: `POST /api/workflows/runs/start` or
+  `POST /api/workflows/definitions/{workflowId}/runs/start`. The request waits until the run
+  stops, and closing the connection cancels the run, so keep it open. Send an `Idempotency-Key`
+  (1 to 256 characters) that includes something unique to your client: keys are global across
+  all API callers of the host, and a replay returns the original run, which an earlier
+  disconnect may have cancelled. A failed or cancelled run is still HTTP 200; check `run.state`.
+- Retry evidence: `GET /api/workflows/runs/by-idempotency-key/{key}` returns the original run
+  identifier (`originalRunId`), its current state and safe hashes without exposing the raw key.
+  The lookup is not caller-scoped and can find another caller's start; 404 means no start
+  recorded the key, so starting with it is safe.
 - Observe runs: `GET /api/workflows/runs`, `GET /api/workflows/runs/page`, `GET /api/workflows/runs/{runId}`, `GET /api/workflows/runs/{runId}/detail`.
-- Cancel runs: `POST /api/workflows/runs/{runId}/cancel`.
+- Cancel runs: `POST /api/workflows/runs/{runId}/cancel`; branch on `outcome`
+  (200 CancellationRequested, 404 NotFound, 409 AlreadyTerminal, NotActive or
+  TransitionRejected, 422 BackendNotCancellable) and read the run again. The body's `run` is the
+  stored run record, not the safe projection.
 - Events, checkpoints, and artifacts: `GET /api/workflows/runs/{runId}/events`, `GET /api/workflows/runs/{runId}/events/page`, `GET /api/workflows/runs/{runId}/checkpoints`, and `GET /api/workflows/runs/{runId}/artifacts`.
 - Live lifecycle signals: `GET /api/workflows/events/stream` for all runs or `GET /api/workflows/runs/{runId}/events/stream` for one run.
 - Artifact content: `GET /api/workflows/runs/{runId}/artifacts/{artifactId}/content`.
 - Human or external input: `GET /api/workflows/runs/{runId}/pending-requests`, `POST /api/workflows/external-requests/{requestId}/response`.
-- Analytics: `GET /api/workflows/analytics`.
+- Analytics: `GET /api/workflows/analytics`; run entries are stored run records (backend run
+  identifier, launch origin), and `take` outside 1 to 500 is rejected with HTTP 400.
 
 ### Durable human/external responses
 
@@ -69,7 +86,9 @@ The response is a JSON value, not a string containing encoded JSON. Preserve the
 same semantics after an ambiguous result; do not create a second logical response.
 
 Read accepted-operation status at
-`GET /api/workflows/external-response-operations/{operationId}`.
+`GET /api/workflows/external-response-operations/{operationId}`. Reading never continues an
+attempt: when it stays Resuming or reports a retryable failure, resend the original submission
+with the same `Idempotency-Key`.
 The exact `api.workflows.respond` authority, authenticated actor, current profile and
 persisted workspace scope apply. Disabling global API authentication does not create an
 anonymous response actor. Responses expose allowlisted status, never raw request/response
@@ -125,12 +144,13 @@ token-rate or thousands-of-subscribers scalability.
 
 - `workflowId`
 - `versionId`
-- `inputJson`
+- `inputJson` (a string that contains a JSON object, not a nested JSON object)
 - `requestedBackend`
 
-The public DTO rejects additional properties. It does not accept internal process-run or
-assignment lineage fields; governed process launches must originate through the process
-orchestration boundary that owns that lineage.
+The public DTO rejects additional properties (HTTP 400 from the framework, without an error
+envelope). It does not accept internal process-run or assignment lineage fields; governed
+process launches must originate through the process orchestration boundary that owns that
+lineage.
 
 `WorkflowRunListApiQuery` fields:
 
@@ -160,13 +180,20 @@ orchestration boundary that owns that lineage.
 - Validate a draft or saved definition before publishing or running it.
 - Resolve integrations by template/external identity, require `Resolved`, and pin
   `runnableVersionId`; never use mutable display names as integration identity.
-- Reuse an idempotency key only for the identical workflow/version/backend/canonical
-  input. Treat `409` as a changed-request conflict.
+- Reuse an idempotency key only for the identical workflow, version choice, backend and
+  canonical input, and make keys unique to your client because they are global across API
+  callers. Treat `409` `workflows.idempotency-key-conflict` as a changed-request conflict.
 - Read `GET /api/workflows/contract` before building clients or smoke tests; use OpenAPI for full schema detail.
 - Prefer explicit lifecycle endpoints over resubmitting a full definition only to change status.
 - Use import/export envelopes for portable workflow definition movement; do not hand-copy internal persistence records.
-- Search and version reusable instructions through the Prompt Gallery API. Treat workflow component endpoints as execution-binding compatibility endpoints, not a second prompt library.
-- Use `expectedVersionId` for lifecycle commands when another agent or UI may be editing the same definition.
+- Search and version reusable instructions through the Prompt Gallery API. Treat the LLM call
+  component endpoints as reusable model-call settings, not a second prompt library. Saving a
+  component keeps its instructions in the Prompt Gallery and, as a side effect, can create a new
+  prompt or a new prompt version.
+- Send `expectedVersionId` (a query parameter on publish, suspend and archive; a body member on
+  `POST /api/workflows/definitions`) when another agent or UI may be editing the same definition.
+  A stale value is rejected with HTTP 400 `workflows.request-invalid`, not 409; read the
+  definition again. Every save, import and status change stores a new `versionId`.
 - For long or active runs, prefer paged run and event routes before fetching full run detail.
 - Treat workflow SSE as a bounded, host-local signal stream. On `stream.gap`, query
   persisted run detail/events before trusting subsequent notifications.
@@ -177,9 +204,12 @@ orchestration boundary that owns that lineage.
 
 ## Executor Side-Effect Contracts
 
-- Executor catalog entries expose `WorkflowExecutorSideEffectDescriptor`. Treat `None`, external read, external write, and idempotent processed-marker contracts as workflow governance data, not UI hints.
+- Executor catalog entries expose `WorkflowExecutorSideEffectDescriptor`: `kind`
+  (0 None, 1 WorkspaceRead, 2 WorkspaceWrite, 3 ExternalRead, 4 ExternalWrite),
+  `externalMutationKind` (0 None, 1 ProcessedMarker) and `allowsIdempotentRetry`. Treat them as
+  workflow governance data, not UI hints.
 - Email mark-processed executors must distinguish preview from commit with `sideEffectMode`, `dryRun`, `committed`, `idempotencyRecord`, `processedMarker`, and `externalSideEffectReceipt`.
-- Do not retry an external-write executor unless its side-effect contract is idempotent retry safe. Preserve `idempotencyKey` and provider-scoped key prefixes when reviewing workflow output or scheduler replay behavior.
+- Do not retry an external-write executor unless its `allowsIdempotentRetry` is true. Preserve `idempotencyKey` and provider-scoped key prefixes when reviewing workflow output or scheduler replay behavior.
 - For governed process workflow runs, use the process orchestration API so internal
   lineage remains tied to the owning process run; do not add internal lineage properties
   to the public workflow start body.
@@ -190,7 +220,9 @@ orchestration boundary that owns that lineage.
 - Use `GET /api/workflows/contract` as the quick route and boundary check for operator automation.
 - After saving, importing, or changing lifecycle status, read back the specific definition id and version id.
 - After starting, cancelling, or responding to a run, read back the run detail plus events.
-- For artifacts, verify both the artifact metadata and the referenced storage path when content matters.
+- For artifacts, verify the metadata and read
+  `GET /api/workflows/runs/{runId}/artifacts/{artifactId}/content` when content matters; the run
+  detail and artifact list never expose storage paths.
 
 ## Source Route Appendix
 

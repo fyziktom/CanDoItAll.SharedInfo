@@ -18,7 +18,8 @@ API.
   before relying on it.
 - When the target host differs, inspect its live `/openapi/v1.json` or
   `/swagger/v1/swagger.json` document.
-- Read `GET /api/processes/contract` before generating clients or smoke tests.
+- Generate clients from the OpenAPI document. `GET /api/processes/contract` returns only a
+  compiled `METHOD /path` list with no shapes.
 - Check `GET /api/access/status` before assuming bearer tokens are required.
 - Do not reinstall or use `candoitall_processes`; that MCP server has been removed.
 
@@ -45,9 +46,14 @@ API.
 
 ## Launch
 
-Use `POST /api/processes/launch/check` for a non-mutating launch preflight. It compiles
-the selected process template, resolves step executors, and returns the launch plan and
-readiness findings without creating a run.
+Use `POST /api/processes/launch/check` to review a launch. It compiles the selected
+process template, resolves step executors, and returns the launch plan and readiness
+findings. Launch check creates no run and dispatches nothing. Unless readiness blocks it,
+it saves a durable preparation bound to the caller and returns `observation.admissionId`
+(`stage` `Planned`). The preflight asks every runtime tool provider for an inert tool
+inventory of the step's declared operations; a tool listed there is a discoverable
+capability, not an executable grant, and dispatch composes its own tools from the saved
+execution.
 
 Use `POST /api/processes/launch` only when a durable run is intended. Request fields:
 
@@ -60,16 +66,29 @@ Use `POST /api/processes/launch` only when a durable run is intended. Request fi
 - `variables`
 - `runReadiness`
 - `execute`
+- `callerIntentId`
+- `preparedAdmissionId`
+
+Generate `callerIntentId` once per intended launch and send it unchanged with the check,
+the launch and every retry. A retry must repeat every member except `execute` exactly,
+and a launch retried after its run was accepted must also repeat `execute`; different
+input returns 409 `process.launch_intent_conflict`. Without these identifiers every call
+creates a new preparation, and every launch a new run.
 
 `execute: false` avoids enqueuing immediate dispatcher execution but is not a dry run.
-The launch endpoint still creates a durable run when readiness allows launch.
+The launch endpoint still creates a durable run when readiness allows launch. The run is
+still activated, and the dispatch recovery scan can run its ready steps later. Do not
+use it to pause a run.
 
-A launch is admitted before it is committed: `GET /api/processes/launch/{admissionId}`
-reads the prepared-launch status by the admission id returned from the launch routes,
-so a client that lost the launch response polls the admission instead of launching
-again. The preflight asks every runtime tool provider for an inert tool inventory of
-the step's declared operations; a tool listed there is a discoverable capability, not
-an executable grant, and dispatch composes its own tools from the saved execution.
+After a lost or failed launch response, resend the identical request with the same
+`callerIntentId` (or `preparedAdmissionId`); it returns the same run and creates nothing
+new. `GET /api/processes/launch/{admissionId}` reads a preparation only when you already
+hold its id, for example from the check. A 400 or 403 does not prove that no preparation
+was saved.
+
+With authorization enabled, the token needs `sub` and `exp` claims. A preparation is
+bound to that subject, and the launch must happen before the token that created the
+preparation expires and while the project's lifetime is unchanged.
 
 ## Operator Actions
 
@@ -83,6 +102,12 @@ Content-Type: application/json
   "requestedBy": "api-client"
 }
 ```
+
+Dispatch executes ready steps synchronously inside the request: at most 200 passes, with
+each step bounded by the step timeout (60 minutes by default). It bypasses the background
+worker's queue and per-run lock. Use it only when nothing is progressing the run. A repeat
+can execute newly ready steps, and a disconnect cancels the step in progress without
+undoing its effects.
 
 Cancel a run:
 
@@ -104,9 +129,14 @@ Content-Type: application/json
 
 {
   "requestedBy": "api-client",
-  "reason": "Operator requested process step rework."
+  "reason": "Reject an empty project name in the settings form; two unit tests fail."
 }
 ```
+
+Cancel and rework both return 200 with an `outcome`. Only a cancel `Applied` means the run
+is cancelled; a rework `Applied` or `Duplicate` means the step is queued. A cancel `reason`
+is not stored. A rework `reason` is passed to the step's executor verbatim, without
+redaction: write a concrete correction and never include secrets.
 
 ## Read Process State
 
@@ -116,10 +146,15 @@ Content-Type: application/json
 - Use `GET /api/processes/runs/{runId}` for deep live state.
 - Use `GET /api/processes/runs/{runId}/history` for a bounded live timeline. `fromUtc`
   defaults to 24 hours before `toUtc`; `toUtc` defaults to now; `take` is clamped to
-  `1..1000`.
+  `1..1000`. It returns the oldest `take` events (default 100) and has no continuation
+  value: set `fromUtc` to the last event's `occurredAtUtc` and skip known `eventId`s.
+  Child-run events are excluded, and an unknown run returns an empty list, not 404.
 - Use `GET /api/processes/runs` for cursor-paged durable records. Available filters
   are `projectId`, `definitionId`, `rootRunId`, `disposition`, `participantId`,
-  `fromUtc`, `toUtc`, `take`, and `cursor`.
+  `fromUtc`, `toUtc`, `take`, and `cursor`. A record exists only after a run ends
+  (Succeeded, Failed, Cancelled or Blocked). `projectId`, `definitionId` and
+  `participantId` match only records whose facts are assembled. Repeat the filters with
+  every `cursor`.
 - Use `GET /api/processes/runs/{runId}/summary` for a paged summary with
   `stepOffset`, `stepTake`, `runtimeEventMinuteOffset`, and
   `runtimeEventMinuteTake`.
@@ -127,6 +162,8 @@ Content-Type: application/json
   `stepOffset` and `stepTake`.
 - Use `GET /api/processes/runs/analytics` for durable aggregate analytics filtered by
   project, definition, root run, participant, or time window.
+- Read [durable run records](references/durable-run-records.md) before choosing between
+  the live and durable reads or interpreting record totals.
 
 ### Process SSE Boundary
 
@@ -136,15 +173,17 @@ a durable process record and not an HTTP resource. The `/api/processes/live`,
 `/api/processes/runs/{runId}`, and history routes continue to read the canonical
 application/projection boundary.
 
-The process SSE routes emit signal-only lifecycle categories: started, progress,
-needs-attention, completed, failed, and cancelled. Envelopes include exact/root run
+The process SSE routes emit signal-only lifecycle categories: `started`, `progress`,
+`needsAttention`, `completed`, `failed`, and `cancelled`. Envelopes include exact/root run
 ids plus durable global/root source sequences. Restricted events mask their event type
 and do not expose actor, correlation, or payload-hash details.
 
 Both routes emit `process.run.changed` with `eventId`, `globalSequence`,
 `rootSequence`, `rootRunId`, exact `runId`, `category`, `eventType`, `sensitivity`,
 `occurredAtUtc`, `isTerminal`, and `needsAttention`. The exact-run route filters by
-`runId`; it does not subscribe to every descendant of `rootRunId`.
+`runId`; it does not subscribe to every descendant of `rootRunId`. `eventId`, `rootRunId`
+and `runId` are objects of the form `{"value":"<GUID>"}`, not strings. A terminal signal
+does not close the stream.
 
 API replay is a bounded, host-local window even though process source events are
 durable. Resume with either a non-negative `Last-Event-ID` header or equivalent
@@ -159,9 +198,9 @@ that resume cursor and sends retained matching notifications. Reload live detail
 history before trusting subsequent signals because SSE cannot reconstruct the missed
 projection state.
 
-Projection notification is at-least-once. Deduplicate process signals by durable
-`eventId` or `globalSequence`, not by the host-local SSE id. A process SSE event is a
-prompt to query canonical state, not a replacement for the projection/read APIs.
+Delivery is best effort: a signal can be skipped or arrive twice. Deduplicate by
+`eventId`, not by the host-local SSE id, and treat each signal only as a prompt to read
+canonical state, not as a replacement for the projection/read APIs.
 
 The stream is pinned to the active database profile and runtime generation. A profile
 switch cancels existing subscriptions. Reconnect against the active profile and
@@ -188,7 +227,7 @@ the project-structure operation result and process readback.
 - Prefer `launch/check` before `launch`.
 - Preserve restricted-diagnostic and runtime-event privacy boundaries.
 - Use the global SSE route for fleet-level attention/terminal signals and the exact-run
-  route when the `ProcessRunId` is already known.
+  route when the `runId` is already known.
 - Do not invent older process authoring, artifact, assignment, escalation, approval, or
   template routes unless the running contract reintroduces them.
 
@@ -197,7 +236,10 @@ the project-structure operation result and process readback.
 1. Compare `GET /api/processes/contract` with the running OpenAPI document.
 2. Run `launch/check` and inspect readiness before a durable launch.
 3. After dispatch, cancellation, or rework, read live detail and history.
-4. Confirm expected structured errors for invalid or missing live-run operations.
+4. Confirm the documented errors. A 403 from check, launch or launch status has no JSON
+   envelope and may render as the host's HTML status page. The all-zero GUID currently
+   returns 500 on several live-run routes. Launch 400s (`process.launch_check_failed`,
+   `process.launch_failed`) do not return the cause.
 
 ## Source Route Appendix
 
