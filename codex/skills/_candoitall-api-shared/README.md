@@ -7,22 +7,22 @@ This non-discoverable support package contains the shared OpenAPI snapshot used 
 - Artifact: [references/candoitall-web.openapi.json](references/candoitall-web.openapi.json)
 - Provenance: [manifest.json](manifest.json)
 - Source repository: CanDoItAll
-- Source branch: modules-decoupling (pre-merge branch contract; not yet integrated into components-decoupling, development or main)
-- Source commit: 160616c8256594257d00612b4e7dbadd567c024e (signed closure head of the module-decoupling refactor)
-- Source state: clean working tree; workingTreeClean: true
-- Dependency pins: CanDoItAll.Components 7b618cdac5570e806832e3f5ff65ddf1439eb868 (tree 35a4d090, identical to the repaired worktree 780e9a30 that built the candidate), CanDoItAll.FileTools 498b36825bd5a5222429972af120b04becf4b3f6
-- Capture host: the audited candidate publication `C:/mdo-qa-160616c8` (app manifest SHA-256 5424d906…, Web assembly SHA-256 73506915…) started as an isolated Development host with the InMemory database provider and private workspace/control-plane roots, bound to the canonical localhost:5032 while that port was free; the operator's Production hosts were not used and no development-only endpoint was enabled on them
+- Source branch: development
+- Source commit: 3fb71dd583f67f83efdda5f6076b522108eacff0 (signed; tree 9a9176f21a12c6e38022833bcc7463b0ac9238f6)
+- Source state: the clean tree of that commit; workingTreeClean: true
+- Dependency pins: CanDoItAll.Components ff5289746573a6dd6456754a7764844627ddd49f, CanDoItAll.FileTools 3a080ecd31068a77c1e1bd639f7a78e21c93db85 (both clean checkouts)
+- Capture host: a clean Release publication of that tree (exported with `git checkout-index`, `UseAppHost=false`) started as an isolated Development host with the InMemory database provider, private workspace and control-plane roots and the Linux headless runtime profile, inside a container whose only network is its own loopback, bound to `http://localhost:5032` of that network namespace; the operator's host that owns localhost:5032 on Windows was not touched and no development-only endpoint was enabled on it
 - Document server: http://localhost:5032/
 - Runtime endpoints: /openapi/v1.json and /swagger/v1/swagger.json
 - OpenAPI version: 3.1.1
 - Paths: 289
 - Operations: 321
-- Component schemas: 518
-- SHA-256: 4A72044B333CA60F18139F5256910087E258D6488C5D3A395F50D68BFE0EF355
+- Component schemas: 865
+- SHA-256: 95C566D15F21C036610DA2F37D174DB7A88FE095414A866DD58B276E8A806006
 
-> Port identity is not source identity. The document's server URL is the capture host's loopback address, not the identity of the source; the manifest's commit, dependency pins and capture note identify the contract. A first capture of the same publication on the free loopback port 127.0.0.1:58992 produced the same document except for the servers entry (SHA-256 C419F169…); the canonical-port capture is the published artifact because the validator pins the canonical server URL.
+> Port identity is not source identity. The document's server URL is the capture host's loopback address, not the identity of the source; the manifest's commit, dependency pins and capture note identify the contract. A Windows capture of the same publication on the free loopback port 51813 produced the same document except for the servers entry (SHA-256 D31B41AA…); the container capture is the published artifact because its host genuinely served the canonical URL that the validator pins.
 
-Captured on 2026-09-15 (14:37 UTC). Both document endpoints returned byte-identical 1,053,750-byte content.
+Captured on 2026-09-19 (17:41 UTC). Both document endpoints returned byte-identical 3,636,957-byte content.
 
 | Route family | Paths | Operations |
 | --- | ---: | ---: |
@@ -50,7 +50,9 @@ Captured on 2026-09-15 (14:37 UTC). Both document endpoints returned byte-identi
 
 These families account for every path and operation. The Development document intentionally includes the /_dev surface. Blazor pages and static files are not API operations. Production hosts with `Api:Authorization:Enabled` require a bearer token on the two document endpoints as well; the isolated capture host used the default configuration without authorization.
 
-Delta from the 2026-08-31 snapshot (commit aadd9531, 276 paths / 308 operations / 486 schemas): additive only. No route, method or operation id was removed or renamed. Added operations: `POST /api/agents/execution-runs/{executionRunId}/recover` (supported same-run recovery of a retained run under current authority), `POST /api/agents/execution-runs/{executionRunId}/reconcile-cancellation` (typed reconciliation of a cancelled run's tool effects), `POST /api/agents/providers/mutations/verify` (idempotent provider-mutation verification), `GET /api/processes/launch/{admissionId}` (prepared-launch status by admission id) and the nine-operation `/api/storage-placement-recovery` family (context, pending intents, pending owner continuations, intent detail and owner continuation, reconcile, reconcile cancelled run receipts, verify external termination, continue workflow asset). Thirty-two schemas were added (agent cancellation and committed-effect responses, tool effect/outcome/dispatch enums, provider mutation and verification responses, storage placement recovery commands and intents, `ProjectWriteAdmission`, `ProjectProcessAssetReceipt`, `WorkflowLaunchObservation`) and fifteen existing schemas gained fields, chiefly the Project Structure task and node inputs (execution-state and expected-cost snapshots, deletion dispositions), `ProjectStructureReadResponse`, `ProcessLaunchApiRequest`, `WorkflowRunStartApiResponse` and the provider editor models. Twenty operations changed only through those schemas; their routes, methods and operation ids are unchanged.
+Every operation, parameter, request body, response, component schema and property carries a description written from the owning code: 9,126 of 9,126 describable items under the rules of the product's coverage gate, including the enum values at every enum-typed member. The descriptions state identity sources, units, null, omitted and default meaning, preconditions, retry and idempotency rules, error codes and authority; the SharedInfo standard `docs/standards/api-documentation.md` and glossary `docs/architecture/candoitall-api-domain-glossary.md` govern their wording.
+
+Delta from the 2026-09-15 snapshot (commit 160616c8, 289 paths / 321 operations / 518 schemas): no route, method or operation id was added, removed or renamed, and no runtime behavior changed. One request contract differs: `PUT /api/project-structure/projects/{projectId}/tasks/{taskId}` now binds `ProjectStructureTaskUpdateAgentInput` with plain string task identifiers, replacing `ProjectStructureTaskDetailsUpdateRequest`, `GanttTaskScheduleChangeRequest` and `GanttTaskDateChange` (see the partner migration matrix). The rest is metadata that now matches the runtime: 425 response statuses and 187 response bodies were declared with the types and envelopes the handlers write; 77 operations moved from the application-name tag to their family tag; the LLM Chat error responses changed media type from `application/json` to `application/problem+json` (50 responses); the non-streaming shared-provider inference responses gained their `application/json` body (2); 13 declared statuses that no code path produces were removed (recruiting review 409, pending-approval stream 404, reconcile-cancellation 500, provider save 500 and 503, provider delete and test 503, LLM provider-options 500, LLM send-turn 504, memory operation status 502 and 504, and the implicit 200 of the plugin OAuth callback, now 302, and of `/managed-files`, now 410); two error responses now reference the schema actually written (provider mutation verification 400, LLM operation event stream 400); the duplicated `agentId` path parameter of `GET /api/agents/{agentId}/execution-runs` was removed; the `default` of the shared `PluginGrantRiskKind`, `PluginGrantScopeKind` and `ProjectStatus` enum components was dropped because their uses disagree (each use states its default). 350 schemas were added, chiefly the newly declared response types.
 
 Complete documented operation sets cover Agents, Agent Recruiting, Memory Providers, Processes, Projects, Project Structure, Workflows, Shared Providers, LLM Chat Definitions, Conversations and Operations. Validation compares every recorded set and skill route appendix against this single generated document.
 
@@ -72,14 +74,19 @@ exact API-skill subset with `-PackageName`, include `_candoitall-api-shared`.
 
 1. Generate the document by running a clean build (or the audited publication) of the
    main `CanDoItAll.Web` project as a Development host on the canonical URL,
-   `http://localhost:5032`. When that port belongs to a protected operator host, start
-   an isolated Development capture host of the same build on a free loopback port
-   instead (InMemory database, private workspace and control-plane roots) and record
-   the actual capture URL; never enable development endpoints on the operator's
-   Production host, and never capture from an unrelated older host merely because it
-   owns port 5032. The validator pins the canonical server URL, so a capture on another
-   port must be repeated on `localhost:5032` once it is free, or the validator's server
-   rule must be updated together with the manifest in the same reviewed change.
+   `http://localhost:5032`. When that port belongs to a protected operator host, run an
+   isolated Development capture host of the same publication (`UseAppHost=false`,
+   InMemory database, private workspace and control-plane roots, Linux headless runtime
+   profile) in a container started with `--network none` and
+   `ASPNETCORE_URLS=http://localhost:5032`, and fetch both document paths from a second
+   container that joins its network namespace (`--network container:<name>`). A plain
+   build output does not start in a container (its development static-asset manifest
+   holds Windows paths); use a publication. Also capture the same publication on a free
+   loopback port of the workstation and confirm that the two documents differ only in
+   the servers entry. Never enable development endpoints on the operator's Production
+   host, and never capture from an unrelated older host merely because it owns port
+   5032. The validator pins the canonical server URL; do not relabel a capture from
+   another port.
 2. Capture `/openapi/v1.json` and `/swagger/v1/swagger.json` and verify they are identical.
 3. Replace the artifact and update all provenance, hash, version, and count fields in
    `manifest.json`.

@@ -21,6 +21,8 @@ $requiredPaths = @(
     'config/repositories.json',
     'codex/marketplace.json',
     'docs/architecture/source-of-truth.md',
+    'docs/architecture/candoitall-api-domain-glossary.md',
+    'docs/standards/api-documentation.md',
     'docs/standards/repository-layout.md',
     'docs/standards/documentation.md',
     'docs/standards/licensing.md',
@@ -334,6 +336,38 @@ $sharedContractChecks = @(
             'Code contributions are accepted only from partners explicitly approved',
             'Unsolicited pull requests are not accepted',
             'fyziktom'
+        )
+    },
+    [pscustomobject]@{
+        Path = 'docs/standards/api-documentation.md'
+        RequiredText = @(
+            'candoitall-api-domain-glossary.md',
+            'published contract',
+            'GenerateDocumentationFile',
+            'ignores `private` handlers',
+            'Required and nullable are independent',
+            'Only a type''s `<summary>`',
+            'overwrites the request-body description',
+            'not an agent runtime tool'
+        )
+    },
+    [pscustomobject]@{
+        Path = 'docs/architecture/candoitall-api-domain-glossary.md'
+        RequiredText = @(
+            'single maintained copy',
+            'Not the same as',
+            'PROJ-005',
+            'WIRE-003'
+        )
+    },
+    [pscustomobject]@{
+        Path = (
+            'codex/skills/apply-candoitall-shared-standards/' +
+            'references/standards-map.md'
+        )
+        RequiredText = @(
+            'docs/standards/api-documentation.md',
+            'docs/architecture/candoitall-api-domain-glossary.md'
         )
     },
     [pscustomobject]@{

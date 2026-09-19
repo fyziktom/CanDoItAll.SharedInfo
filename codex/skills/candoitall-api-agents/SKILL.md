@@ -7,7 +7,8 @@ description: Use when managing CanDoItAll agents, SSE activity, provider complet
 
 Use this skill when a task needs agent catalog, provider, chat, execution, approval, or diagnostics control through the CanDoItAll web API.
 
-Agent chat sessions are governed agent executions under `/api/agents`. For provider-neutral ordinary
+An agent chat session under `/api/agents` is a conversation thread with one technical agent
+definition; every message in it starts its own governed agent execution run. For Simple Chat
 conversations under `/api/llm-chats`, use
 [`candoitall-api-llm-chats`](../candoitall-api-llm-chats/SKILL.md); do not substitute one chat contract
 for the other.
@@ -16,7 +17,10 @@ for the other.
 
 - Start the CanDoItAll web app and inspect Swagger/OpenAPI at `/swagger`.
 - Check `/api/access/status` before assuming bearer tokens are required.
-- If JWT is active, send `Authorization: Bearer <token>`.
+- When API authorization is enabled, send `Authorization: Bearer <token>`. Most agent routes
+  accept any valid token; recovery and cancellation reconciliation need the exact `api` scope,
+  and recording a recruiting human review needs `agent-recruiting.review` (see
+  [partner API contracts](references/partner-api-contracts.md)).
 
 ## Contract Source
 
@@ -38,13 +42,21 @@ for the other.
 ## Catalog And Configuration
 
 - Agents: `GET /api/agents`, `GET /api/agents/bootstrap`, `GET /api/agents/{agentId}`, `POST /api/agents`, `DELETE /api/agents/{agentId}`, clone, convert-to-template, export, legacy server-path import, and remote-safe multipart package import.
+- To change an agent, read `GET /api/agents/{agentId}`, change only what you intend and send the
+  whole form to `POST /api/agents` with `expectedUpdatedAtUtc` unchanged: it must equal the stored
+  revision exactly, otherwise nothing is saved and the response is HTTP 400 `agents.request-invalid`
+  (not 409); null skips the check. Unknown identifiers on `GET /api/agents/{agentId}` and the clone,
+  convert-to-template and export routes fail with a generic HTTP 500 without the error envelope;
+  list the agents before retrying.
 - Stable partner provisioning: GET/PUT/DELETE
   `/api/agents/by-external-key/{externalNamespace}/{key}` with ETag,
   `Idempotency-Key`, and `If-Match` handling.
 - Teams: `GET /api/agents/teams`, `GET /api/agents/teams/{teamId}`, `GET /api/agents/teams/{teamId}/editor`, `POST /api/agents/teams`, `PUT /api/agents/teams/{teamId}`, `DELETE /api/agents/teams/{teamId}`, `GET /api/agents/teams/{teamId}/agents`, `POST /api/agents/teams/{teamId}/members`, and `PUT /api/agents/teams/{teamId}/members`.
 - Providers: `/api/agents/providers`, `/providers/{providerId}/editor`, create/delete/test/test-chat, SSE chat completion, and Ollama modelfile routes.
 - Capabilities: `/api/agents/capabilities`, `/capabilities/{capabilityId}/editor`, create/delete, per-agent capability verification, tool setup tests, MCP setup tests, and access-policy previews.
-- Memory: `/api/agents/{agentId}/memory`, `POST /api/agents/memory`, and delete memory routes.
+- Workspace memory notes: `/api/agents/{agentId}/memory`, `POST /api/agents/memory` and
+  `DELETE /api/agents/memory/{memoryId}`. They are simple title and content records, not memory
+  providers (`/api/memory-providers`), and are not injected into agent runs.
 
 ## Shared providers and request evidence
 
@@ -63,10 +75,20 @@ and `api.provider-history.*` does not imply a new general history HTTP route.
 
 - Chat sessions: `/api/agents/{agentId}/chat-sessions`, rename, chat workspace, `/chat`, and `/chat/stream`.
 - Execution runs: blocking JSON and same-request SSE start routes at `/api/agents/execution-runs` and `/api/agents/{agentId}/execution-runs`, plus list, detail, and agent-scoped/global evidence routes.
-- Approvals: global approval listing and blocking/SSE response commands under `/api/agents/execution-runs/{executionRunId}`.
+- Approvals: the run's approval list and blocking/SSE response commands under `/api/agents/execution-runs/{executionRunId}`.
 - Attachments: upload a bounded image with `POST /api/agents/attachments/images`, then pass the returned `relativePath` in `attachmentPaths` or `inputAttachmentPaths`.
 - Evidence: execution artifacts, checkpoints, tool receipts, execution log, runtime snapshot, and metrics routes.
-- Recovery: `POST /api/agents/execution-runs/{executionRunId}/recover` resumes a retained run under current authority without repeating committed effects; the owner re-authorizes every saved private result before disclosure, so a run whose original read targets are gone stays failed (the typed denial currently surfaces as a generic `agents.run-failed` 500). `POST /api/agents/execution-runs/{executionRunId}/reconcile-cancellation` records the typed cancellation disposition of a cancelled run's tool effects (`AgentCancellationReconciliationApiResponse`); neither route creates a new grant or a new run.
+- Recovery: `POST /api/agents/execution-runs/{executionRunId}/recover` resumes a run that has a
+  recoverable tool-admission journal (runs admitted by the interactive chat interface or by
+  governed process steps) under current authority, and never repeats a tool call whose effect is
+  uncertain. Runs started through this HTTP API have no journal and are rejected with HTTP 400
+  `tool-admission.legacy-run`; other recovery rules fail with 400 `tool-admission.*` codes. The
+  owner re-authorizes every saved private result before disclosure, so a run whose original read
+  targets are gone stays failed. A cancelled run first needs
+  `POST /api/agents/execution-runs/{executionRunId}/reconcile-cancellation`, which records from
+  owner receipts which tool effects took place (`AgentCancellationReconciliationApiResponse`;
+  `hasUnknownEffects` true needs manual follow-up). Both routes need the exact `api` scope when
+  API authorization is enabled, and neither creates a new grant or a new run.
 - Provider mutations: `POST /api/agents/providers/mutations/verify` verifies an earlier create/update/delete attempt by its mutation attempt identity (`ProviderVerificationApiResponse`) instead of repeating it after an uncertain response.
 - Recruiting evidence: create/read `/api/agent-recruiting/interviews`, list a
   candidate's interviews through
@@ -90,14 +112,21 @@ They emit numbered canonical activity frames, an id-less safe
 `agent.command.completed` or `agent.command.failed` frame. An id-less command frame
 must not advance the canonical activity replay cursor.
 
+Every agent command runs only while its request is open: closing the connection cancels the run
+(stored as failed with outcome Cancelled) without undoing completed tool calls, and the id-less
+`agent.command.*` frames are not replayable. After a dropped connection, read
+`GET /api/agents/execution-runs/{executionRunId}` before sending the command again. Stream data
+uses camel-case enum strings (for example `waitingOnTool`) where the JSON routes write integers.
+
 For command/subscriber separation, send a caller-generated UUID as
 `activityOperationId` on the corresponding blocking JSON chat, run-start, or approval
-command. Start that request without waiting for its response body, then subscribe to:
+command. Start that request and keep it open without waiting for its response body, then
+subscribe to:
 
 `GET /api/agents/execution-operations/{operationId}/events/stream`
 
-The operation GET returns only the canonical activity stream. A transient `404` can
-mean the command has not admitted the supplied operation yet; an unknown operation
+This agent execution operation stream returns only the canonical activity events. A transient
+`404` can mean the command has not admitted the supplied operation yet; an unknown operation
 also returns `404`. Do not silently replace the operation id. Duplicate, previously
 evicted, and capacity-exhausted operation admission return `409`, `410`, and `503`
 respectively.
@@ -108,7 +137,7 @@ same-request SSE, exposes the actual operation id in the
 supplied the id or the server generated it. A caller that needs a concurrent
 cross-request subscriber must still generate the id before starting the command.
 
-Only the operation GET supports replay. Send either a non-negative
+Only the agent execution operation stream supports replay. Send either a non-negative
 `Last-Event-ID` header or equivalent `after` query parameter; if both are present they
 must be equal. An invalid or conflicting cursor returns HTTP `400` with
 `sse.cursor-invalid`. `stream.gap` reports `requestedFromInclusive` and
@@ -143,21 +172,25 @@ resumable operation stream.
 
 `agent.approval.required` contains only `approvalId`, `toolName`, `toolKind`, and
 `requestedAtUtc` for each pending approval. It deliberately omits tool arguments and
-persisted approval details. Read the scoped or global run approval endpoint when the
-authorized client needs the canonical record.
+persisted approval details. The approval list does not return the proposed tool arguments
+either. Read `GET /api/agents/execution-runs/{executionRunId}/approvals` (the agent-scoped form
+returns 404 for an unknown run) for each approval's `status`, `decidedAtUtc` and
+`decisionSourceKind`.
 
 Read the approval list immediately before posting a decision; do not assume an older SSE
 summary is still complete. New clients should send `decisions` with exactly one
 `approvalId`/`approved` pair for every currently pending approval. Duplicate, unknown,
-missing, or stale decision sets fail with `agents.approval-decision-mismatch`. The required
-legacy `approved` field remains a uniform decision only when `decisions` is absent or empty.
+missing, or stale decision sets fail with HTTP 400 `agents.approval-decision-mismatch` on the
+JSON route; the streaming route reports them in the stream as `agent.command.failed` with
+`agents.command-failed`. The required legacy `approved` field remains a uniform decision only
+when `decisions` is absent or empty.
 
 Upload attachments as multipart form field `file` to
 `POST /api/agents/attachments/images`. The staging boundary accepts PNG, JPEG, GIF,
-or WebP images up to 10 MB, requires a supplied content type to agree with the file
-extension, normalizes the file name, and stores the file under the managed workspace.
-Use only the returned `relativePath` in `attachmentPaths` or
-`inputAttachmentPaths`; never send or persist a server absolute path.
+or WebP images up to 10 MiB (10,485,760 bytes), requires a supplied content type to agree with
+the file extension, normalizes the file name, and stores the file under the managed workspace.
+A message or run can attach at most 8 images. Use only the returned `relativePath` in
+`attachmentPaths` or `inputAttachmentPaths`; never send or persist a server absolute path.
 
 ## Operating Rules
 
@@ -167,25 +200,55 @@ Use only the returned `relativePath` in `attachmentPaths` or
 - Resolve partner-managed agents by external key. Do not emulate identity with display
   names, and do not retry a changed payload under an existing idempotency key.
 - For debugging, query run detail first, then fetch artifacts/checkpoints/receipts/log only for the run under review.
-- Treat `activityOperationId` and `initialActivityOperationId` as correlation metadata
-  only. Continue to use `executionRunId` for durable run lookups.
-- SSE approval summaries omit raw tool arguments. Read the run approval endpoint when
-  the full persisted approval record is required.
+- Treat `activityOperationId` and the `X-CanDoItAll-Agent-Operation-Id` header value as
+  correlation metadata only. Continue to use `executionRunId` for durable run lookups.
+- SSE approval summaries and the approval list omit tool arguments; decide from `toolName`,
+  `toolKind` and the run context.
 - Use provider test routes before assigning a provider to production-like agents.
-- Use capability verification before assuming a tool or skill is assigned to an agent.
-- Use setup tests for external tool and MCP capability descriptors before enabling them for agents or process roles. Use access-preview when a process, team, or role policy might deny required skill/tool/MCP capabilities.
-- Provider profiles include `isPrivateProvider`, `modelPrices`, and `tags`. Provider capabilities include structured output, hosted tools, hosted/local MCP, image generation, vision, compaction, native code/file/web search, and approval support.
-- For OpenAI-like Responses models beginning with `gpt-5`, `o1`, `o3`, or `o4`, temperature is omitted and `modelParameters.reasoningEffort` can be set to `none`, `low`, `medium`, `high`, or `extraHigh`.
-- Use the versioned `json-schema` structured-output DTO for portable clients. Treat its
-  validation status and preserved raw output as evidence; do not validate only
-  `responseText`.
+- Use capability verification to check that a capability is assigned exactly once to an agent and
+  to publish its proof. HTTP 200 means the proof was published, not that it passed: read the
+  agent's `capabilities[].proofStatus` in `GET /api/agents`. Verification never attaches a tool to
+  a run.
+- Use setup tests for tool and MCP capability definitions before enabling them for agents or
+  process roles; they run the configured command or connect from the server host, so test only
+  definitions you trust. Use access-preview to see which candidates a capability access policy
+  would allow; it evaluates only the policy you send, not what a particular run receives. Agent
+  teams neither grant nor restrict capabilities.
+- Provider profiles include `isPrivateProvider`, `modelPrices`, `tags`, `purpose` (Chat or
+  ImageGeneration), `supportsTools` and `modelThinkingEffortCapabilities`; a profile imported from
+  a shared provider source also carries `featureConstraints` (structured output, vision, native
+  tools, hosted MCP, service-managed history, compaction, parallel function tools). Read the live
+  `ProviderProfile` schema for the exact members.
+- Set an agent's reasoning effort with the typed `thinkingEffortOverride` member of the agent form
+  (a JSON integer; null uses the provider default), not by editing `configurationJson`: the save
+  writes it to `modelParameters.reasoningEffort` and rejects a level that the model's
+  thinking-effort capability does not allow (HTTP 400 on `POST /api/agents`, 409 on the
+  external-key `PUT`). Allowed levels differ per model; read the live `AgentReasoningEffortLevel`
+  schema and the provider profile's `modelThinkingEffortCapabilities`. Temperature is not sent to
+  defined OpenAI reasoning models such as `gpt-5` or `o3`.
+- Use the versioned `json-schema` structured-output contract for portable clients. Treat
+  `structuredOutput.validationStatus`, `validationErrors` and the parsed `data` as the evidence:
+  any status other than `Valid` ends the run in state 6 Failed although the response is HTTP 200.
+  The run keeps the raw provider output internally and returns no `rawOutput` member; do not rely
+  on `responseText` alone.
 
 ## Canonical Runtime Contracts
 
-- Process-driven agent runs should use the canonical structured output contract key for process-step outcomes and preserve `processRunId`, `processStepId`, `schedulerRunId`, and `messageId` filters when reviewing execution runs.
+- Only process automation starts process-step runs and sets their output contract. In `context`,
+  never send source kind `process-step`, `processRunId` or `processStepId`, which mark the run as a
+  governed process run with different validation, approval and tool rules, and never send
+  `metadataJson` keys starting with `agent`, which the product reserves for its own run settings.
+  When reviewing process-driven runs, filter `GET /api/agents/execution-runs` by `processRunId`,
+  `processStepId`, `schedulerRunId` and `messageId`.
 - Provider usage is a ledger observation, not a chat estimate. The HTTP run-detail contract exposes `usageTotals`: observation counts, known/unknown usage counts, token and tool-call totals, known/unknown cost counts, and known cost. Raw internal provider-usage observation enums are not public API fields.
 - Tool receipts and runtime snapshots are current-run evidence. Do not treat stale prior-run receipts, copied artifacts, or provider test-chat output as proof for a governed process step.
-- When a process proof claims real automation dispatch, verify at least one execution run is bound to the claimed process run and step, has relevant tool receipts, and reports `usageTotals.observationCount > 0` when a provider response was produced. A provider test route or detached chat session proves provider health only, not process execution.
+- When a process proof claims real automation dispatch, verify at least one execution run is
+  bound to the claimed process run and step, has relevant tool receipts, and reports
+  `usageTotals.observationCount > 0` when a provider response was produced. Judge each receipt by
+  `effectState` (3 Committed, 2 NotCommitted, 1 None, 0 Unknown), not by the command's HTTP
+  status; workspace file, workspace process and MCP receipts currently report 0 Unknown, and an
+  unknown effect needs reconciliation, not a blind retry. A provider test route or detached chat
+  session proves provider health only, not process execution.
 
 ## Execution DTOs
 

@@ -41,19 +41,29 @@ The API is work in progress and experimental.
 
 1. List profiles with `GET /api/memory-providers`.
 2. Read the exact profile with `GET /api/memory-providers/{providerId}`.
-3. Create or replace it with `PUT /api/memory-providers/{providerId}`.
+3. Create or replace it with `PUT /api/memory-providers/{providerId}`. PUT is
+   last-write-wins and does not contact the provider. It also turns off the ingestion,
+   feedback and event capabilities, which this API cannot configure.
 4. Read it back and verify the effective capabilities, interaction support, limits, and
    sanitized transport configuration.
 
-The request body rejects unknown JSON properties. Treat `providerId`, driver kind,
-provider kind, fallback behavior, and query mode as typed contract values; do not invent
-string aliases.
+The request body rejects unknown JSON properties. Send `driverKind`, `fallbackBehavior` and
+the query `mode` as the exact PascalCase tokens of the live schema; do not invent string
+aliases.
+`providerKind` is a lowercase dotted token such as `memory.mock`. `providerId` is the
+caller-chosen permanent route key, at most 256 characters.
 
 ### Transport And Credential Rules
 
+- Send every request member, using null for the unused transport and for `selectionTags`
+  when there are no tags.
 - `Http` and `NativeRemote` require `http` configuration and reject `mcp`.
 - `Mcp` requires `mcp` configuration and rejects `http`.
 - `Mock` rejects both transport blocks.
+- `Http`, `NativeRemote` and `Mock` support synchronous queries only; `Mcp` supports all
+  three capabilities. Asynchronous queries require operation status. An MCP profile needs
+  `contextQueryTool` for queries and also `operationStatusTool` for asynchronous queries or
+  operation status.
 - `InProcessMigration` is not accepted through the external provider API.
 - Use HTTPS for remote HTTP endpoints or loopback HTTP for local development. Use safe
   rooted relative query and health paths.
@@ -74,10 +84,21 @@ send extra transport blocks in the hope that an inactive block will be ignored.
    `mode` of `Synchronous` or `Asynchronous`.
 2. Inspect the returned handler `status`, selection result, diagnostic, operation,
    context pack, and accepted-operation metadata. Do not assume every `2xx` contains a
-   completed context pack.
-3. For an accepted asynchronous operation, poll the returned status path or
-   `GET /api/memory-providers/operations/{operationId}`.
-4. Stop polling on the terminal ledger status described by the live schema.
+   completed context pack. The HTTP status follows `status`. Responses 403, 404, 409, 502
+   and 504 carry the query response body, not `errors`: branch on `status` and
+   `driverDispatchAttempted`. Only the 400 `memory-provider.request-invalid` and the 403
+   `memory-provider.identity-missing` (a token without a subject) use `errors`; a body the
+   framework cannot bind returns 400 without it. Every call creates a new operation, so
+   retry a 502 or 504 only as a new query.
+3. For an accepted asynchronous operation, poll
+   `GET /api/memory-providers/operations/{operationId}` with
+   `acceptedOperation.operationId`. `statusPath` holds the same identifier as text and is
+   not an address. Wait at least `pollAfterSeconds` between reads, and stop when
+   `expiresAtUtc` passes.
+4. Stop when `operation.status` is `Completed`, `Failed`, `TimedOut`, `Cancelled`,
+   `Expired` or `Forgotten`. The status read returns only the ledger record, never a
+   context pack. The record advances only while the host's memory background workers run,
+   so it can stay `Accepted` or `Running`.
 
 Query dispatch is pinned to the provider id in the route. Operation status is visible
 only to the same API requester that created the operation. A different authenticated

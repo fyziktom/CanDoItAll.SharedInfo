@@ -26,14 +26,18 @@ requires `api.tokens.issue`. Do not expose credentials in URLs, prompts or artif
 
 1. Read the native catalog for publication/model identities, availability, capabilities,
    thinking options and public prices. Use ETag/If-None-Match for conditional reads.
-2. Select the returned opaque model ID exactly. A model ID is not an upstream model name;
-   keep the publication/source identity when refreshing it.
+2. Select the returned opaque routing model identifier (`providers[].models[].id`, starting
+   `sp1.`) exactly. `displayName` is the upstream model name and must never be sent as
+   `model`. Keep the publication/source identity when refreshing it.
 3. Configure a compatible client endpoint at `/api/shared-providers/openai/v1`.
 4. Invoke only a supported operation and supported model features.
    Read [protocol limits and failure handling](references/protocol.md) before constructing
    tools, reasoning, structured output, image, or streaming requests.
 5. Inspect terminal status, usage completeness and errors. Do not retry an ambiguous
-   inference automatically: it can duplicate provider work and cost.
+   inference automatically: it can duplicate provider work and cost. The native catalog
+   fails with the general `errors` envelope (for example
+   `shared-provider.catalog.unavailable`). The OpenAI-compatible routes use the OpenAI
+   `error` object; branch on `error.code`.
 
 Invocation may consume paid upstream resources. A catalog-read request does not authorize
 an inference test. Respect the user's requested call and any stated budget.

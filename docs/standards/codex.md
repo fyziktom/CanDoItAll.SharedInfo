@@ -55,6 +55,9 @@ invariants but does not replace the repository documents.
   from the recorded snapshot.
 - Update the snapshot, API-skill guidance, provenance, and validation together when the
   web API contract changes.
+- Write API skills with the terms of the [API domain glossary](../architecture/candoitall-api-domain-glossary.md)
+  and rely on the snapshot's operation and schema descriptions for field-level detail; a skill
+  adds workflow guidance and must not restate or contradict the generated contract.
 
 ## Agents
 
