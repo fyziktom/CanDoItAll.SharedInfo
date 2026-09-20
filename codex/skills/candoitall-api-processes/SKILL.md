@@ -1,12 +1,28 @@
 ---
 name: candoitall-api-processes
-description: Use when launching, dispatching, cancelling, reworking, or observing live CanDoItAll process runs and SSE lifecycle signals through the HTTP API.
+description: Use when discovering CanDoItAll process definitions, roles and steps, or launching, dispatching, cancelling, reworking and observing process runs through the HTTP API.
 ---
 
 # CanDoItAll Processes API
 
 Use this skill for process runtime control and readback through the main CanDoItAll web
 API.
+
+## Access and definition discovery
+
+Check `GET /api/access/status` and follow the shared
+[authentication and capability rules](../_candoitall-api-shared/references/access-and-authentication.md).
+With JWT enabled, catalog and run reads use `api.processes.read`; launch/check, launch,
+dispatch, cancel and rework use `api.processes.execute`. Configuration writes use
+`api.processes.write`. Compatible `api` remains accepted; execution does not grant reads.
+
+Discover definitions through `GET /api/processes/definitions`, then read
+`/{definitionKey}`, `/{definitionKey}/roles` and `/{definitionKey}/steps` beneath that
+catalog route. A catalog entry carries a key wrapper: read the opaque string from
+`items[].key.value`, then URI-escape that value for the path. Do not send the wrapper,
+a GUID or a display name. These are current catalog/editor projections, not durable
+run snapshots. Search is bounded to 256 characters; use the documented scope enum.
+Missing definitions return 404, while infrastructure failures remain service errors.
 
 ## Contract Source
 
@@ -236,9 +252,10 @@ the project-structure operation result and process readback.
 1. Compare `GET /api/processes/contract` with the running OpenAPI document.
 2. Run `launch/check` and inspect readiness before a durable launch.
 3. After dispatch, cancellation, or rework, read live detail and history.
-4. Confirm the documented errors. A 403 from check, launch or launch status has no JSON
-   envelope and may render as the host's HTML status page. The all-zero GUID currently
-   returns 500 on several live-run routes. Launch 400s (`process.launch_check_failed`,
+4. Inspect status and the operation's JSON error envelope. The API transport pipeline
+   supplies safe JSON for otherwise bodyless errors, including denied process launch
+   operations; do not parse an HTML status page. Invalid all-zero GUIDs can still produce
+   500 on live-run routes. Launch 400s (`process.launch_check_failed`,
    `process.launch_failed`) do not return the cause.
 
 ## Source Route Appendix
@@ -263,4 +280,9 @@ the project-structure operation result and process readback.
 | `GET` | `/api/processes/runs/{runId}/history` |
 | `POST` | `/api/processes/runs/{runId}/steps/{stepInstanceId}/rework` |
 | `GET` | `/api/processes/runs/{runId}/summary` |
+| `GET` | `/api/processes/definitions` |
+| `GET` | `/api/processes/definitions/{definitionKey}` |
+| `GET` | `/api/processes/definitions/{definitionKey}/roles` |
+| `GET` | `/api/processes/definitions/{definitionKey}/steps` |
+
 <!-- api-docs-skills-parity:routes:end -->

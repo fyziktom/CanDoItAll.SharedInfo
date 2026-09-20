@@ -49,6 +49,10 @@ invariants but does not replace the repository documents.
 - Capture from the repository's canonical development URL so the OpenAPI `servers` value
   and content hash do not drift with an arbitrary temporary port.
 - Record route-family counts that account for every documented path and operation.
+- Record the API exposure configuration alongside provenance. Capture the supported
+  surface with JWT, user authentication and access management enabled so conditional
+  account/session routes and bearer security metadata are included. Keep signing keys,
+  passwords and hashes out of the snapshot and manifest; use isolated synthetic credentials.
 - Make every skill that operates the web API link to the shared snapshot and its
   provenance manifest.
 - Treat a target host's live OpenAPI document as authoritative when its version differs

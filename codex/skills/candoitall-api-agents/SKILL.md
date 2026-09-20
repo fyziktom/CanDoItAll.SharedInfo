@@ -17,10 +17,13 @@ for the other.
 
 - Start the CanDoItAll web app and inspect Swagger/OpenAPI at `/swagger`.
 - Check `/api/access/status` before assuming bearer tokens are required.
-- When API authorization is enabled, send `Authorization: Bearer <token>`. Most agent routes
-  accept any valid token; recovery and cancellation reconciliation need the exact `api` scope,
-  and recording a recruiting human review needs `agent-recruiting.review` (see
-  [partner API contracts](references/partner-api-contracts.md)).
+- Follow [authentication and capability rules](../_candoitall-api-shared/references/access-and-authentication.md)
+  for login, machine credentials, HTTPS and Swagger authorization.
+- With JWT enabled, agent reads, configuration writes and execution use `api.agents.read`,
+  `api.agents.write` and `api.agents.execute` respectively, or compatible `api` where supported.
+  Recovery and cancellation reconciliation retain exact `api`; human recruiting review
+  retains exact `agent-recruiting.review`. Existing tool and approval checks still apply
+  (see [partner API contracts](references/partner-api-contracts.md)).
 
 ## Contract Source
 

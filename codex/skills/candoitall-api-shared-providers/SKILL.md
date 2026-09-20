@@ -19,8 +19,11 @@ A snapshot from an uncommitted tree is not commit-clean provenance.
 
 With authorization enabled, send the configured bearer token. Catalog/models need
 `api.shared-providers.catalog.read`; inference needs `api.shared-providers.invoke`.
-The existing `api` umbrella also satisfies these two policies. Token issuance itself
-requires `api.tokens.issue`. Do not expose credentials in URLs, prompts or artifacts.
+The existing `api` umbrella also satisfies these two policies. HTTP token issuance needs
+an enabled management surface and a registered configured-administrator session; legacy
+`api.tokens.issue` is insufficient. Follow [authentication and capability rules](../_candoitall-api-shared/references/access-and-authentication.md)
+for account login, sessions, HTTPS and Swagger. Do not expose credentials in URLs, prompts
+or artifacts.
 
 ## Discover and invoke
 

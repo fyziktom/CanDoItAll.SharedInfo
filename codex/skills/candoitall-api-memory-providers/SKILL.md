@@ -28,8 +28,9 @@ The API is work in progress and experimental.
 - Authorization accepts the umbrella `api` scope or the granular
   `api.memory-providers.read`, `api.memory-providers.write`, and
   `api.memory-providers.query` scopes. Read covers profile/status `GET` operations,
-  write covers profile `PUT`, and query covers the query `POST`. Token issuance
-  itself requires the privileged `api.tokens.issue` scope.
+  write covers profile `PUT`, and query covers the query `POST`.
+- Follow [authentication and capability rules](../_candoitall-api-shared/references/access-and-authentication.md)
+  for login, administrator-only HTTP token issuance, HTTPS and Swagger authorization.
 - Use the shared
   [OpenAPI snapshot](../_candoitall-api-shared/references/candoitall-web.openapi.json)
   for exact schemas when it matches the target source version.

@@ -213,6 +213,46 @@ A business-supplied reference on a party. The CRM/HR persistence model indexes i
 
 **Anchors:** `Party.ExternalCode`.
 
+### AUTH-011 — ordinary API account
+
+A stable server-owned user identity with password authentication, explicit business capabilities and a versioned profile under the private control-plane root.
+
+**Not the same as:** configured administrator; agent definition; workspace database user.
+
+**Anchors:** `ApiUserDetails`, `/api/access/users`.
+
+### AUTH-012 — configured administrator session
+
+A registered login session validated against the configured administrator credential binding. It authorizes access administration when that HTTP surface is enabled, without implicitly granting workspace business permissions.
+
+**Not the same as:** an `api` or `api.tokens.issue` claim; an administrator-looking token subject or role.
+
+**Anchors:** `ApiBootstrapAdminOptions`, `ApiAuthorizationPolicies.ManageAccess`, `ValidatedApiCredential`.
+
+### AUTH-013 — user session
+
+A registered bearer credential tied to an ordinary account's current authentication revision. Expiry, revocation and account changes can invalidate it; a new login creates a new session.
+
+**Not the same as:** machine token; refresh token; agent chat session.
+
+**Anchors:** `ApiLoginResult`, `ApiSessionService`, `/api/access/me`, `/api/access/logout`.
+
+### AUTH-014 — machine credential registration
+
+The server-owned registration of an independently issued machine JWT. Account edits do not revoke it; explicit registration revocation/deletion and signing-key changes affect its validity.
+
+**Not the same as:** ordinary account password; administrator session; token plaintext returned by a metadata read.
+
+**Anchors:** `ApiTokenAdministrationService`, `/api/access/tokens`.
+
+### AUTH-015 — API capability catalog
+
+The server-owned set of selectable authorization grants, including credential-kind restrictions and sensitivity markers. Read, write and execute grants are independent, and additional exact-scope and domain policies can still apply.
+
+**Not the same as:** agent tool capability; query filter; permission inferred from a valid signature.
+
+**Anchors:** `ApiScopeCatalog`, `/api/access/scopes`, `ApiSectionAuthorization`.
+
 ## Projects, Project Structure and tasks
 
 ### PROJ-001 — project

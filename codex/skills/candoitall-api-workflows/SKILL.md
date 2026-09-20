@@ -11,9 +11,11 @@ Use this skill when a task needs workflow authoring, lifecycle control, runtime 
 
 - Start the CanDoItAll web app and inspect Swagger/OpenAPI at `/swagger` or `/openapi/v1.json`.
 - Check `/api/access/status` before assuming bearer tokens are required.
-- When API authorization is enabled, create a token from Settings -> API Access, or with
-  `POST /api/access/tokens` using a token that has the exact `api.tokens.issue` scope, then send
-  `Authorization: Bearer <token>`.
+- Follow [authentication and capability rules](../_candoitall-api-shared/references/access-and-authentication.md)
+  for login, registered-administrator token issuance, HTTPS and Swagger authorization.
+- With JWT enabled, use `api.workflows.read`, `api.workflows.write` and
+  `api.workflows.execute` for their respective operations, or compatible `api`.
+  Durable external responses retain the separate exact `api.workflows.respond` policy.
 - Do not add or reinstall a workflow-specific MCP server; workflow control is through the HTTP API.
 
 ## Contract Source
@@ -44,6 +46,21 @@ Use this skill when a task needs workflow authoring, lifecycle control, runtime 
 - Import/export: `GET /api/workflows/definitions/{workflowId}/export`, `POST /api/workflows/definitions/import`.
 - Validation: `POST /api/workflows/definitions/{workflowId}/validate` for saved definitions and `POST /api/workflows/validate` for drafts.
 - LLM call components and providers: `GET /api/workflows/provider-options`, `GET /api/workflows/components`, `GET /api/workflows/components/{componentId}`, `POST /api/workflows/components`, `DELETE /api/workflows/components/{componentId}`. Reusable prompt content is canonical in `/api/prompt-gallery`; workflow components retain provider/model/runtime settings plus an immutable Gallery item/version reference and prompt snapshot.
+
+### Create a draft from a workflow template
+
+Read `GET /api/workflows/templates` with workflow read authority. Select the returned
+opaque template key and call `POST /api/workflows/templates/{templateKey}/drafts` with
+workflow write authority. The result is a persisted draft plus its component, using the
+same owner as the Settings template action; it does not run a model.
+
+An enabled structured-output provider with an available configured default model is
+required before writing. Each call creates new identities and has no idempotency key;
+after an ambiguous response, inspect existing definitions before repeating it. Friendly
+names can coincide during concurrent creation and are not identity. Partial-write cleanup
+is bounded to that request's component. Unexpected cleanup failures reach HTTP clients
+as generic 500 errors, without a distinct cleanup code; an ambiguous failure requires
+state inspection and possibly operator review before another creation attempt.
 
 ## Runtime Work
 
@@ -235,9 +252,6 @@ lineage.
 
 <!-- api-docs-skills-parity:routes:start -->
 
-Workflows API route appendix. Generated from Minimal API registrations; refresh from
-`WorkflowsApi.cs` and `WorkflowRunEventsApi.cs` when routes change.
-
 | Method | Route |
 | --- | --- |
 | `GET` | `/api/workflows/analytics` |
@@ -284,4 +298,7 @@ Workflows API route appendix. Generated from Minimal API registrations; refresh 
 | `POST` | `/api/workflows/settings` |
 | `POST` | `/api/workflows/test-runs` |
 | `POST` | `/api/workflows/validate` |
+| `GET` | `/api/workflows/templates` |
+| `POST` | `/api/workflows/templates/{templateKey}/drafts` |
+
 <!-- api-docs-skills-parity:routes:end -->

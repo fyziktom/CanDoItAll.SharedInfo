@@ -11,7 +11,9 @@ Operate the canonical prompt and prompt-part library through the CanDoItAll web 
 
 - Start the web app and inspect `/swagger` or `/openapi/v1.json` before generating a client.
 - Check `/api/access/status` before assuming bearer authentication is disabled.
-- When API authorization is enabled, send `Authorization: Bearer <token>`.
+- With JWT enabled, send `Authorization: Bearer <token>` with `api.prompts.read` for reads
+  or `api.prompts.write` for mutations, or compatible `api`. Follow the shared
+  [authentication and capability rules](../_candoitall-api-shared/references/access-and-authentication.md).
 - Before exposing the host outside a trusted local environment, set `Api:Authorization:Enabled` to `true` and provide a secret signing key of at least 32 bytes. The repository's local-first defaults do not protect mutation or projection endpoints.
 
 ## Contract Source

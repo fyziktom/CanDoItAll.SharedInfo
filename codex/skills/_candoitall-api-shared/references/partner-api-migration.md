@@ -68,9 +68,8 @@ what the handlers already return, so regenerated clients change shape:
 
 ## Security Delta (commit b82ffc57, 2026-09-19)
 
-These behavior changes are newer than the captured snapshot, which was taken at commit
-`3fb71dd5`. Routes, methods and operation ids are unchanged; the snapshot does not yet show the
-two `401` declarations the runtime routes gained.
+These changes are included in the current snapshot. That security release preserved
+routes, methods and operation identifiers and added the runtime routes' 401 declarations.
 
 | Superseded integration behavior | Current contract | Required migration |
 | --- | --- | --- |
@@ -80,6 +79,23 @@ two `401` declarations the runtime routes gained.
 | Send an agent run `context` that claims a process step (source kind `process-step`, `processRunId` or `processStepId`), or `metadataJson` carrying `agentExternalTargetRootBindings` | Every HTTP run start (`/api/agents/execution-runs`, `/api/agents/{agentId}/execution-runs` and their `/stream` variants) rejects both before any run with `400 agents.request-invalid` | Drop those context members. Process automation sets them in process; external folders are granted only in the agent's saved workspace tool settings |
 | Read other callers' recorded request and response bodies from `POST /api/project-structure/analytics/query` | Bodies, warnings, internal error message and repository root are returned only for the caller's own calls; other callers' entries carry `{}`, `[]`, null and an empty string | Use the log for your own call evidence; read owner state through the structure read |
 | Send an OAuth `returnPath` such as `/\host`, `//host` or one containing control characters to `POST /api/plugins/{pluginId}/oauth/start` | A return path must start with a single `/` that is not followed by `/` or `\` and must contain no control characters; any other value is replaced by `/plugins` | Send a plain relative path of this host, for example `/plugins?connection=gmail` |
+
+## API Access Delta (commits 6aa1aa0dd and 32d296a92, 2026-09-20)
+
+Read [authentication and capabilities](access-and-authentication.md) for the exposure
+matrix, session lifecycle and scope map. Regenerate clients from the refreshed snapshot;
+login and management routes appear only when their independent settings are enabled.
+
+| Superseded integration behavior | Current contract | Required migration |
+| --- | --- | --- |
+| Issue HTTP tokens with broad `api` or `api.tokens.issue` | HTTP account/token management requires a registered configured-administrator session and enabled management | Log in as the configured administrator when administration was requested; use ordinary scoped credentials for business work |
+| Treat any signed JWT as sufficient for Projects, Agents, Workflows, Processes, CRM/HR, Prompts, Plugins or runtime | Section read/write/execute policies apply; existing exact policies still apply | Select the required catalog capabilities independently; do not broaden grants after a 403 |
+| Keep using an account token after editing its profile, grants, password or enabled state | Existing sessions become invalid at the next validation; active streams also revalidate | Log in again under current permissions; re-enabling never revives a session |
+| Authenticate the OpenAPI document before Swagger can show Authorize | Documents and UI load anonymously when enabled; protected operations retain bearer requirements | Use HTTPS Swagger, paste a raw JWT into Authorize, and keep documentation exposure settings explicit |
+| Scrape process definitions, roles or steps from UI/internal storage | Four read operations expose current catalog/editor projections under `/api/processes/definitions` | Select returned opaque definition keys; keep definition discovery separate from durable run evidence |
+| Reimplement Settings' workflow-template creation | `GET /api/workflows/templates` and `POST /api/workflows/templates/{templateKey}/drafts` use the canonical application owner | Grant workflow read/write as needed, satisfy provider/model prerequisites and reconcile uncertain creation before retrying |
+| Treat a successful settings write with failed read-back as a failed mutation | Workspace `PUT` can return success with `X-CanDoItAll-Read-Back: pending` and the saved snapshot | Refresh with `GET /api/settings/workspace`; do not repeat the committed write |
+| Parse framework/API failures as HTML or suppress service faults with empty data | API transport failures return safe JSON with explicit status; domain envelopes remain distinct | Branch on status and the operation's documented JSON envelope; preserve 500/503 failures |
 
 ## Upgrade Gate
 

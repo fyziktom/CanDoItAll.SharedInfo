@@ -11,10 +11,11 @@ Use this skill when a task needs project, hierarchy, project-structure, dependen
 
 - Start the CanDoItAll web app and use Swagger/OpenAPI from the running host, usually `http://localhost:5032/swagger` or `https://localhost:7271/swagger`.
 - Use `/api/access/status` to check whether API authorization is enabled.
-- When API authorization is enabled, create a token from Settings -> API Access, or with
-  `POST /api/access/tokens` using a token that has the exact `api.tokens.issue` scope, then send
-  `Authorization: Bearer <token>`. Every `/api/project-structure` operation, including reads,
-  needs the `api` or `api.project-structure.write` scope; `/api/projects` accepts any valid token.
+- Follow [authentication and capability rules](../_candoitall-api-shared/references/access-and-authentication.md)
+  for login, administrator-only HTTP token issuance, HTTPS and Swagger authorization.
+- Every `/api/project-structure` operation, including reads, needs `api` or
+  `api.project-structure.write`. `/api/projects` separately enforces `api.projects.read`
+  and `api.projects.write`, or compatible `api`; a valid token alone is insufficient.
 - Do not reinstall or use `candoitall_projectstructure`; that MCP server has been removed.
 
 ## Contract Source

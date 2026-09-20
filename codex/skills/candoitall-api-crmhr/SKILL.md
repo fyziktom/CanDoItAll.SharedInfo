@@ -12,7 +12,9 @@ Use this skill for CRM/HR HTTP operations. The CRM/HR application services remai
 1. Start the intended CanDoItAll Web instance.
 2. Call `GET /api/access/status`.
 3. If `authorizationEnabled` is true, send `Authorization: Bearer <token>` from an approved token workflow.
-4. Treat the response as the source of truth. Scope claims may be issued, but the current API boundary authenticates the whole `/api` group and does not provide CRM/HR scope policies.
+4. Select `api.crm-hr.read` for reads and `api.crm-hr.write` for mutations; compatible `api`
+   remains accepted. A valid token from another section is insufficient. Follow the shared
+   [authentication and capability rules](../_candoitall-api-shared/references/access-and-authentication.md).
 
 Use `/swagger/v1/swagger.json` to inspect the running contract when source and host versions may differ.
 
@@ -41,7 +43,8 @@ Use `/swagger/v1/swagger.json` to inspect the running contract when source and h
 4. Submit the smallest typed command that owns the intended change.
 5. Read the resource back and verify relationships, workforce state, or recruiting workspace.
 6. On a non-success response, inspect `errors[].code`, `errors[].message`, and `errors[].severity`. Do not hide the failure with another persistence path.
-   A body the framework cannot bind returns 400 without the `errors` envelope.
+   Transport/binding failures return safe JSON rather than the domain `errors` array;
+   inspect the status and returned envelope before parsing it.
 
 Read the CRM/HR API contract reference before constructing request bodies or multi-step
 scenarios.

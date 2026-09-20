@@ -14,9 +14,10 @@ own documentation pipeline.
 
 ## Source of truth
 
-- C# XML documentation on route handlers and serialized types is the canonical operation and schema
-  text. Do not keep a second, independently edited set of descriptions in code, transformers or
-  Markdown.
+- C# XML documentation on route handlers and serialized types is the default canonical operation and
+  schema text. A reviewed source-owned metadata path, such as endpoint `DescribeApi` declarations and
+  DTO `Description` attributes used by the access and process-authoring APIs, can own that text instead.
+  Keep exactly one description owner; do not maintain independent copies in transformers or Markdown.
 - The generated OpenAPI document of a build is the published contract. Hand-edited copies are not.
   Fix a description at its source and regenerate.
 - A few schemas have no CLR source (hand-built protocol schemas) or come from framework or external
@@ -123,8 +124,9 @@ These rules follow from how the XML comment generator of `Microsoft.AspNetCore.O
 
 - Enable `GenerateDocumentationFile` on every project that declares a route handler or a serialized API
   type. Only project references contribute XML; package references do not.
-- Route handlers are named methods, not lambdas: the compiler keeps no XML for lambdas. The generator
-  ignores `private` handlers; use `internal` or `public`.
+- XML-documented route handlers are named `internal` or `public` methods: the compiler keeps no XML
+  for lambdas and the generator ignores `private` handlers. A reviewed endpoint-metadata path must
+  supply and validate the descriptions when a handler cannot contribute XML.
 - Every route group sets its tags explicitly. A lambda's default tag is the application name and a
   method's is its declaring class.
 - Document path, query, header and body parameters with `<param>`. Do not document service,
@@ -139,11 +141,25 @@ These rules follow from how the XML comment generator of `Microsoft.AspNetCore.O
 - A component first generated from a nullable value type loses its type description. Restore it from the
   same XML rather than from a second text source.
 
+## Documentation access and bearer authorization
+
+Keep documentation exposure settings explicit and independent of API operation permissions.
+For Swagger's JWT **Authorize** flow, the page and its OpenAPI document must load before the
+user supplies a token. Disabling document exposure must also disable a UI that depends on it.
+Serving a document anonymously never grants access to the operations it describes.
+
+Publish an HTTP bearer/JWT security scheme and attach its requirement to the protected
+operations. Anonymous login/status operations must remain usable without that requirement.
+Verify page and document loading with API authorization enabled, then prove a protected
+operation returns 401 without a token, succeeds with an authorized JWT and returns 401 after
+Swagger authorization is cleared. UI logout and server-side session revocation are distinct.
+
 ## Verification
 
 Keep these checks as separate results; one does not prove another:
 
-1. **Source** — handlers and every exposed type and member carry meaningful XML comments.
+1. **Source** — handlers and every exposed type and member carry meaningful descriptions through
+   XML comments or a reviewed source-owned metadata path.
 2. **Document** — a maintained test fails when an operation, parameter, request body, response,
    component schema or property of the generated document has no description, except for a reviewed
    list of exclusions with reasons.

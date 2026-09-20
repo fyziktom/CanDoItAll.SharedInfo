@@ -56,6 +56,12 @@ install, name both the desired skill and `_candoitall-api-shared`:
     -PackageName candoitall-api-agents,_candoitall-api-shared
 ```
 
+For login, Swagger JWT authorization and account/token administration, use
+[`candoitall-api-access`](skills/candoitall-api-access/SKILL.md). For workspace business
+defaults, use [`candoitall-api-workspace-settings`](skills/candoitall-api-workspace-settings/SKILL.md).
+Both require `_candoitall-api-shared`; all API skills share its
+[access and capability reference](skills/_candoitall-api-shared/references/access-and-authentication.md).
+
 For shared-provider catalog discovery and compatible inference, install
 `candoitall-api-shared-providers` with `_candoitall-api-shared`.
 

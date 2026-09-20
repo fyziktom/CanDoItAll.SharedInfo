@@ -3,27 +3,48 @@
   "source": {
     "repository": "CanDoItAll",
     "branch": "development",
-    "commit": "3fb71dd583f67f83efdda5f6076b522108eacff0",
+    "commit": "32d296a92ce26c66bd539061fd2a8e3fe10cbaea",
     "workingTreeClean": true,
-    "captureNote": "Documented HTTP API contract of development: captured from a clean publish (UseAppHost=false, Release) of CanDoItAll tree 9a9176f21a12c6e38022833bcc7463b0ac9238f6, exported with git checkout-index from the staged state that became commit 3fb71dd583f67f83efdda5f6076b522108eacff0, built with the clean sibling checkouts Components ff5289746573a6dd6456754a7764844627ddd49f and FileTools 3a080ecd31068a77c1e1bd639f7a78e21c93db85. The publication ran as an isolated Development host (InMemory database provider, private /tmp workspace and control-plane roots, RuntimeHost__Profile=LinuxHeadless) inside a container with no network except its own loopback (mcr.microsoft.com/dotnet/aspnet:10.0.10, image sha256:f1126d438ccc359f51cc6d4701a8deae513856cf10f5fe645d29ea6403dcac6b), bound to http://localhost:5032 of that network namespace, because the operator's protected host owns localhost:5032 on Windows and was not touched. Both runtime document paths returned byte-identical 3636957-byte documents, fetched from inside the same namespace. A Windows capture of the same publication on the free loopback port 51813 (SHA-256 d31b41aab7856db4c9c74e9c4ec800d8aeb38878e3aa45b68fdf2f47136e2aaa) differs only in the servers entry; port identity is not source identity.",
+    "captureNote": "Clean Release Docker publication of CanDoItAll development commit 32d296a92ce26c66bd539061fd2a8e3fe10cbaea, tree 203460f864ae4b2e65b3377ebb5fcdb4eb863ce4, with the clean dependency pins recorded below. Capture image sha256:c1b23150f87bd2ca14f593debc76dce133df71e8f4f7a5d91afcc03f2dfaba12 ran as an isolated Development host with InMemory storage, synthetic private credentials, LinuxHeadless runtime and McpToolHost worker policy, bound to http://localhost:5032 in a network-none container. All API, OpenAPI, Swagger, JWT, user authentication and HTTP management switches were enabled to include conditional access routes and bearer metadata. Two disposable readers joined only its network namespace; anonymous document requests returned byte-identical 3881813-byte content. The same published files ran under WindowsHeadless on http://127.0.0.1:54619/ with isolated state; both Windows document routes were identical and the resulting contract differs only in servers (SHA-256 663132B00A777CABAAEC6399FEF5E1650A964155ADB999FC0A00CB665091FA53). Existing operator hosts and the publisher/client test pair were not changed.",
     "webProject": "src/App/CanDoItAll.Web/CanDoItAll.Web.csproj",
     "environment": "Development",
-    "generatedUtc": "2026-09-19T17:41:57.3280909Z",
+    "generatedUtc": "2026-09-20T19:13:26.683676Z",
     "runtimeDocumentPaths": [
       "/openapi/v1.json",
       "/swagger/v1/swagger.json"
-    ]
+    ],
+    "tree": "203460f864ae4b2e65b3377ebb5fcdb4eb863ce4",
+    "dependencies": [
+      {
+        "repository": "CanDoItAll.Components",
+        "commit": "ff5289746573a6dd6456754a7764844627ddd49f",
+        "workingTreeClean": true
+      },
+      {
+        "repository": "CanDoItAll.FileTools",
+        "commit": "3a080ecd31068a77c1e1bd639f7a78e21c93db85",
+        "workingTreeClean": true
+      }
+    ],
+    "apiConfiguration": {
+      "Api:Enabled": true,
+      "Api:OpenApiEnabled": true,
+      "Api:SwaggerUiEnabled": true,
+      "Api:Authorization:Enabled": true,
+      "Api:UserAuthentication:Enabled": true,
+      "Api:AccessManagement:Enabled": true
+    }
   },
   "artifact": {
     "file": "references/candoitall-web.openapi.json",
-    "sha256": "95C566D15F21C036610DA2F37D174DB7A88FE095414A866DD58B276E8A806006",
+    "sha256": "C7DA97AC7C0EA73CBEF1AAE47E6E03A6CF24C550CAFA2C893A1E6DA06C501A3A",
     "openapiVersion": "3.1.1",
     "documentTitle": "CanDoItAll.Web | v1",
     "documentVersion": "1.0.0",
     "serverUrl": "http://localhost:5032/",
-    "pathCount": 289,
-    "operationCount": 321,
-    "schemaCount": 865
+    "pathCount": 305,
+    "operationCount": 342,
+    "schemaCount": 997
   },
   "routeFamilies": [
     {
@@ -33,8 +54,8 @@
     },
     {
       "prefix": "/api/access",
-      "pathCount": 2,
-      "operationCount": 2
+      "pathCount": 11,
+      "operationCount": 15
     },
     {
       "prefix": "/api/agent-recruiting",
@@ -78,8 +99,8 @@
     },
     {
       "prefix": "/api/processes",
-      "pathCount": 16,
-      "operationCount": 16
+      "pathCount": 20,
+      "operationCount": 20
     },
     {
       "prefix": "/api/project-structure",
@@ -102,6 +123,11 @@
       "operationCount": 2
     },
     {
+      "prefix": "/api/settings/workspace",
+      "pathCount": 1,
+      "operationCount": 2
+    },
+    {
       "prefix": "/api/shared-providers",
       "pathCount": 5,
       "operationCount": 5
@@ -113,8 +139,8 @@
     },
     {
       "prefix": "/api/workflows",
-      "pathCount": 39,
-      "operationCount": 44
+      "pathCount": 41,
+      "operationCount": 46
     },
     {
       "prefix": "/authorized-files",
@@ -793,6 +819,26 @@
           "method": "GET",
           "path": "/api/processes/runs/{runId}/summary",
           "operationId": "GetProcessRunRecordSummary"
+        },
+        {
+          "method": "GET",
+          "path": "/api/processes/definitions",
+          "operationId": "ListProcessDefinitions"
+        },
+        {
+          "method": "GET",
+          "path": "/api/processes/definitions/{definitionKey}",
+          "operationId": "GetProcessDefinition"
+        },
+        {
+          "method": "GET",
+          "path": "/api/processes/definitions/{definitionKey}/roles",
+          "operationId": "GetProcessDefinitionRoles"
+        },
+        {
+          "method": "GET",
+          "path": "/api/processes/definitions/{definitionKey}/steps",
+          "operationId": "GetProcessDefinitionSteps"
         }
       ]
     },
@@ -1395,6 +1441,16 @@
           "method": "POST",
           "path": "/api/workflows/validate",
           "operationId": "ValidateDraftWorkflowDefinition"
+        },
+        {
+          "method": "GET",
+          "path": "/api/workflows/templates",
+          "operationId": "ListWorkflowTemplates"
+        },
+        {
+          "method": "POST",
+          "path": "/api/workflows/templates/{templateKey}/drafts",
+          "operationId": "AddWorkflowTemplateToDrafts"
         }
       ]
     },
@@ -1428,6 +1484,105 @@
           "method": "GET",
           "path": "/api/shared-providers/v1/catalog",
           "operationId": "GetSharedProviderCatalog"
+        }
+      ]
+    },
+    {
+      "name": "API Access",
+      "prefix": "/api/access",
+      "skillFile": "../candoitall-api-access/SKILL.md",
+      "operations": [
+        {
+          "method": "GET",
+          "path": "/api/access/status",
+          "operationId": "GetApiAccessStatus"
+        },
+        {
+          "method": "POST",
+          "path": "/api/access/login",
+          "operationId": "LoginApiUser"
+        },
+        {
+          "method": "GET",
+          "path": "/api/access/me",
+          "operationId": "GetApiSession"
+        },
+        {
+          "method": "POST",
+          "path": "/api/access/logout",
+          "operationId": "LogoutApiSession"
+        },
+        {
+          "method": "GET",
+          "path": "/api/access/scopes",
+          "operationId": "GetApiScopeCatalog"
+        },
+        {
+          "method": "GET",
+          "path": "/api/access/users",
+          "operationId": "ListApiUsers"
+        },
+        {
+          "method": "POST",
+          "path": "/api/access/users",
+          "operationId": "CreateApiUser"
+        },
+        {
+          "method": "GET",
+          "path": "/api/access/users/{id}",
+          "operationId": "GetApiUser"
+        },
+        {
+          "method": "PUT",
+          "path": "/api/access/users/{id}",
+          "operationId": "UpdateApiUser"
+        },
+        {
+          "method": "DELETE",
+          "path": "/api/access/users/{id}",
+          "operationId": "DeleteApiUser"
+        },
+        {
+          "method": "POST",
+          "path": "/api/access/users/{id}/reset-password",
+          "operationId": "ResetApiUserPassword"
+        },
+        {
+          "method": "GET",
+          "path": "/api/access/tokens",
+          "operationId": "ListApiTokens"
+        },
+        {
+          "method": "POST",
+          "path": "/api/access/tokens",
+          "operationId": "IssueApiToken"
+        },
+        {
+          "method": "POST",
+          "path": "/api/access/tokens/{id}/revoke",
+          "operationId": "RevokeApiToken"
+        },
+        {
+          "method": "DELETE",
+          "path": "/api/access/tokens/{id}",
+          "operationId": "DeleteApiToken"
+        }
+      ]
+    },
+    {
+      "name": "Workspace Settings API",
+      "prefix": "/api/settings/workspace",
+      "skillFile": "../candoitall-api-workspace-settings/SKILL.md",
+      "operations": [
+        {
+          "method": "GET",
+          "path": "/api/settings/workspace",
+          "operationId": "GetWorkspaceSettings"
+        },
+        {
+          "method": "PUT",
+          "path": "/api/settings/workspace",
+          "operationId": "SaveWorkspaceSettings"
         }
       ]
     }

@@ -14,7 +14,9 @@ sessions, tools, skills, MCP access, memory, or governed agent execution runs.
 - Start the CanDoItAll web app and inspect Swagger UI at `/swagger`.
 - Check `/api/access/status` before assuming bearer tokens are required.
 - When API authorization is enabled (`authorizationEnabled`), send `Authorization: Bearer <token>`
-  with the exact LLM Chat scope.
+  with the exact LLM Chat scope. Follow the shared
+  [authentication and capability rules](../_candoitall-api-shared/references/access-and-authentication.md)
+  for login, credential expiry, HTTPS and Swagger authorization.
 - Use the shared
   [OpenAPI snapshot](../_candoitall-api-shared/references/candoitall-web.openapi.json)
   when its [provenance manifest](../_candoitall-api-shared/manifest.json) matches the target source.
