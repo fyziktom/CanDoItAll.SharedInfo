@@ -44,6 +44,12 @@ Declare every status an operation can return, with the type and media type it re
 response description does not create a response. Do not declare an envelope the route does not use,
 wrap existing results in new envelopes or change runtime behavior to simplify documentation.
 
+Say whose data an operation returns. When a response can carry records that another caller
+created, name the members withheld or redacted for them, and give the caller scope of every key a
+client supplies for retries, so a reader knows whether another caller's key can collide with or
+replay theirs. Describing such a key as shared across callers, or a record as complete, is a
+security claim: verify it against the store and the authorization scope.
+
 An HTTP operation is not an agent runtime tool, even when both use the same application service.
 Never describe HTTP access as a way around a denied or unavailable tool.
 

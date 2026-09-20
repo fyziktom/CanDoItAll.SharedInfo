@@ -72,3 +72,10 @@ The shared OpenAPI snapshot records the exact product branch and commit it was c
 from in its manifest; it is captured from the product's `development` branch, which includes
 the module-decoupling work. A snapshot describes one build: the live `/openapi/v1.json`
 of the target host stays authoritative when it differs.
+
+Behavior newer than the current snapshot is recorded in the shared package's README and in the
+security delta of its partner migration matrix: workflow idempotency keys and their lookup belong
+to the caller that recorded them, workflow cancellation and analytics no longer return a run's
+launch origin, the `/api/runtime` snapshots need a bearer token where API authorization is on,
+HTTP agent run starts refuse a caller context that claims a process step or binds host folders,
+and Project Structure analytics returns recorded bodies only to the caller that made the call.

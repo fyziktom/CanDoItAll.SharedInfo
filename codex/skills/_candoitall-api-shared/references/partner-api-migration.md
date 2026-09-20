@@ -66,6 +66,21 @@ what the handlers already return, so regenerated clients change shape:
 | Handle a declared status that never occurred | 13 unreachable declarations were removed, including recruiting review 409 (a review conflict currently fails with HTTP 500), LLM send-turn 504 (deadline failures are recorded on the asynchronous operation) and memory operation status 502/504 | Remove dead branches; keep generic 5xx handling |
 | Read enum values from the schema list | Integer enums carry no value list; every enum schema and enum-typed member describes its values in text | Map values from the descriptions or the live document |
 
+## Security Delta (commit b82ffc57, 2026-09-19)
+
+These behavior changes are newer than the captured snapshot, which was taken at commit
+`3fb71dd5`. Routes, methods and operation ids are unchanged; the snapshot does not yet show the
+two `401` declarations the runtime routes gained.
+
+| Superseded integration behavior | Current contract | Required migration |
+| --- | --- | --- |
+| Share one `Idempotency-Key` between callers of a host, or read a start made by another caller with `GET /api/workflows/runs/by-idempotency-key/{key}` | A key belongs to the caller that first used it: the bearer token subject, or the local operator when authorization is disabled, under the current database profile's authorization scope | Use keys per caller. A key another caller holds returns `409 workflows.idempotency-key-conflict` on start and `404` on the lookup; a start never replays another caller's run |
+| Read `run.origin` (the launch origin, with the launching caller's identity and authority) from `POST /api/workflows/runs/{runId}/cancel` or `GET /api/workflows/analytics` | Both withhold the launch origin: `origin` is always null. `POST /api/workflows/test-runs` still returns the origin of the caller's own preview run | Remove any dependency on `origin` from the cancellation and analytics responses; correlate runs by `runId` |
+| Poll `GET /api/runtime/capabilities` or `GET /api/runtime/operations` without a token on a host with `Api:Authorization:Enabled` | Both require a bearer token issued by that host, like the rest of `/api`; without one they answer `401 api.authorization-required`. With authorization disabled they stay open | Send the bearer token, or use the anonymous `GET /health` for liveness |
+| Send an agent run `context` that claims a process step (source kind `process-step`, `processRunId` or `processStepId`), or `metadataJson` carrying `agentExternalTargetRootBindings` | Every HTTP run start (`/api/agents/execution-runs`, `/api/agents/{agentId}/execution-runs` and their `/stream` variants) rejects both before any run with `400 agents.request-invalid` | Drop those context members. Process automation sets them in process; external folders are granted only in the agent's saved workspace tool settings |
+| Read other callers' recorded request and response bodies from `POST /api/project-structure/analytics/query` | Bodies, warnings, internal error message and repository root are returned only for the caller's own calls; other callers' entries carry `{}`, `[]`, null and an empty string | Use the log for your own call evidence; read owner state through the structure read |
+| Send an OAuth `returnPath` such as `/\host`, `//host` or one containing control characters to `POST /api/plugins/{pluginId}/oauth/start` | A return path must start with a single `/` that is not followed by `/` or `\` and must contain no control characters; any other value is replaced by `/plugins` | Send a plain relative path of this host, for example `/plugins?connection=gmail` |
+
 ## Upgrade Gate
 
 Before removing a workaround:

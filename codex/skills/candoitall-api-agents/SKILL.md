@@ -238,6 +238,10 @@ A message or run can attach at most 8 images. Use only the returned `relativePat
   never send source kind `process-step`, `processRunId` or `processStepId`, which mark the run as a
   governed process run with different validation, approval and tool rules, and never send
   `metadataJson` keys starting with `agent`, which the product reserves for its own run settings.
+  The HTTP run-start operations enforce both: such a `context`, and `metadataJson` carrying
+  `agentExternalTargetRootBindings` (which would bind folders on the server host), are rejected
+  before any run with HTTP 400 `agents.request-invalid`. External folders are granted only in the
+  agent's saved workspace tool settings.
   When reviewing process-driven runs, filter `GET /api/agents/execution-runs` by `processRunId`,
   `processStepId`, `schedulerRunId` and `messageId`.
 - Provider usage is a ledger observation, not a chat estimate. The HTTP run-detail contract exposes `usageTotals`: observation counts, known/unknown usage counts, token and tool-call totals, known/unknown cost counts, and known cost. Raw internal provider-usage observation enums are not public API fields.

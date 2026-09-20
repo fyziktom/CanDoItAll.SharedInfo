@@ -58,6 +58,19 @@ Complete documented operation sets cover Agents, Agent Recruiting, Memory Provid
 
 The main host exposes the experimental provider-neutral /api/memory-providers surface. Native Cognitive Memory remains separate; no /api/cognitive-memory compatibility family is exposed. Simple Chats remain distinct from governed agent chat sessions and execution runs.
 
+Newer than this snapshot: product commit `b82ffc57` (2026-09-19) changed five behaviors for
+security reasons without adding, removing or renaming a route, method or operation id. Workflow
+`Idempotency-Key` values belong to the caller that recorded them, and the by-key lookup finds only
+that caller's keys; the workflow cancellation and analytics responses withhold the launch origin
+(`origin` is always null); the two `/api/runtime` routes require a bearer token when
+`Api:Authorization:Enabled` (they gained a `401` declaration that this snapshot does not show);
+every HTTP agent run start rejects a `context` that claims a process step or carries
+`agentExternalTargetRootBindings`; and the Project Structure analytics query returns recorded
+bodies, warnings, error messages and repository roots only for the calling caller. The plugin
+OAuth `returnPath` now rejects addresses that leave this host. The API skills describe the current
+behavior; the next capture will bring the document in line. See the security delta in the
+[partner API migration matrix](references/partner-api-migration.md).
+
 Use the [partner API migration matrix](references/partner-api-migration.md) for integrations using superseded workarounds.
 
 ## Usage

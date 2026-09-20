@@ -50,29 +50,35 @@ Use this skill when a task needs workflow authoring, lifecycle control, runtime 
 - Test runs: `POST /api/workflows/test-runs` validates a draft or exact version or, without
   `validateOnly`, creates a real preview run that executes its nodes, including executors with
   external effects, except the nodes replaced by `previewSimulationPlan`. It has no idempotency
-  key, and its result contains stored run records (event payloads, artifact storage paths, raw
-  request and response JSON, launch origin); use it only from trusted authoring clients.
+  key, and its result contains stored run records of your own preview run (event payloads,
+  artifact storage paths, raw request and response JSON, launch origin); use it only from trusted
+  authoring clients.
 - Start runs: `POST /api/workflows/runs/start` or
   `POST /api/workflows/definitions/{workflowId}/runs/start`. The request waits until the run
   stops, and closing the connection cancels the run, so keep it open. Send an `Idempotency-Key`
-  (1 to 256 characters) that includes something unique to your client: keys are global across
-  all API callers of the host, and a replay returns the original run, which an earlier
-  disconnect may have cancelled. A failed or cancelled run is still HTTP 200; check `run.state`.
+  (1 to 256 characters). A key belongs to the caller that first used it (the bearer token
+  subject, or the local operator when API authorization is disabled) in the current database
+  profile: your replay returns your original run, which an earlier disconnect may have cancelled,
+  and another caller's request with the same key is rejected with HTTP 409 and never replays your
+  run. A failed or cancelled run is still HTTP 200; check `run.state`.
 - Retry evidence: `GET /api/workflows/runs/by-idempotency-key/{key}` returns the original run
   identifier (`originalRunId`), its current state and safe hashes without exposing the raw key.
-  The lookup is not caller-scoped and can find another caller's start; 404 means no start
-  recorded the key, so starting with it is safe.
+  It finds only keys recorded by the same caller; a key another caller holds reads as 404. After
+  a 404 you may send the start with that key: if another caller holds it, that start is rejected
+  with HTTP 409 and nothing runs.
 - Observe runs: `GET /api/workflows/runs`, `GET /api/workflows/runs/page`, `GET /api/workflows/runs/{runId}`, `GET /api/workflows/runs/{runId}/detail`.
 - Cancel runs: `POST /api/workflows/runs/{runId}/cancel`; branch on `outcome`
   (200 CancellationRequested, 404 NotFound, 409 AlreadyTerminal, NotActive or
   TransitionRejected, 422 BackendNotCancellable) and read the run again. The body's `run` is the
-  stored run record, not the safe projection.
+  stored run record, not the safe projection, and its `origin` is always null: the HTTP API
+  withholds the launch origin because the run can belong to another caller.
 - Events, checkpoints, and artifacts: `GET /api/workflows/runs/{runId}/events`, `GET /api/workflows/runs/{runId}/events/page`, `GET /api/workflows/runs/{runId}/checkpoints`, and `GET /api/workflows/runs/{runId}/artifacts`.
 - Live lifecycle signals: `GET /api/workflows/events/stream` for all runs or `GET /api/workflows/runs/{runId}/events/stream` for one run.
 - Artifact content: `GET /api/workflows/runs/{runId}/artifacts/{artifactId}/content`.
 - Human or external input: `GET /api/workflows/runs/{runId}/pending-requests`, `POST /api/workflows/external-requests/{requestId}/response`.
-- Analytics: `GET /api/workflows/analytics`; run entries are stored run records (backend run
-  identifier, launch origin), and `take` outside 1 to 500 is rejected with HTTP 400.
+- Analytics: `GET /api/workflows/analytics`; run entries are stored run records with the backend
+  run identifier but without the launch origin (always null, for the same reason as cancellation),
+  and `take` outside 1 to 500 is rejected with HTTP 400.
 
 ### Durable human/external responses
 
@@ -181,8 +187,9 @@ lineage.
 - Resolve integrations by template/external identity, require `Resolved`, and pin
   `runnableVersionId`; never use mutable display names as integration identity.
 - Reuse an idempotency key only for the identical workflow, version choice, backend and
-  canonical input, and make keys unique to your client because they are global across API
-  callers. Treat `409` `workflows.idempotency-key-conflict` as a changed-request conflict.
+  canonical input. A key belongs to the caller that first used it, so `409`
+  `workflows.idempotency-key-conflict` means either a changed request or a key another caller
+  already holds; use a new key, and keep keys unique to your client to avoid the second case.
 - Read `GET /api/workflows/contract` before building clients or smoke tests; use OpenAPI for full schema detail.
 - Prefer explicit lifecycle endpoints over resubmitting a full definition only to change status.
 - Use import/export envelopes for portable workflow definition movement; do not hand-copy internal persistence records.

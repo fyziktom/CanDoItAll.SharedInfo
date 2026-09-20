@@ -166,8 +166,12 @@ lease token.
   when that loss is intended.
 - After mutations, read back only the affected nodes or links with the structure read
   (`nodeIds`, `includeLinks`). `POST /api/project-structure/analytics/query` is a log of every
-  caller's recent calls, not proof of stored state, and its bodies can contain notes, file
-  content and lease tokens: treat it as sensitive.
+  caller's recent calls, not proof of stored state. Over HTTP it returns the recorded request and
+  response bodies, warnings, error message and repository root only for your own calls, the same
+  bearer token subject (or `local-api-operator` without authorization); entries of other callers
+  and of in-process agent tools come back with `{}` bodies, `[]` warnings, a null error message
+  and an empty repository root. Your own bodies can contain notes, file content and lease tokens:
+  treat the response as sensitive.
 - Start a node workflow with a new `intentId` per launch and repeat the same `intentId` to retry;
   `/process/start` has no idempotency key, so look for the run before retrying. Use
   `/nodes/{nodeId}/workflow/status` after starting node-linked workflows. Do not infer workflow

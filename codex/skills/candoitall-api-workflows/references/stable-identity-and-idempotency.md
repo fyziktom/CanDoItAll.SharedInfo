@@ -34,12 +34,14 @@ Both public start routes accept `Idempotency-Key`:
 - `POST /api/workflows/runs/start`;
 - `POST /api/workflows/definitions/{workflowId}/runs/start`.
 
-Use one stable key for one logical launch. Keys are global across all API callers of the host,
-so include something unique to your client. The request fingerprint covers the version choice,
-requested backend, canonical JSON input and the caller's authorization context (its workspace
-scope): a key reused from another workspace scope conflicts, and another caller in the same
-workspace scope with the same request receives the original run. Object properties are sorted
-for canonicalization; input must be a JSON object.
+Use one stable key for one logical launch. A key belongs to the caller that first used it: the
+bearer token subject, or the local operator when API authorization is disabled, under the
+authorization scope of the current database profile. Another caller sending the same key is
+rejected with `409` and never receives the first caller's run, so a key is never a way to read
+someone else's launch. Keep keys unique to your client anyway, because a collision costs you a
+`409`. The request fingerprint covers the version choice, requested backend, canonical JSON input
+and the caller's authorization context: a key reused from another workspace scope conflicts.
+Object properties are sorted for canonicalization; input must be a JSON object.
 
 An identical concurrent or post-timeout retry returns the original run with `replayed: true`,
 `created: false` and `idempotencyDisposition` 2 ReplayedExistingRun; a concurrent duplicate
@@ -54,7 +56,8 @@ Read retry evidence with
 `GET /api/workflows/runs/by-idempotency-key/{key}`. The response exposes the safe key
 hash, request and canonical-input hashes, selected/resolved workflow and version,
 backend, original run id, claim/run state, terminal flag, replay count/timestamps, and
-completion timestamp. It never returns the raw key.
+completion timestamp. It never returns the raw key, and it finds only the keys of the
+calling caller: a key another caller holds reads as `404`.
 
 The current Web serializer encodes `idempotencyDisposition` numerically:
 `NotRequested=0`, `EnforcedNewRun=1`, `ReplayedExistingRun=2`. Evidence
