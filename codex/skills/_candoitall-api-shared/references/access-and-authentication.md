@@ -44,6 +44,14 @@ must be protected separately from HTTP API access.
   operations. **Logout** in that dialog only clears Swagger's stored authorization;
   call `/api/access/logout` to revoke a session on the server.
 
+When user authentication is enabled, open Swagger on HTTPS before entering a password.
+Hosts with the Swagger HTTPS redirect repair send HTTP Swagger navigation to the configured
+HTTPS port. For Docker port mappings, configure `ASPNETCORE_HTTPS_PORT` with the published
+HTTPS port, not the container's internal port; a working HTTPS listener or trusted TLS
+proxy is still required. If login returns `api.https-required`, reopen Swagger on the
+correct HTTPS address and repeat login there. Do not disable the transport check or retry
+credentials over HTTP to work around the error.
+
 When user authentication is enabled, API and authorized-file traffic requires HTTPS.
 The opt-in `Api:UserAuthentication:AllowLoopbackHttp` exception accepts only direct
 original/effective loopback peers without forwarding headers. It is not a proxy setting.

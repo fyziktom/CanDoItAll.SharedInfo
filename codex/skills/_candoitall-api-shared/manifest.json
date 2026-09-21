@@ -4,11 +4,11 @@
     "repository": "CanDoItAll",
     "branch": "development",
     "commit": "32d296a92ce26c66bd539061fd2a8e3fe10cbaea",
-    "workingTreeClean": true,
-    "captureNote": "Clean Release Docker publication of CanDoItAll development commit 32d296a92ce26c66bd539061fd2a8e3fe10cbaea, tree 203460f864ae4b2e65b3377ebb5fcdb4eb863ce4, with the clean dependency pins recorded below. Capture image sha256:c1b23150f87bd2ca14f593debc76dce133df71e8f4f7a5d91afcc03f2dfaba12 ran as an isolated Development host with InMemory storage, synthetic private credentials, LinuxHeadless runtime and McpToolHost worker policy, bound to http://localhost:5032 in a network-none container. All API, OpenAPI, Swagger, JWT, user authentication and HTTP management switches were enabled to include conditional access routes and bearer metadata. Two disposable readers joined only its network namespace; anonymous document requests returned byte-identical 3881813-byte content. The same published files ran under WindowsHeadless on http://127.0.0.1:54619/ with isolated state; both Windows document routes were identical and the resulting contract differs only in servers (SHA-256 663132B00A777CABAAEC6399FEF5E1650A964155ADB999FC0A00CB665091FA53). Existing operator hosts and the publisher/client test pair were not changed.",
+    "workingTreeClean": false,
+    "captureNote": "Captured anonymously from both HTTPS document routes of the running Development publisher at https://localhost:5312 with its local certificate trusted explicitly. Responses were byte-identical and all six new image-price properties have descriptions. Docker image candoitall-shared-manual:api-metadata-complete-20260920 was built from development HEAD plus reviewed changes; image source-diff fingerprint is 3f9750af3541c1f0058484bd550d8b430475cb366067a583d40edf117a3dc49b, Docker image ID sha256:f8e3658618a2ed640591b5f2612cb74f30426fa86ecac3c62100f95d41ccd342. API, OpenAPI, Swagger, JWT, user authentication and HTTP management remain enabled. Test users and persistent data were preserved. The checked-in document normalizes only servers[0].url from https://localhost:5312/ to http://localhost:5032/ as required by the shared snapshot contract; original runtime bytes SHA-256 DC3DCCB507CB238F78F554C425618AA3BF21DD5F86498E264E1336145A1593D8.",
     "webProject": "src/App/CanDoItAll.Web/CanDoItAll.Web.csproj",
     "environment": "Development",
-    "generatedUtc": "2026-09-20T19:13:26.683676Z",
+    "generatedUtc": "2026-09-20T23:54:45Z",
     "runtimeDocumentPaths": [
       "/openapi/v1.json",
       "/swagger/v1/swagger.json"
@@ -33,11 +33,13 @@
       "Api:Authorization:Enabled": true,
       "Api:UserAuthentication:Enabled": true,
       "Api:AccessManagement:Enabled": true
-    }
+    },
+    "workingTreeStatusSha256": "7C133819B90E2E8EF39F2BB847DE58ECCDBF53CCED31E4FF5A7AEEDFB113A78B",
+    "workingTreeNote": "Uncommitted API/provider improvements on development HEAD, including image response validation, scoped Simple Chat serialization and image-price API descriptions. Runtime publication includes the production changes. This capture is not commit-clean provenance."
   },
   "artifact": {
     "file": "references/candoitall-web.openapi.json",
-    "sha256": "C7DA97AC7C0EA73CBEF1AAE47E6E03A6CF24C550CAFA2C893A1E6DA06C501A3A",
+    "sha256": "AF5707270873F8474B794C55D28C59520D01E32D121EA2B7E24EBE307A7C93E4",
     "openapiVersion": "3.1.1",
     "documentTitle": "CanDoItAll.Web | v1",
     "documentVersion": "1.0.0",

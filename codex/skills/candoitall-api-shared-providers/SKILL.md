@@ -29,6 +29,9 @@ or artifacts.
 
 1. Read the native catalog for publication/model identities, availability, capabilities,
    thinking options and public prices. Use ETag/If-None-Match for conditional reads.
+   Request the optional image-pricing representation as described in
+   [the protocol reference](references/protocol.md#catalog-prices-and-capabilities)
+   when those rates are needed.
 2. Select the returned opaque routing model identifier (`providers[].models[].id`, starting
    `sp1.`) exactly. `displayName` is the upstream model name and must never be sent as
    `model`. Keep the publication/source identity when refreshing it.

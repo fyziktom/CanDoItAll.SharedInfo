@@ -550,6 +550,14 @@
         "operationId": "GetSharedProviderCatalog",
         "parameters": [
           {
+            "name": "CanDoItAll-Catalog-Features",
+            "in": "header",
+            "description": "Send image-pricing to include separate image-input and cached image-input token rates. Omit for the original schema 1.1 price shape. Responses vary by this header and acknowledge supported features.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "If-None-Match",
             "in": "header",
             "description": "Optional RFC 9110 entity-tag list used for conditional catalog retrieval.",
@@ -3506,6 +3514,8 @@
                       "low",
                       "medium",
                       "high",
+                      "xhigh",
+                      "max",
                       "auto"
                     ],
                     "type": "string",
@@ -71181,6 +71191,26 @@
             "description": "Rate for prompt-cache write tokens, or null when the model has no separate rate; not negative.",
             "format": "double"
           },
+          "imageInputPerMillionTokensUsd": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
+            "description": "Price in USD per one million uncached image input tokens; null means unavailable, not zero. Separate from text input rates.",
+            "format": "double"
+          },
+          "cachedImageInputPerMillionTokensUsd": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
+            "description": "Price in USD per one million cached image input tokens; null means unavailable, not zero. Separate from text input rates.",
+            "format": "double"
+          },
           "longContextThresholdTokens": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
             "type": [
@@ -71284,6 +71314,26 @@
               "string"
             ],
             "description": "Rate for prompt-cache write tokens, or null when the model has no separate rate.",
+            "format": "double"
+          },
+          "imageInputPerMillionTokensUsd": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
+            "description": "Price in USD per one million uncached image input tokens; null means unavailable, not zero. Separate from text input rates.",
+            "format": "double"
+          },
+          "cachedImageInputPerMillionTokensUsd": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
+            "description": "Price in USD per one million cached image input tokens; null means unavailable, not zero. Separate from text input rates.",
             "format": "double"
           },
           "longContextThresholdTokens": {
@@ -73189,6 +73239,26 @@
               "string"
             ],
             "description": "Price of writing one million tokens to the provider's prompt cache, in US dollars; null when not priced.",
+            "format": "double"
+          },
+          "imageInputPerMillionTokensUsd": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
+            "description": "Price in USD per one million uncached image input tokens; omitted when unavailable, not a zero price. Separate from text input rates.",
+            "format": "double"
+          },
+          "cachedImageInputPerMillionTokensUsd": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
+            "description": "Price in USD per one million cached image input tokens; omitted when unavailable, not a zero price. Separate from text input rates.",
             "format": "double"
           },
           "longContextThresholdTokens": {
