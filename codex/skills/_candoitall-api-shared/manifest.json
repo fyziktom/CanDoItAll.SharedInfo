@@ -3,12 +3,12 @@
   "source": {
     "repository": "CanDoItAll",
     "branch": "demos-repairs",
-    "commit": "a59e3af7dcba28b7c0bf4a7450898d468a7d6fc3",
-    "tree": "e156b5248cc87f9ea9e91c090a19ab3ee048610f",
+    "commit": "e09d18f9a99186740095fdf2817b0bc12464f07c",
+    "tree": "1cfd63991d9135157f00a50d571280db553e9d8b",
     "workingTreeClean": true,
     "webProject": "src/App/CanDoItAll.Web/CanDoItAll.Web.csproj",
     "environment": "Development",
-    "generatedUtc": "2026-10-07T19:08:54Z",
+    "generatedUtc": "2026-10-07T19:48:11Z",
     "runtimeDocumentPaths": [
       "/openapi/v1.json",
       "/swagger/v1/swagger.json"
@@ -33,13 +33,13 @@
       "Api:UserAuthentication:Enabled": true,
       "Api:AccessManagement:Enabled": true
     },
-    "captureNote": "Unmodified runtime bytes from an isolated network-none LinuxHeadless container at canonical http://localhost:5032/ with InMemory synthetic state, synthetic credentials and McpToolHost worker policy. Both anonymous document routes are byte-identical. The exact same Release publication was copied to WindowsHeadless and checked on free loopback port 5542; only servers differs. No operator host, demo credentials or persistent data were changed. This image also passed the synthetic live voice API round trip on the dedicated hotel engine at http://localhost:5532; that deployment keeps user authentication and HTTP management disabled.",
-    "image": "candoitall-hotels-engine:a59e3af7dcba28b7c0bf4a7450898d468a7d6fc3",
-    "imageId": "sha256:f7c5665a16e162c87e78c31ce729b5d00fb079b4c61068088861c1b3d053c211",
+    "captureNote": "Unmodified runtime bytes from an isolated network-none LinuxHeadless container at canonical http://localhost:5032/ with InMemory synthetic state, synthetic credentials and McpToolHost worker policy. Both anonymous document routes are byte-identical. The exact same Release publication was copied to WindowsHeadless and checked on free loopback port 5542; only servers differs. No operator host, demo credentials or persistent data were changed. This image passed 13 live synthetic project identity checks on the dedicated hotel engine at http://localhost:5532; the probe was deleted afterward. Voice live proof is retained separately with its T07 source commit; voice source is unchanged in T08. The demo deployment keeps user authentication and HTTP management disabled.",
+    "image": "candoitall-hotels-engine:e09d18f9a99186740095fdf2817b0bc12464f07c",
+    "imageId": "sha256:9b6f015e2fbe9cfd24fea2890b110109ad813206c765d7af81233498cff6acff",
     "crossPlatformComparison": {
       "runtimeProfile": "WindowsHeadless",
       "captureUrl": "http://localhost:5542/",
-      "sha256": "73267766EE7505D20340FA0678AE7ADE36CFFFFEB11E11C09DCD005FDB7227C8",
+      "sha256": "5B16714F03CD40DF34FC0EF90444DA395FB02A2F8DEB0E33AA6E77446EA6A827",
       "allowedDifferences": [
         "servers"
       ],
@@ -48,19 +48,26 @@
     "verifiedVoiceDeployment": {
       "url": "http://localhost:5532/",
       "openApiSha256": "C05F005AF01061B3C2DAFF62D608FA6C4066289B02ECBEC4999AA2B52AD8A065",
-      "syntheticTtsAndSttPassed": true
+      "syntheticTtsAndSttPassed": true,
+      "sourceCommit": "a59e3af7dcba28b7c0bf4a7450898d468a7d6fc3"
+    },
+    "verifiedIdentityDeployment": {
+      "url": "http://localhost:5532/",
+      "openApiSha256": "62817CE53285C381BCB7B0979A6905131C7F8DE59DCBF57E1258DFAF68CE0698",
+      "checksPassed": 13,
+      "syntheticProbeDeleted": true
     }
   },
   "artifact": {
     "file": "references/candoitall-web.openapi.json",
-    "sha256": "9A3540D43D854E7AAE019E6D8122B27B85C476E2B90F9A58F211B3604C5079C1",
+    "sha256": "0B1C79FC23E0F21D66CA55F406D3A9791BF190D575E031098C5CF2228B986FA5",
     "openapiVersion": "3.1.1",
     "documentTitle": "CanDoItAll.Web | v1",
     "documentVersion": "1.0.0",
     "serverUrl": "http://localhost:5032/",
-    "pathCount": 308,
-    "operationCount": 345,
-    "schemaCount": 1015
+    "pathCount": 309,
+    "operationCount": 346,
+    "schemaCount": 1016
   },
   "routeFamilies": [
     {
@@ -125,8 +132,8 @@
     },
     {
       "prefix": "/api/projects",
-      "pathCount": 10,
-      "operationCount": 13
+      "pathCount": 11,
+      "operationCount": 14
     },
     {
       "prefix": "/api/prompt-gallery",
@@ -895,6 +902,11 @@
         },
         {
           "method": "GET",
+          "path": "/api/projects/by-external-key/{externalNamespace}/{externalKey}",
+          "operationId": "ResolveProjectExternalIdentity"
+        },
+        {
+          "method": "GET",
           "path": "/api/projects/deletion-cleanups",
           "operationId": "ListPendingProjectDeletionCleanups"
         },
@@ -914,24 +926,24 @@
           "operationId": "ReconnectProjectSubproject"
         },
         {
+          "method": "DELETE",
+          "path": "/api/projects/{parentProjectId}/subprojects/{childProjectId}",
+          "operationId": "DetachProjectSubproject"
+        },
+        {
           "method": "POST",
           "path": "/api/projects/{parentProjectId}/subprojects/{childProjectId}",
           "operationId": "AttachProjectSubproject"
         },
         {
           "method": "DELETE",
-          "path": "/api/projects/{parentProjectId}/subprojects/{childProjectId}",
-          "operationId": "DetachProjectSubproject"
+          "path": "/api/projects/{projectId}",
+          "operationId": "DeleteProject"
         },
         {
           "method": "GET",
           "path": "/api/projects/{projectId}",
           "operationId": "GetProjectEditor"
-        },
-        {
-          "method": "DELETE",
-          "path": "/api/projects/{projectId}",
-          "operationId": "DeleteProject"
         },
         {
           "method": "POST",

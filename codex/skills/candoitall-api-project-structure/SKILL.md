@@ -47,6 +47,15 @@ Use this skill when a task needs project, hierarchy, project-structure, dependen
   `/nodes/{rootNodeId}/delete` again with its `durableMutationId` and the same
   `managedStorageDisposition`.
 
+## Stable Project Provisioning
+
+Use `POST /api/projects` with an optional external namespace/key pair and resolve it
+through `GET /api/projects/by-external-key/{externalNamespace}/{externalKey}`. The pair
+is normalized, unique and immutable once assigned. Return the resolved lifetime on
+subsequent edits; missing, duplicate and stale bindings fail explicitly. See the
+[project external identity contract](references/project-external-identity.md) for
+compatibility rules, scopes and recovery. Do not substitute display-name searches.
+
 ## Direct Tool Boundary
 
 The internal project-structure runtime tool surface is exposed through `ProjectStructureAgentRuntimeToolProvider`; the tools an invocation receives depend on its project access. It broadly mirrors the 58-path, 59-operation `/api/project-structure` HTTP surface and adds the repo-branch lease helper `project_structure_repo_branch_lease_acquire`, which is a runtime tool and not an HTTP route. Direct runtime tools include node create (`project_structure_node_create`), single and batch node delete (`project_structure_node_delete`, `project_structure_nodes_delete`), focused node updates, generic links, asset create/content (`project_structure_asset_create`, `project_structure_asset_content_get`), lease renew, process/workflow node operations, and read/write/import/lease tools. These tools are classified by `AgentToolInvocationPolicy`; destructive and mutating tools still require project-structure write access and the normal approval path.
@@ -263,14 +272,15 @@ Project Structure routes mirrored by the shared OpenAPI snapshot.
 | `GET` | `/api/projects` |
 | `POST` | `/api/projects` |
 | `GET` | `/api/projects/access-list` |
+| `GET` | `/api/projects/by-external-key/{externalNamespace}/{externalKey}` |
 | `GET` | `/api/projects/deletion-cleanups` |
 | `GET` | `/api/projects/deletion-completion-notices` |
 | `GET` | `/api/projects/hierarchy-links` |
 | `POST` | `/api/projects/{childProjectId}/reconnect-subproject` |
-| `POST` | `/api/projects/{parentProjectId}/subprojects/{childProjectId}` |
 | `DELETE` | `/api/projects/{parentProjectId}/subprojects/{childProjectId}` |
-| `GET` | `/api/projects/{projectId}` |
+| `POST` | `/api/projects/{parentProjectId}/subprojects/{childProjectId}` |
 | `DELETE` | `/api/projects/{projectId}` |
+| `GET` | `/api/projects/{projectId}` |
 | `POST` | `/api/projects/{projectId}/deletion-cleanups/{participantId}/{recoveryId}/retry` |
 | `GET` | `/api/projects/{projectId}/hierarchy` |
 <!-- api-docs-skills-parity:projects-routes:end -->

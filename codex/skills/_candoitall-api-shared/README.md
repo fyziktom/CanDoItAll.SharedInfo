@@ -7,8 +7,8 @@ access guidance used by the CanDoItAll API skills.
 
 - Artifact: [references/candoitall-web.openapi.json](references/candoitall-web.openapi.json)
 - Provenance: [manifest.json](manifest.json)
-- Source: CanDoItAll `demos-repairs`, commit `a59e3af7dcba28b7c0bf4a7450898d468a7d6fc3`
-- Source tree: `e156b5248cc87f9ea9e91c090a19ab3ee048610f`; working tree clean
+- Source: CanDoItAll `demos-repairs`, commit `e09d18f9a99186740095fdf2817b0bc12464f07c`
+- Source tree: `1cfd63991d9135157f00a50d571280db553e9d8b`; working tree clean
 - Dependency pins: Components `a3fd4d22f2c4e0432cf389f194c6468b44ab7371` and FileTools
   `3a080ecd31068a77c1e1bd639f7a78e21c93db85`, both clean
 - Capture: exact signed-source Release Docker publication, Development environment,
@@ -17,17 +17,18 @@ access guidance used by the CanDoItAll API skills.
 - Document server: `http://localhost:5032/` inside an isolated container with no network
   or published ports; existing operator and demo hosts were not reconfigured
 - Runtime endpoints: `/openapi/v1.json` and `/swagger/v1/swagger.json`
-- Captured UTC: 2026-10-07T19:08:54Z
-- OpenAPI: `3.1.1`; **308 paths, 345 operations, 1,015 schemas**
-- SHA-256: `9A3540D43D854E7AAE019E6D8122B27B85C476E2B90F9A58F211B3604C5079C1`
+- Captured UTC: 2026-10-07T19:48:11Z
+- OpenAPI: `3.1.1`; **309 paths, 346 operations, 1,016 schemas**
+- SHA-256: `0B1C79FC23E0F21D66CA55F406D3A9791BF190D575E031098C5CF2228B986FA5`
 
-Both anonymous document requests returned byte-identical 3,923,256-byte content.
+Both anonymous document requests returned byte-identical 3,927,847-byte content.
 The artifact contains those unmodified bytes. The same publication was checked with
 WindowsHeadless on free loopback port 5542; both Windows document routes agree and the
 Linux/Windows documents differ only in `servers`. Its SHA-256 is
-`73267766EE7505D20340FA0678AE7ADE36CFFFFEB11E11C09DCD005FDB7227C8`.
-The manifest also identifies the image and the live voice-verified deployment at port
-5532, whose user login and account management remain disabled. Port identity is not
+`5B16714F03CD40DF34FC0EF90444DA395FB02A2F8DEB0E33AA6E77446EA6A827`.
+The manifest also identifies the image and its 13 live synthetic identity checks at port
+5532, whose user login and account management remain disabled. It retains voice round-trip
+proof with the earlier T07 commit explicitly identified; T08 leaves voice code unchanged. Port identity is not
 source identity; the commit, configuration and dependency pins identify the contract.
 
 | Route family | Paths | Operations |
@@ -44,7 +45,7 @@ source identity; the commit, configuration and dependency pins identify the cont
 | /api/plugins | 18 | 20 |
 | /api/processes | 20 | 20 |
 | /api/project-structure | 58 | 59 |
-| /api/projects | 10 | 13 |
+| /api/projects | 11 | 14 |
 | /api/prompt-gallery | 10 | 11 |
 | /api/runtime | 2 | 2 |
 | /api/settings/workspace | 1 | 2 |
@@ -62,13 +63,18 @@ expose fewer routes.
 
 ## Current API improvements
 
-Compared with the previous September snapshot, this document adds three paths and three
+Compared with the previous September snapshot, this document adds four paths and four
 operations and removes no operation. Two new public voice routes provide bounded audio
 transcription and speech synthesis using existing workspace settings, execute authority,
 native-provider capability checks and safe errors. See the
 [voice client contract](../candoitall-api-agents/references/voice-api.md).
 The snapshot also includes the existing `/api/agents/usage` summary route. Its schema
-count changes from 997 to 1,015; regenerate clients against the new artifact.
+count changes from 997 to 1,016; regenerate clients against the new artifact.
+
+The latest additive route resolves projects by an immutable external namespace/key pair,
+with lifetime checks and explicit conflicts. Existing project editors may omit the new
+fields without losing a stored identity. See the
+[project identity contract](../candoitall-api-project-structure/references/project-external-identity.md).
 
 The prior access/session, workspace-settings, workflow/process, stable provisioning and
 request-history contracts remain included. Thirteen documented operation sets are
