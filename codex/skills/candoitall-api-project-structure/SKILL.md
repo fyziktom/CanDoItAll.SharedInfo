@@ -158,6 +158,36 @@ lease token.
 
 ## Operating Rules
 
+### JSON outline import identity
+
+`POST /api/project-structure/imports` accepts `sourceKind: 3` (JsonOutline) with
+`sourceText` containing one object or an array of objects, each with `title` (or
+`name`), optional `notes` and `children`. An optional `sourceKey` identifies a node
+independently of its display name. It starts with an ASCII letter or digit, contains
+at most 128 ASCII letters, digits, `-`, `_`, `.`, `:` or `/`, and is unique across
+the whole outline using case-sensitive comparison. Duplicate display names are valid.
+
+Clients that need reliable identity readback must check that the live
+`ProjectStructureImportRequest` schema has `requireSourceKeys`, then send it as `true`.
+This requires a key on every JSON node; another source kind is rejected. An old host
+cannot provide this guarantee and must be reported as unsupported before any write.
+The importer validates the complete source before creating its container or source
+asset. Missing required keys return HTTP 400 `ImportSourceKeyRequired`; invalid
+supplied keys return `InvalidImportSourceKey`; duplicates return
+`DuplicateImportSourceKey`; required keys on another format return
+`ImportSourceKeysUnsupported`.
+
+Read the created nodes with `includeMetadata: true`. Parse their `metadataJson` and
+read `importSource.sourceKey`, numeric `importSource.sourceKind` and
+`importSource.containerNodeId`. Verify the container against the import result.
+The canonical task owner preserves this typed identity through task creation and
+edits; notes remain human text. Do not put recovery keys in notes or use generic
+metadata writes on canonical tasks. Import accepts no arbitrary metadata field.
+Omitted keys preserve the earlier import behavior. Import remains non-atomic after
+validation: inspect any partial result before deliberately resetting or retrying.
+
+### Mutation and readback
+
 - Prefer focused endpoints over fetching or sending entire graphs.
 - Use `CanonicalCurrent` for HTTP structure reads. Do not request
   `InvocationSnapshot` outside the internal agent runtime.

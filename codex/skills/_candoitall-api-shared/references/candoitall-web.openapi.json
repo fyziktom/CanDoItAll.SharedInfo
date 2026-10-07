@@ -66166,6 +66166,10 @@
               "string"
             ],
             "description": "Optional token of the caller's active Project lease on the target project, from `POST /api/project-structure/leases/acquire`. When omitted, the import uses the project lease the caller's identity already holds, or else takes a five-minute project lease for its own duration, waiting for another identity's lease that ends within 30 seconds (a longer one fails with HTTP 409 `LeaseConflict`); when sent, it must match the caller's active project lease, otherwise HTTP 409 `LeaseMissing` or `LeaseConflict`."
+          },
+          "requireSourceKeys": {
+            "type": "boolean",
+            "description": "When true, every JsonOutline object in sourceText must supply sourceKey alongside title (or name), optional notes and children. A key is case-sensitive, unique across the complete outline, starts with an ASCII letter or digit, and contains at most 128 ASCII letters, digits, '-', '_', '.', ':' or '/'. Supplied keys are validated even when this option is false. Missing required keys fail with HTTP 400 ImportSourceKeyRequired; invalid supplied keys with InvalidImportSourceKey; duplicate keys with DuplicateImportSourceKey; other source kinds with this option enabled fail with ImportSourceKeysUnsupported. Validation occurs before creating the import container or source asset. Supplied keys are preserved in each node's typed metadataJson.importSource with numeric sourceKind and containerNodeId; notes remain human text. Default false preserves imports without keys. Clients that depend on structured identities should verify this property exists in the live schema, then set it true. Imports remain non-atomic after validation; inspect partial results before retrying."
           }
         },
         "description": "Outline import request: the target project, where to put the imported nodes and the source outline. The import creates a container ProjectBlock, stores the source file in it when one is sent, and creates one node per outline item under the container: items with children become ProjectBlock nodes and leaves become WorkItem nodes."

@@ -3,12 +3,12 @@
   "source": {
     "repository": "CanDoItAll",
     "branch": "demos-repairs",
-    "commit": "4dcf8291435aeda470ca11cb800c276d0576bfde",
-    "tree": "77e0f4ec70903c7f46fd33af4c7d22c40c3cdb07",
+    "commit": "b886b4ef96e9f2653525352cc2232b0af28342e6",
+    "tree": "de1c5ba2e85cbb1323642442806c874459361d4d",
     "workingTreeClean": true,
     "webProject": "src/App/CanDoItAll.Web/CanDoItAll.Web.csproj",
     "environment": "Development",
-    "generatedUtc": "2026-10-07T22:42:41Z",
+    "generatedUtc": "2026-10-07T23:54:24Z",
     "runtimeDocumentPaths": [
       "/openapi/v1.json",
       "/swagger/v1/swagger.json"
@@ -33,13 +33,13 @@
       "Api:UserAuthentication:Enabled": true,
       "Api:AccessManagement:Enabled": true
     },
-    "captureNote": "Unmodified runtime bytes from an isolated network-none LinuxHeadless container at canonical http://localhost:5032/ with InMemory synthetic state, synthetic credentials and McpToolHost worker policy. Both anonymous document routes are byte-identical. An independent WindowsHeadless Release build of the same clean source was checked on free loopback port 5542; only servers differs. No operator host, demo credentials or persistent data were changed by capture. The dedicated hotel engine at http://localhost:5532 resumed seven imported unscheduled synthetic tasks through initialSchedule and verified the same node IDs with persisted intervals. Focused validation passed 19 unit and 23 PostgreSQL HTTP integration tests. Earlier voice and identity live proofs retain their original source commits; this is not a claim that they were rerun for T11-a. The demo deployment keeps user authentication and HTTP management disabled.",
-    "image": "candoitall-hotels-engine:4dcf8291435aeda470ca11cb800c276d0576bfde",
-    "imageId": "sha256:9f0b4a7dddc94032cd541cc2abf6ea407f76b759386a7ab49e55fb4de00772f6",
+    "captureNote": "Unmodified runtime bytes from an isolated network-none LinuxHeadless container at canonical http://localhost:5032/ with InMemory synthetic state, synthetic credentials and McpToolHost worker policy. Both document routes are byte-identical. WindowsHeadless on loopback 5542 uses the same clean source and differs only in servers. The dedicated hotel engine proves 58 imported tasks retain typed source identity after scheduling, clean human notes and duplicate rejection before writes. The functional repair fe1806e616f6e031f898daaa96b8e06552c2a1f2 passed 14 unit and 35 PostgreSQL HTTP/import integration tests. The final follow-up changes API prose only; its generated contract and live owner behavior were checked on this image. Earlier voice, project identity and initial-schedule deployment proofs retain their original source commits; they are not relabeled as rerun. The hotel deployment keeps user authentication and HTTP management disabled.",
+    "image": "candoitall-hotels-engine:b886b4ef96e9f2653525352cc2232b0af28342e6",
+    "imageId": "sha256:2702d3d8a729a7bb10b5197514c86a46358f4466b180d79e028a1d7449e0bb3a",
     "crossPlatformComparison": {
       "runtimeProfile": "WindowsHeadless",
       "captureUrl": "http://localhost:5542/",
-      "sha256": "E3EFA8D502A2E557DA571F198082E1DED3A4FB46D5B108FC07F2D15047645F0B",
+      "sha256": "2FC9353FC11559CD062E4E99E97FD39C6DF7C11C15C1430E07242E341032927E",
       "allowedDifferences": [
         "servers"
       ],
@@ -66,11 +66,22 @@
       "scheduledTaskCount": 7,
       "unitTestsPassed": 19,
       "httpIntegrationTestsPassed": 23
+    },
+    "verifiedImportIdentityDeployment": {
+      "url": "http://localhost:5532/",
+      "sourceCommit": "b886b4ef96e9f2653525352cc2232b0af28342e6",
+      "openApiSha256": "3C0588CA6E2E2B4F0F42D68FA900311B66786509A9DE377FBD3B278AF67A872A",
+      "tasksWithPersistentSourceIdentity": 58,
+      "cleanNotes": true,
+      "duplicateRejectedBeforeWrites": true,
+      "functionalValidationCommit": "fe1806e616f6e031f898daaa96b8e06552c2a1f2",
+      "unitTestsPassed": 14,
+      "httpAndImportIntegrationTestsPassed": 35
     }
   },
   "artifact": {
     "file": "references/candoitall-web.openapi.json",
-    "sha256": "40DCF075EFBA91DEC35D617AB9F5186F4B37BD06EA72055B2E8BFE1DD956B878",
+    "sha256": "7530815976EF24E6D2AED50A506932737D3E93DA0FF0F7FBCA86B8D42ED9921A",
     "openapiVersion": "3.1.1",
     "documentTitle": "CanDoItAll.Web | v1",
     "documentVersion": "1.0.0",
