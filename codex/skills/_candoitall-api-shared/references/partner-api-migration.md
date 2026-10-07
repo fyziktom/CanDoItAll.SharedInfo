@@ -99,6 +99,15 @@ login and management routes appear only when their independent settings are enab
 
 ## Upgrade Gate
 
+For the additive voice routes in commit `a59e3af7`, a client that previously needed
+interactive voice UI can use `POST /api/agents/voice/transcriptions` and
+`POST /api/agents/voice/speech`. Use execute authority, explicit multipart media types,
+the bounded file/text contracts and safe failure handling described in the
+[voice reference](../../candoitall-api-agents/references/voice-api.md). Keep provider
+configuration in the engine; do not introduce direct-provider retries after engine
+errors. A typed brief does not require transcription, and a transcript remains editable
+before an agent run. Speech returns raw audio, not a chat response or execution receipt.
+
 Before removing a workaround:
 
 1. Pin the target host commit and OpenAPI SHA-256.

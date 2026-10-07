@@ -70,6 +70,7 @@ capabilities are independent; requesting execution does not grant read access.
 | --- | --- |
 | Projects | `api.projects.read`, `api.projects.write` |
 | Agents, governed agent chats and execution | `api.agents.read`, `api.agents.write`, `api.agents.execute`; recovery/reconciliation retains exact `api`; human recruiting review retains exact `agent-recruiting.review` |
+| Voice transcription and speech | `api.agents.execute` (or compatible `api`); read/write alone is insufficient. Agent-selected speech also enforces that agent's voice permission. |
 | Workflows | `api.workflows.read`, `api.workflows.write`, `api.workflows.execute`; durable external responses and response-operation reads require exact `api.workflows.respond` |
 | Processes | `api.processes.read`, `api.processes.write`, `api.processes.execute`; launch/check, launch, dispatch, cancel and rework use execute |
 | Prompt Gallery | `api.prompts.read`, `api.prompts.write` |

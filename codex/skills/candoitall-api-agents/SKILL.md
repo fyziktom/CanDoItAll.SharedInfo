@@ -1,6 +1,6 @@
 ---
 name: candoitall-api-agents
-description: Use when managing CanDoItAll agents, SSE activity, provider completions, attachments, approvals, execution evidence, remote imports, stable external-key provisioning, portable JSON Schema output, or recruiting through the HTTP API.
+description: Use when managing CanDoItAll agents, voice transcription/synthesis, SSE activity, provider completions, attachments, approvals, execution evidence, remote imports, stable external-key provisioning, portable JSON Schema output, or recruiting through the HTTP API.
 ---
 
 # CanDoItAll Agents API
@@ -80,6 +80,11 @@ and `api.provider-history.*` does not imply a new general history HTTP route.
 - Execution runs: blocking JSON and same-request SSE start routes at `/api/agents/execution-runs` and `/api/agents/{agentId}/execution-runs`, plus list, detail, and agent-scoped/global evidence routes.
 - Approvals: the run's approval list and blocking/SSE response commands under `/api/agents/execution-runs/{executionRunId}`.
 - Attachments: upload a bounded image with `POST /api/agents/attachments/images`, then pass the returned `relativePath` in `attachmentPaths` or `inputAttachmentPaths`.
+- Voice: `POST /api/agents/voice/transcriptions` accepts one audio file or ordered chunks;
+  `POST /api/agents/voice/speech` returns audio for text and optional agent/voice selection.
+  Both require execute authority and reuse workspace settings. Read [voice contracts](references/voice-api.md)
+  for formats, byte/text limits, native-provider restrictions, safe errors and cancellation.
+  Voice calls do not start an agent run; do not substitute direct provider calls when an engine call fails.
 - Evidence: execution artifacts, checkpoints, tool receipts, execution log, runtime snapshot, and metrics routes.
 - Recovery: `POST /api/agents/execution-runs/{executionRunId}/recover` resumes a run that has a
   recoverable tool-admission journal (runs admitted by the interactive chat interface or by
@@ -320,9 +325,8 @@ properties. Do not generate clients against removed internal persistence record 
 
 <!-- api-docs-skills-parity:routes:start -->
 
-Agents API route appendix. Generated from Minimal API registrations; refresh from
-`AgentsApi.cs`, `AgentEventsApi.cs`, `AgentProviderEventsApi.cs`, and
-`AgentAttachmentsApi.cs` when routes change.
+Agents API route appendix captured from the running OpenAPI document, including
+the public voice routes. Refresh it with the shared manifest's operation set.
 
 | Method | Route |
 | --- | --- |
@@ -330,9 +334,9 @@ Agents API route appendix. Generated from Minimal API registrations; refresh fro
 | `POST` | `/api/agents` |
 | `POST` | `/api/agents/attachments/images` |
 | `GET` | `/api/agents/bootstrap` |
+| `DELETE` | `/api/agents/by-external-key/{externalNamespace}/{key}` |
 | `GET` | `/api/agents/by-external-key/{externalNamespace}/{key}` |
 | `PUT` | `/api/agents/by-external-key/{externalNamespace}/{key}` |
-| `DELETE` | `/api/agents/by-external-key/{externalNamespace}/{key}` |
 | `GET` | `/api/agents/capabilities` |
 | `POST` | `/api/agents/capabilities` |
 | `POST` | `/api/agents/capabilities/access-preview` |
@@ -368,15 +372,18 @@ Agents API route appendix. Generated from Minimal API registrations; refresh fro
 | `POST` | `/api/agents/providers/{providerId}/test-chat` |
 | `GET` | `/api/agents/teams` |
 | `POST` | `/api/agents/teams` |
+| `DELETE` | `/api/agents/teams/{teamId}` |
 | `GET` | `/api/agents/teams/{teamId}` |
 | `PUT` | `/api/agents/teams/{teamId}` |
-| `DELETE` | `/api/agents/teams/{teamId}` |
 | `GET` | `/api/agents/teams/{teamId}/agents` |
 | `GET` | `/api/agents/teams/{teamId}/editor` |
-| `PUT` | `/api/agents/teams/{teamId}/members` |
 | `POST` | `/api/agents/teams/{teamId}/members` |
-| `GET` | `/api/agents/{agentId}` |
+| `PUT` | `/api/agents/teams/{teamId}/members` |
+| `GET` | `/api/agents/usage` |
+| `POST` | `/api/agents/voice/speech` |
+| `POST` | `/api/agents/voice/transcriptions` |
 | `DELETE` | `/api/agents/{agentId}` |
+| `GET` | `/api/agents/{agentId}` |
 | `POST` | `/api/agents/{agentId}/capabilities/{capabilityId}/verify` |
 | `POST` | `/api/agents/{agentId}/chat` |
 | `GET` | `/api/agents/{agentId}/chat-sessions` |

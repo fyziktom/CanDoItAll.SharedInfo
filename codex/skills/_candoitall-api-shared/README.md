@@ -7,31 +7,35 @@ access guidance used by the CanDoItAll API skills.
 
 - Artifact: [references/candoitall-web.openapi.json](references/candoitall-web.openapi.json)
 - Provenance: [manifest.json](manifest.json)
-- Source: CanDoItAll `development`, commit `32d296a92ce26c66bd539061fd2a8e3fe10cbaea`
-- Source tree: `203460f864ae4b2e65b3377ebb5fcdb4eb863ce4`; working tree clean
-- Dependency pins: Components `ff5289746573a6dd6456754a7764844627ddd49f` and FileTools `3a080ecd31068a77c1e1bd639f7a78e21c93db85`, both clean
-- Capture: clean Release Docker publication, Development environment, InMemory database,
-  private temporary roots and synthetic credentials, LinuxHeadless profile, McpToolHost worker policy
+- Source: CanDoItAll `demos-repairs`, commit `a59e3af7dcba28b7c0bf4a7450898d468a7d6fc3`
+- Source tree: `e156b5248cc87f9ea9e91c090a19ab3ee048610f`; working tree clean
+- Dependency pins: Components `a3fd4d22f2c4e0432cf389f194c6468b44ab7371` and FileTools
+  `3a080ecd31068a77c1e1bd639f7a78e21c93db85`, both clean
+- Capture: exact signed-source Release Docker publication, Development environment,
+  InMemory synthetic state/credentials, LinuxHeadless profile and McpToolHost worker policy
 - Exposure: main API, OpenAPI, Swagger, JWT, user authentication and HTTP management enabled
-- Document server: `http://localhost:5032/` inside an isolated container with no external network;
-  the workstation's existing operator hosts and publisher/client test pair were not changed
+- Document server: `http://localhost:5032/` inside an isolated container with no network
+  or published ports; existing operator and demo hosts were not reconfigured
 - Runtime endpoints: `/openapi/v1.json` and `/swagger/v1/swagger.json`
-- Captured UTC: `2026-09-20T19:13:26.683676Z`
-- OpenAPI: `3.1.1`; **305 paths, 342 operations, 997 schemas**
-- SHA-256: `C7DA97AC7C0EA73CBEF1AAE47E6E03A6CF24C550CAFA2C893A1E6DA06C501A3A`
+- Captured UTC: 2026-10-07T19:08:54Z
+- OpenAPI: `3.1.1`; **308 paths, 345 operations, 1,015 schemas**
+- SHA-256: `9A3540D43D854E7AAE019E6D8122B27B85C476E2B90F9A58F211B3604C5079C1`
 
-Both anonymous document requests returned byte-identical 3,881,813-byte content. The same
-publication was checked on a free Windows loopback port with the WindowsHeadless profile;
-the document differs only in `servers`. The manifest records that comparison's hash and
-capture address. Port identity is not source identity; the commit and dependency pins
-identify the published contract.
+Both anonymous document requests returned byte-identical 3,923,256-byte content.
+The artifact contains those unmodified bytes. The same publication was checked with
+WindowsHeadless on free loopback port 5542; both Windows document routes agree and the
+Linux/Windows documents differ only in `servers`. Its SHA-256 is
+`73267766EE7505D20340FA0678AE7ADE36CFFFFEB11E11C09DCD005FDB7227C8`.
+The manifest also identifies the image and the live voice-verified deployment at port
+5532, whose user login and account management remain disabled. Port identity is not
+source identity; the commit, configuration and dependency pins identify the contract.
 
 | Route family | Paths | Operations |
 | --- | ---: | ---: |
 | /_dev | 10 | 10 |
 | /api/access | 11 | 15 |
 | /api/agent-recruiting | 6 | 6 |
-| /api/agents | 62 | 75 |
+| /api/agents | 65 | 78 |
 | /api/crm-hr | 15 | 19 |
 | /api/llm-chat-operations | 4 | 4 |
 | /api/llm-chats | 8 | 10 |
@@ -52,32 +56,24 @@ identify the published contract.
 | /storage | 2 | 2 |
 
 These families account for every path and operation. Development diagnostics are included;
-Blazor pages and static assets are not API operations. The capture enables conditional
-account/session routes and includes the HTTP bearer/JWT scheme with operation security
-requirements. A differently configured deployment may expose fewer routes.
+Blazor pages and static assets are not API operations. Conditional account/session routes
+and operation bearer requirements are present. A differently configured deployment may
+expose fewer routes.
 
 ## Current API improvements
 
-Compared with the previous snapshot at `3fb71dd5`, this contract adds 16 paths and 21
-operations, removes or renames no operation, and includes the current security behavior.
-The previous snapshot had 865 schemas; the current document has 997. The changes cover:
+Compared with the previous September snapshot, this document adds three paths and three
+operations and removes no operation. Two new public voice routes provide bounded audio
+transcription and speech synthesis using existing workspace settings, execute authority,
+native-provider capability checks and safe errors. See the
+[voice client contract](../candoitall-api-agents/references/voice-api.md).
+The snapshot also includes the existing `/api/agents/usage` summary route. Its schema
+count changes from 997 to 1,015; regenerate clients against the new artifact.
 
-- user login, self-session reads/logout, account lifecycle, capability discovery and
-  administrator-only machine/session registration management;
-- section-level read/write/execute capabilities while retaining existing exact policies;
-- process-definition catalog/detail/role/step reads;
-- workflow-template discovery and draft creation;
-- workspace business settings with explicit committed-write/read-back handling;
-- safe API errors, current stream revalidation, and anonymous Swagger/OpenAPI discovery.
-
-The security changes from `b82ffc57` are included: caller-owned workflow idempotency,
-withheld launch origin, protected runtime reads, bounded external agent context and
-caller-filtered analytics. Use the
-[partner migration matrix](references/partner-api-migration.md) for the client changes.
-
-Thirteen documented operation sets are checked against the snapshot and skill appendices,
-including API Access and Workspace Settings. The main host's Memory-provider API remains
-experimental; it does not expose a native Cognitive Memory compatibility family.
+The prior access/session, workspace-settings, workflow/process, stable provisioning and
+request-history contracts remain included. Thirteen documented operation sets are
+checked against the snapshot and skill appendices. The main host's Memory-provider API
+remains experimental; it does not expose a native Cognitive Memory compatibility family.
 
 ## Access and usage
 
