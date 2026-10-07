@@ -121,6 +121,18 @@ lease token.
      none, and the read's `expectedProjectAdmission`.
   5. Read the structure again. The success body only lists the changed tasks, each as an
      object whose `value` is the task's node id.
+- **First schedule after an outline import:** imported canonical tasks can have null
+  `startUtc` and `endUtc`. Do not invent previous dates or use generic node edits. On
+  hosts whose task-update schema includes `initialSchedule`, set `scheduleChange` null
+  and send `initialSchedule` with all five members: `currentStartUtc`, `currentEndUtc`,
+  `currentDurationSeconds` copied exactly from the node (explicit nulls included), and
+  `proposedStartUtc`, `proposedEndUtc` as ISO instants. Both current dates must be null;
+  proposed end must follow start. The owner compares the snapshot and enforces task
+  dependency constraints in the same task transaction. A concurrently initialized
+  schedule fails with HTTP 409 `StaleTask`. Both schedule modes together, an inverted
+  interval or an already-scheduled current snapshot fail with HTTP 400. Missing inner
+  members fail framework binding. Older hosts cannot initialize an imported task
+  through this route; report the capability gap instead of submitting substitute dates.
 - **Values:** `expectedEffortHours` stays in hours even when the unit is man-days.
   Current progress accepts -1 (untracked) or 0 through 100; proposed progress only 0
   through 100. A cost amount needs a currency that normalizes to three letters.

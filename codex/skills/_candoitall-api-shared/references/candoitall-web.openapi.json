@@ -66217,6 +66217,55 @@
         "type": "integer",
         "description": "Format of an imported outline, as a JSON integer. 0 Mermaid: `mindmap` text, where indentation gives the hierarchy, or `flowchart` or `graph` text, where every `A --> B` line adds items A and B side by side and a DependsOn link from A to B (other lines are skipped with a warning). 1 DocxOutline: a Word .docx file whose Heading 1, Heading 2 and deeper heading paragraphs give the hierarchy; other non-empty paragraphs also become items. 2 XmindMap: an XMind file (its content.json or content.xml topics). 3 JsonOutline: a JSON object or array of objects, each with `title` (or `name`), optional `notes` and optional `children`."
       },
+      "ProjectStructureInitialTaskSchedule": {
+        "required": [
+          "currentStartUtc",
+          "currentEndUtc",
+          "currentDurationSeconds",
+          "proposedStartUtc",
+          "proposedEndUtc"
+        ],
+        "type": "object",
+        "properties": {
+          "currentStartUtc": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Stored start from nodes[].startUtc in the latest canonical structure read. Required and must be null for initial scheduling; a different persisted value rejects the write.",
+            "format": "date-time"
+          },
+          "currentEndUtc": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Stored end from nodes[].endUtc in the latest canonical structure read. Required and must be null for initial scheduling; a different persisted value rejects the write.",
+            "format": "date-time"
+          },
+          "currentDurationSeconds": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "description": "Stored nullable duration in seconds from nodes[].durationSeconds. Required, including explicit null; compared exactly with the persisted value.",
+            "format": "int32"
+          },
+          "proposedStartUtc": {
+            "type": "string",
+            "description": "Requested first planned start as an ISO 8601 instant with an offset; required and earlier than proposedEndUtc.",
+            "format": "date-time"
+          },
+          "proposedEndUtc": {
+            "type": "string",
+            "description": "Requested first planned end as an ISO 8601 instant with an offset; required and later than proposedStartUtc.",
+            "format": "date-time"
+          }
+        },
+        "description": "Initial planned interval for a canonical task whose stored start and end are both null. Read the node's dates and duration first, send all five members, and use this instead of scheduleChange. A changed snapshot is rejected as StaleTask; dependency constraints still apply."
+      },
       "ProjectStructureLeaseAcquireRequest": {
         "required": [
           "scopeKind",
@@ -69363,6 +69412,17 @@
               {
                 "description": "Project write admission returned as `expectedProjectAdmission` by the structure read, sent back unchanged. The HTTP operation requires it even though the schema allows null: when it is omitted, null or names another project, the update is rejected with HTTP 409 `ProjectLifetimeRefreshRequired` and nothing is written. Read the structure again to obtain a fresh admission; never construct one.",
                 "$ref": "#/components/schemas/ProjectWriteAdmission"
+              }
+            ]
+          },
+          "initialSchedule": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "description": "Optional first planned interval for an unscheduled task, for example a JSON outline import. Omit or send null to preserve the current schedule. Cannot be combined with scheduleChange. Echo the node's nullable dates and duration; changed values fail with StaleTask.",
+                "$ref": "#/components/schemas/ProjectStructureInitialTaskSchedule"
               }
             ]
           }

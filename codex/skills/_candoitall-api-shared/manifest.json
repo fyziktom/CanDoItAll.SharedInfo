@@ -3,12 +3,12 @@
   "source": {
     "repository": "CanDoItAll",
     "branch": "demos-repairs",
-    "commit": "e09d18f9a99186740095fdf2817b0bc12464f07c",
-    "tree": "1cfd63991d9135157f00a50d571280db553e9d8b",
+    "commit": "4dcf8291435aeda470ca11cb800c276d0576bfde",
+    "tree": "77e0f4ec70903c7f46fd33af4c7d22c40c3cdb07",
     "workingTreeClean": true,
     "webProject": "src/App/CanDoItAll.Web/CanDoItAll.Web.csproj",
     "environment": "Development",
-    "generatedUtc": "2026-10-07T19:48:11Z",
+    "generatedUtc": "2026-10-07T22:42:41Z",
     "runtimeDocumentPaths": [
       "/openapi/v1.json",
       "/swagger/v1/swagger.json"
@@ -33,13 +33,13 @@
       "Api:UserAuthentication:Enabled": true,
       "Api:AccessManagement:Enabled": true
     },
-    "captureNote": "Unmodified runtime bytes from an isolated network-none LinuxHeadless container at canonical http://localhost:5032/ with InMemory synthetic state, synthetic credentials and McpToolHost worker policy. Both anonymous document routes are byte-identical. The exact same Release publication was copied to WindowsHeadless and checked on free loopback port 5542; only servers differs. No operator host, demo credentials or persistent data were changed. This image passed 13 live synthetic project identity checks on the dedicated hotel engine at http://localhost:5532; the probe was deleted afterward. Voice live proof is retained separately with its T07 source commit; voice source is unchanged in T08. The demo deployment keeps user authentication and HTTP management disabled.",
-    "image": "candoitall-hotels-engine:e09d18f9a99186740095fdf2817b0bc12464f07c",
-    "imageId": "sha256:9b6f015e2fbe9cfd24fea2890b110109ad813206c765d7af81233498cff6acff",
+    "captureNote": "Unmodified runtime bytes from an isolated network-none LinuxHeadless container at canonical http://localhost:5032/ with InMemory synthetic state, synthetic credentials and McpToolHost worker policy. Both anonymous document routes are byte-identical. An independent WindowsHeadless Release build of the same clean source was checked on free loopback port 5542; only servers differs. No operator host, demo credentials or persistent data were changed by capture. The dedicated hotel engine at http://localhost:5532 resumed seven imported unscheduled synthetic tasks through initialSchedule and verified the same node IDs with persisted intervals. Focused validation passed 19 unit and 23 PostgreSQL HTTP integration tests. Earlier voice and identity live proofs retain their original source commits; this is not a claim that they were rerun for T11-a. The demo deployment keeps user authentication and HTTP management disabled.",
+    "image": "candoitall-hotels-engine:4dcf8291435aeda470ca11cb800c276d0576bfde",
+    "imageId": "sha256:9f0b4a7dddc94032cd541cc2abf6ea407f76b759386a7ab49e55fb4de00772f6",
     "crossPlatformComparison": {
       "runtimeProfile": "WindowsHeadless",
       "captureUrl": "http://localhost:5542/",
-      "sha256": "5B16714F03CD40DF34FC0EF90444DA395FB02A2F8DEB0E33AA6E77446EA6A827",
+      "sha256": "E3EFA8D502A2E557DA571F198082E1DED3A4FB46D5B108FC07F2D15047645F0B",
       "allowedDifferences": [
         "servers"
       ],
@@ -55,19 +55,29 @@
       "url": "http://localhost:5532/",
       "openApiSha256": "62817CE53285C381BCB7B0979A6905131C7F8DE59DCBF57E1258DFAF68CE0698",
       "checksPassed": 13,
-      "syntheticProbeDeleted": true
+      "syntheticProbeDeleted": true,
+      "sourceCommit": "e09d18f9a99186740095fdf2817b0bc12464f07c"
+    },
+    "verifiedInitialScheduleDeployment": {
+      "url": "http://localhost:5532/",
+      "sourceCommit": "4dcf8291435aeda470ca11cb800c276d0576bfde",
+      "openApiSha256": "5648CF3BEA38EFF3E41DFCDE1E1F5DB26DCEBEEACA5970E243841990C8F0925B",
+      "sameTaskIds": true,
+      "scheduledTaskCount": 7,
+      "unitTestsPassed": 19,
+      "httpIntegrationTestsPassed": 23
     }
   },
   "artifact": {
     "file": "references/candoitall-web.openapi.json",
-    "sha256": "0B1C79FC23E0F21D66CA55F406D3A9791BF190D575E031098C5CF2228B986FA5",
+    "sha256": "40DCF075EFBA91DEC35D617AB9F5186F4B37BD06EA72055B2E8BFE1DD956B878",
     "openapiVersion": "3.1.1",
     "documentTitle": "CanDoItAll.Web | v1",
     "documentVersion": "1.0.0",
     "serverUrl": "http://localhost:5032/",
     "pathCount": 309,
     "operationCount": 346,
-    "schemaCount": 1016
+    "schemaCount": 1017
   },
   "routeFamilies": [
     {
