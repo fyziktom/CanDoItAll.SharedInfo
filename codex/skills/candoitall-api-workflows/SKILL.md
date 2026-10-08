@@ -64,6 +64,10 @@ state inspection and possibly operator review before another creation attempt.
 
 ## Runtime Work
 
+- Stage PDF input with `POST /api/workflows/attachments/documents` and workflow write
+  authority. Read the [bounded document contract](references/document-attachments.md)
+  before uploading; staging returns a managed path and does not run a converter.
+
 - Test runs: `POST /api/workflows/test-runs` validates a draft or exact version or, without
   `validateOnly`, creates a real preview run that executes its nodes, including executors with
   external effects, except the nodes replaced by `previewSimulationPlan`. It has no idempotency
@@ -255,6 +259,7 @@ lineage.
 | Method | Route |
 | --- | --- |
 | `GET` | `/api/workflows/analytics` |
+| `POST` | `/api/workflows/attachments/documents` |
 | `GET` | `/api/workflows/components` |
 | `POST` | `/api/workflows/components` |
 | `GET` | `/api/workflows/components/{componentId}` |

@@ -3,12 +3,12 @@
   "source": {
     "repository": "CanDoItAll",
     "branch": "demos-repairs",
-    "commit": "b886b4ef96e9f2653525352cc2232b0af28342e6",
-    "tree": "de1c5ba2e85cbb1323642442806c874459361d4d",
+    "commit": "16eb94433945e20259ad3cfc3d57751224a8f548",
+    "tree": "38b01d3ef29b36b036de9dae44cdfe6c28ff539e",
     "workingTreeClean": true,
     "webProject": "src/App/CanDoItAll.Web/CanDoItAll.Web.csproj",
     "environment": "Development",
-    "generatedUtc": "2026-10-07T23:54:24Z",
+    "generatedUtc": "2026-10-08T07:53:02Z",
     "runtimeDocumentPaths": [
       "/openapi/v1.json",
       "/swagger/v1/swagger.json"
@@ -16,7 +16,7 @@
     "dependencies": [
       {
         "repository": "CanDoItAll.Components",
-        "commit": "a3fd4d22f2c4e0432cf389f194c6468b44ab7371",
+        "commit": "e44176b2f454d143cc8edc9ba610cf4612fe99ec",
         "workingTreeClean": true
       },
       {
@@ -33,18 +33,9 @@
       "Api:UserAuthentication:Enabled": true,
       "Api:AccessManagement:Enabled": true
     },
-    "captureNote": "Unmodified runtime bytes from an isolated network-none LinuxHeadless container at canonical http://localhost:5032/ with InMemory synthetic state, synthetic credentials and McpToolHost worker policy. Both document routes are byte-identical. WindowsHeadless on loopback 5542 uses the same clean source and differs only in servers. The dedicated hotel engine proves 58 imported tasks retain typed source identity after scheduling, clean human notes and duplicate rejection before writes. The functional repair fe1806e616f6e031f898daaa96b8e06552c2a1f2 passed 14 unit and 35 PostgreSQL HTTP/import integration tests. The final follow-up changes API prose only; its generated contract and live owner behavior were checked on this image. Earlier voice, project identity and initial-schedule deployment proofs retain their original source commits; they are not relabeled as rerun. The hotel deployment keeps user authentication and HTTP management disabled.",
-    "image": "candoitall-hotels-engine:b886b4ef96e9f2653525352cc2232b0af28342e6",
-    "imageId": "sha256:2702d3d8a729a7bb10b5197514c86a46358f4466b180d79e028a1d7449e0bb3a",
-    "crossPlatformComparison": {
-      "runtimeProfile": "WindowsHeadless",
-      "captureUrl": "http://localhost:5542/",
-      "sha256": "2FC9353FC11559CD062E4E99E97FD39C6DF7C11C15C1430E07242E341032927E",
-      "allowedDifferences": [
-        "servers"
-      ],
-      "passed": true
-    },
+    "captureNote": "Unmodified runtime bytes from the clean signed source in an isolated network-none LinuxHeadless Release container at canonical http://localhost:5032/, with InMemory invented state and credentials, all six API exposure flags enabled and McpToolHost worker policy. Both document routes are byte-identical. This capture was not repeated on Windows; the prior Windows comparison retains its original source identity. Earlier voice, identity and scheduling proofs are historical, not relabeled. The dedicated hotel deployment keeps user authentication and HTTP management disabled.",
+    "image": "candoitall-hotels-engine:16eb94433945e20259ad3cfc3d57751224a8f548",
+    "imageId": "sha256:0b27014399990a1b73b61f1b8ec8ecb8a694a0a68b73cf9606de0e4ae8c5baa8",
     "verifiedVoiceDeployment": {
       "url": "http://localhost:5532/",
       "openApiSha256": "C05F005AF01061B3C2DAFF62D608FA6C4066289B02ECBEC4999AA2B52AD8A065",
@@ -77,18 +68,39 @@
       "functionalValidationCommit": "fe1806e616f6e031f898daaa96b8e06552c2a1f2",
       "unitTestsPassed": 14,
       "httpAndImportIntegrationTestsPassed": 35
+    },
+    "historicalCrossPlatformComparison": {
+      "runtimeProfile": "WindowsHeadless",
+      "captureUrl": "http://localhost:5542/",
+      "sha256": "2FC9353FC11559CD062E4E99E97FD39C6DF7C11C15C1430E07242E341032927E",
+      "allowedDifferences": [
+        "servers"
+      ],
+      "passed": true,
+      "sourceCommit": "b886b4ef96e9f2653525352cc2232b0af28342e6"
+    },
+    "verifiedDocumentStagingDeployment": {
+      "url": "http://localhost:5532/",
+      "sourceCommit": "16eb94433945e20259ad3cfc3d57751224a8f548",
+      "pdfWorkflowRunId": "24f79ab2-8159-4c46-ae6f-40d6c1d92e28",
+      "succeeded": true,
+      "previewTruncated": false,
+      "unitTestsPassed": 10,
+      "httpIntegrationTestsPassed": 6,
+      "converterTestsPassed": 9,
+      "note": "PDF upload and document.to-markdown succeeded in the read-only Linux deployment. Subsequent internal whitespace and transaction improvements do not change this captured HTTP contract."
     }
   },
   "artifact": {
     "file": "references/candoitall-web.openapi.json",
-    "sha256": "7530815976EF24E6D2AED50A506932737D3E93DA0FF0F7FBCA86B8D42ED9921A",
+    "sha256": "6095DC7E69890DA6FD20662CC55320B87525D565F96E240E39622BE120E71C25",
     "openapiVersion": "3.1.1",
     "documentTitle": "CanDoItAll.Web | v1",
     "documentVersion": "1.0.0",
     "serverUrl": "http://localhost:5032/",
-    "pathCount": 309,
-    "operationCount": 346,
-    "schemaCount": 1017
+    "pathCount": 310,
+    "operationCount": 347,
+    "schemaCount": 1019
   },
   "routeFamilies": [
     {
@@ -183,8 +195,8 @@
     },
     {
       "prefix": "/api/workflows",
-      "pathCount": 41,
-      "operationCount": 46
+      "pathCount": 42,
+      "operationCount": 47
     },
     {
       "prefix": "/authorized-files",
@@ -1292,6 +1304,11 @@
           "operationId": "GetWorkflowAnalytics"
         },
         {
+          "method": "POST",
+          "path": "/api/workflows/attachments/documents",
+          "operationId": "StageWorkflowDocument"
+        },
+        {
           "method": "GET",
           "path": "/api/workflows/components",
           "operationId": "ListWorkflowComponents"
@@ -1302,14 +1319,14 @@
           "operationId": "SaveWorkflowComponent"
         },
         {
-          "method": "GET",
-          "path": "/api/workflows/components/{componentId}",
-          "operationId": "GetWorkflowComponent"
-        },
-        {
           "method": "DELETE",
           "path": "/api/workflows/components/{componentId}",
           "operationId": "DeleteWorkflowComponent"
+        },
+        {
+          "method": "GET",
+          "path": "/api/workflows/components/{componentId}",
+          "operationId": "GetWorkflowComponent"
         },
         {
           "method": "GET",
@@ -1342,14 +1359,14 @@
           "operationId": "ImportWorkflowDefinition"
         },
         {
-          "method": "GET",
-          "path": "/api/workflows/definitions/{workflowId}",
-          "operationId": "GetWorkflowDefinition"
-        },
-        {
           "method": "DELETE",
           "path": "/api/workflows/definitions/{workflowId}",
           "operationId": "DeleteWorkflowDefinition"
+        },
+        {
+          "method": "GET",
+          "path": "/api/workflows/definitions/{workflowId}",
+          "operationId": "GetWorkflowDefinition"
         },
         {
           "method": "POST",
@@ -1497,16 +1514,6 @@
           "operationId": "SaveWorkflowSettings"
         },
         {
-          "method": "POST",
-          "path": "/api/workflows/test-runs",
-          "operationId": "RunWorkflowTest"
-        },
-        {
-          "method": "POST",
-          "path": "/api/workflows/validate",
-          "operationId": "ValidateDraftWorkflowDefinition"
-        },
-        {
           "method": "GET",
           "path": "/api/workflows/templates",
           "operationId": "ListWorkflowTemplates"
@@ -1515,6 +1522,16 @@
           "method": "POST",
           "path": "/api/workflows/templates/{templateKey}/drafts",
           "operationId": "AddWorkflowTemplateToDrafts"
+        },
+        {
+          "method": "POST",
+          "path": "/api/workflows/test-runs",
+          "operationId": "RunWorkflowTest"
+        },
+        {
+          "method": "POST",
+          "path": "/api/workflows/validate",
+          "operationId": "ValidateDraftWorkflowDefinition"
         }
       ]
     },

@@ -38394,6 +38394,94 @@
         ]
       }
     },
+    "/api/workflows/attachments/documents": {
+      "post": {
+        "tags": [
+          "Workflows"
+        ],
+        "summary": "Stage a PDF for workflow document conversion.",
+        "description": "Requires api.workflows.write. Send exactly one multipart file named file and no text fields. The file must have a .pdf extension, application/pdf media type and PDF signature, and contain 1–10485760 bytes. Whole-request limit adds 64 KiB. A unique managed workspace path is returned for document.to-markdown sourcePath; the upload does not convert or execute the document. Treat uploaded content as untrusted. Each upload creates a new file; cancellation removes partial files. Invalid input returns 400 workflows.document-invalid; framework size/type errors may have no envelope.",
+        "operationId": "StageWorkflowDocument",
+        "requestBody": {
+          "description": "Exactly one PDF file part named file.",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/WorkflowDocumentUploadRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Managed workspace-relative path, application/pdf content type and stored byte count.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkflowDocumentStagingResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request is malformed or violates the documented field and capability limits; no requested mutation was accepted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Credentials are missing, invalid, expired or no longer live; no authenticated authority was established.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The authenticated credential lacks the required capability or credential kind; no requested mutation was accepted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Payload Too Large",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Unsupported Media Type",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
     "/api/workflows/contract": {
       "get": {
         "tags": [
@@ -76258,6 +76346,45 @@
       "WorkflowDefinitionSelectionKind": {
         "type": "integer",
         "description": "How a launch chose the definition version to run, as a JSON integer: 0 ExactSavedVersion (a `versionId` was given), 1 LatestActive (the latest Active version), 2 DraftPreview (an unsaved draft in a preview run)."
+      },
+      "WorkflowDocumentStagingResult": {
+        "required": [
+          "relativePath",
+          "contentType",
+          "sizeBytes"
+        ],
+        "type": "object",
+        "properties": {
+          "relativePath": {
+            "type": "string",
+            "description": "Managed workspace-relative path to supply as document.to-markdown sourcePath."
+          },
+          "contentType": {
+            "type": "string",
+            "description": "Validated media type: application/pdf."
+          },
+          "sizeBytes": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Stored document size in bytes, at most 10485760.",
+            "format": "int64"
+          }
+        }
+      },
+      "WorkflowDocumentUploadRequest": {
+        "required": [
+          "file"
+        ],
+        "type": "object",
+        "properties": {
+          "file": {
+            "description": "One nonempty PDF, at most 10 MiB, with application/pdf media type.",
+            "$ref": "#/components/schemas/IFormFile"
+          }
+        }
       },
       "WorkflowDurationAnalyticsSummary": {
         "required": [
