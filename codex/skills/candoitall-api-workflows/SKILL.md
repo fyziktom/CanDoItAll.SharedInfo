@@ -62,6 +62,17 @@ is bounded to that request's component. Unexpected cleanup failures reach HTTP c
 as generic 500 errors, without a distinct cleanup code; an ambiguous failure requires
 state inspection and possibly operator review before another creation attempt.
 
+## Project task schedules
+
+The `project-structure` executor's `CreateTaskNodes` operation accepts optional
+`startUtc` and `dueUtc` on each item selected by `TaskItemsJsonPath`. Supply both
+for a complete Gantt schedule. Dates are normalized to UTC; when both are present,
+the start must precede the due date. The executor validates the entire input batch
+before creating any task. Omitting the start remains supported for due-only work,
+which Gantt identifies as a projected schedule. Approval/decision dependencies stay
+in the project structure; only dependencies between canonical tasks constrain Gantt.
+A dependency whose endpoint no longer exists still produces a warning.
+
 ## Runtime Work
 
 - Stage PDF input with `POST /api/workflows/attachments/documents` and workflow write
