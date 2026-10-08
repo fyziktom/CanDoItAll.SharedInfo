@@ -47,6 +47,15 @@ Use this skill when a task needs project, hierarchy, project-structure, dependen
   `/nodes/{rootNodeId}/delete` again with its `durableMutationId` and the same
   `managedStorageDisposition`.
 
+## Stable Project Provisioning
+
+Use `POST /api/projects` with an optional external namespace/key pair and resolve it
+through `GET /api/projects/by-external-key/{externalNamespace}/{externalKey}`. The pair
+is normalized, unique and immutable once assigned. Return the resolved lifetime on
+subsequent edits; missing, duplicate and stale bindings fail explicitly. See the
+[project external identity contract](references/project-external-identity.md) for
+compatibility rules, scopes and recovery. Do not substitute display-name searches.
+
 ## Direct Tool Boundary
 
 The internal project-structure runtime tool surface is exposed through `ProjectStructureAgentRuntimeToolProvider`; the tools an invocation receives depend on its project access. It broadly mirrors the 58-path, 59-operation `/api/project-structure` HTTP surface and adds the repo-branch lease helper `project_structure_repo_branch_lease_acquire`, which is a runtime tool and not an HTTP route. Direct runtime tools include node create (`project_structure_node_create`), single and batch node delete (`project_structure_node_delete`, `project_structure_nodes_delete`), focused node updates, generic links, asset create/content (`project_structure_asset_create`, `project_structure_asset_content_get`), lease renew, process/workflow node operations, and read/write/import/lease tools. These tools are classified by `AgentToolInvocationPolicy`; destructive and mutating tools still require project-structure write access and the normal approval path.
@@ -112,6 +121,18 @@ lease token.
      none, and the read's `expectedProjectAdmission`.
   5. Read the structure again. The success body only lists the changed tasks, each as an
      object whose `value` is the task's node id.
+- **First schedule after an outline import:** imported canonical tasks can have null
+  `startUtc` and `endUtc`. Do not invent previous dates or use generic node edits. On
+  hosts whose task-update schema includes `initialSchedule`, set `scheduleChange` null
+  and send `initialSchedule` with all five members: `currentStartUtc`, `currentEndUtc`,
+  `currentDurationSeconds` copied exactly from the node (explicit nulls included), and
+  `proposedStartUtc`, `proposedEndUtc` as ISO instants. Both current dates must be null;
+  proposed end must follow start. The owner compares the snapshot and enforces task
+  dependency constraints in the same task transaction. A concurrently initialized
+  schedule fails with HTTP 409 `StaleTask`. Both schedule modes together, an inverted
+  interval or an already-scheduled current snapshot fail with HTTP 400. Missing inner
+  members fail framework binding. Older hosts cannot initialize an imported task
+  through this route; report the capability gap instead of submitting substitute dates.
 - **Values:** `expectedEffortHours` stays in hours even when the unit is man-days.
   Current progress accepts -1 (untracked) or 0 through 100; proposed progress only 0
   through 100. A cost amount needs a currency that normalizes to three letters.
@@ -136,6 +157,36 @@ lease token.
   token.
 
 ## Operating Rules
+
+### JSON outline import identity
+
+`POST /api/project-structure/imports` accepts `sourceKind: 3` (JsonOutline) with
+`sourceText` containing one object or an array of objects, each with `title` (or
+`name`), optional `notes` and `children`. An optional `sourceKey` identifies a node
+independently of its display name. It starts with an ASCII letter or digit, contains
+at most 128 ASCII letters, digits, `-`, `_`, `.`, `:` or `/`, and is unique across
+the whole outline using case-sensitive comparison. Duplicate display names are valid.
+
+Clients that need reliable identity readback must check that the live
+`ProjectStructureImportRequest` schema has `requireSourceKeys`, then send it as `true`.
+This requires a key on every JSON node; another source kind is rejected. An old host
+cannot provide this guarantee and must be reported as unsupported before any write.
+The importer validates the complete source before creating its container or source
+asset. Missing required keys return HTTP 400 `ImportSourceKeyRequired`; invalid
+supplied keys return `InvalidImportSourceKey`; duplicates return
+`DuplicateImportSourceKey`; required keys on another format return
+`ImportSourceKeysUnsupported`.
+
+Read the created nodes with `includeMetadata: true`. Parse their `metadataJson` and
+read `importSource.sourceKey`, numeric `importSource.sourceKind` and
+`importSource.containerNodeId`. Verify the container against the import result.
+The canonical task owner preserves this typed identity through task creation and
+edits; notes remain human text. Do not put recovery keys in notes or use generic
+metadata writes on canonical tasks. Import accepts no arbitrary metadata field.
+Omitted keys preserve the earlier import behavior. Import remains non-atomic after
+validation: inspect any partial result before deliberately resetting or retrying.
+
+### Mutation and readback
 
 - Prefer focused endpoints over fetching or sending entire graphs.
 - Use `CanonicalCurrent` for HTTP structure reads. Do not request
@@ -263,14 +314,15 @@ Project Structure routes mirrored by the shared OpenAPI snapshot.
 | `GET` | `/api/projects` |
 | `POST` | `/api/projects` |
 | `GET` | `/api/projects/access-list` |
+| `GET` | `/api/projects/by-external-key/{externalNamespace}/{externalKey}` |
 | `GET` | `/api/projects/deletion-cleanups` |
 | `GET` | `/api/projects/deletion-completion-notices` |
 | `GET` | `/api/projects/hierarchy-links` |
 | `POST` | `/api/projects/{childProjectId}/reconnect-subproject` |
-| `POST` | `/api/projects/{parentProjectId}/subprojects/{childProjectId}` |
 | `DELETE` | `/api/projects/{parentProjectId}/subprojects/{childProjectId}` |
-| `GET` | `/api/projects/{projectId}` |
+| `POST` | `/api/projects/{parentProjectId}/subprojects/{childProjectId}` |
 | `DELETE` | `/api/projects/{projectId}` |
+| `GET` | `/api/projects/{projectId}` |
 | `POST` | `/api/projects/{projectId}/deletion-cleanups/{participantId}/{recoveryId}/retry` |
 | `GET` | `/api/projects/{projectId}/hierarchy` |
 <!-- api-docs-skills-parity:projects-routes:end -->

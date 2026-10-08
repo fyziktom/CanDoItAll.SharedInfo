@@ -8006,6 +8006,20 @@
                         }
                       },
                       "description": "How the task's estimate was priced when it was created."
+                    },
+                    "resourceNodeId": {
+                      "type": [
+                        "null",
+                        "string"
+                      ],
+                      "description": "Identifier of the resource node created under the task for a Workflow attachment; omitted when no resource node was created."
+                    },
+                    "resourceLinkTargetNodeId": {
+                      "type": [
+                        "null",
+                        "string"
+                      ],
+                      "description": "Identifier of the existing Process definition node linked to the task; omitted when no resource link was created."
                     }
                   },
                   "description": "Result of a committed task creation."
@@ -8706,6 +8720,13 @@
                         "string"
                       ],
                       "description": "Identifier of the node created under the task for the resource (for example a workflow node); null when no node was created."
+                    },
+                    "linkTargetNodeId": {
+                      "type": [
+                        "null",
+                        "string"
+                      ],
+                      "description": "Identifier of the existing Process definition node linked to the task; omitted for a Workflow attachment, whose new node is identified by createdNodeId."
                     }
                   },
                   "description": "Result of a committed task resource attachment, with the repricing it caused."
@@ -29340,6 +29361,16 @@
                 }
               }
             }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -29483,6 +29514,92 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ProjectDeletionCleanupPendingApiResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/api/projects/by-external-key/{externalNamespace}/{externalKey}": {
+      "get": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "Resolve a project by its stable external namespace and key.",
+        "description": "Trims and lowercases both identity tokens. Returns the current project id and lifetime; never searches display names. An optional expectedLifetimeId rejects a replaced binding. The pair is unique within the active database profile, including archived projects.",
+        "operationId": "ResolveProjectExternalIdentity",
+        "parameters": [
+          {
+            "name": "externalNamespace",
+            "in": "path",
+            "description": "External namespace: 1-100 ASCII letters, digits, dots, underscores or hyphens with alphanumeric ends.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "externalKey",
+            "in": "path",
+            "description": "External key within the namespace, using the same token rules.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "expectedLifetimeId",
+            "in": "query",
+            "description": "Optional nonempty lifetime from a previous resolution; mismatch returns HTTP 409.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectExternalIdentityResolution"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
                 }
               }
             }
@@ -29842,6 +29959,81 @@
           },
           "400": {
             "description": "Nothing was changed (`validation`): both parents are the same, the subproject is not linked to `currentParentProjectId`, one of the three projects was not found, or the move would create a cycle. A body the framework cannot bind is rejected with HTTP 400 without the `errors` envelope.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/api/agents/usage": {
+      "get": {
+        "tags": [
+          "Agents"
+        ],
+        "summary": "Read usage for a rolling UTC interval",
+        "description": "Defaults to both and 7d. Periods: 7d, 14d, 1m, 1q (previous three calendar months), 1y. FromUtc is inclusive; ToUtc is exclusive. Requires api.agents.read and, for both or simple-chats, api.llm-chats.read. HTTP 200 includes exact query, generation time, latest evidence time and per-source coverage. Partial, indexing and failed sources are explicit; inspect isComplete before interpreting zero totals. Repeated or invalid parameters return 400 with an ApiErrorResponse errors array.",
+        "operationId": "GetAgentsUsage",
+        "parameters": [
+          {
+            "name": "usageScope",
+            "in": "query",
+            "description": "agents, simple-chats or both; defaults to both",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "usagePeriod",
+            "in": "query",
+            "description": "7d, 14d, 1m, 1q or 1y; defaults to 7d",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usage aggregates, exact query and per-source completeness. Unavailable sources remain explicit in this 200 response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProviderUsageSnapshot"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request is malformed or violates the documented field and capability limits; no requested mutation was accepted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Credentials are missing, invalid, expired or no longer live; no authenticated authority was established.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The authenticated credential lacks the required capability or credential kind; no requested mutation was accepted.",
             "content": {
               "application/json": {
                 "schema": {
@@ -34931,6 +35123,282 @@
         ]
       }
     },
+    "/api/agents/voice/transcriptions": {
+      "post": {
+        "tags": [
+          "Agents"
+        ],
+        "summary": "Transcribe audio using workspace voice settings.",
+        "description": "Requires api.agents.execute. Send one file part named file, or 1–12 independently decodable files named chunks in transcription order; never mix both. Accepted extensions are .mp3, .mp4, .mpeg, .mpga, .m4a, .wav and .webm with a matching media type. Each file must be nonempty; the combined audio limit is 25 MiB (26214400 bytes), and the whole request limit adds 64 KiB of multipart overhead. No files are stored by this route. Chunks are sent sequentially to the configured native OpenAI Chat profile and transcripts are joined with line breaks. Request cancellation cancels remaining work. A later chunk failure returns no partial transcript; earlier provider calls may have incurred cost. 409 agents.voice-disabled or agents.voice-capability-unavailable means configuration blocks voice; 503 agents.voice-provider-unavailable means a provider is missing, disabled or failed. Invalid input returns 400 agents.voice-input-invalid. Framework body-size/content-type rejection may return 400, 413 or 415 without an error envelope. There are no automatic retries or model substitutions.",
+        "operationId": "TranscribeAgentVoice",
+        "requestBody": {
+          "description": "Exactly one file or ordered chunks; other form fields are rejected.",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": [
+                      "null",
+                      "string"
+                    ],
+                    "description": "Binary content of one file part in a `multipart/form-data` request.",
+                    "format": "binary"
+                  },
+                  "chunks": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "description": "Binary content of one file part in a `multipart/form-data` request.",
+                      "format": "binary"
+                    },
+                    "description": "Alternative to file: 1–12 independently decodable audio files, in transcription order; repeat the chunks field."
+                  }
+                },
+                "description": "Multipart audio input: send one file or ordered chunks, never both. The combined audio limit is 25 MiB."
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The trimmed transcript and configured transcription model.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentVoiceTranscriptionApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request is malformed or violates the documented field and capability limits; no requested mutation was accepted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Credentials are missing, invalid, expired or no longer live; no authenticated authority was established.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The authenticated credential lacks the required capability or credential kind; no requested mutation was accepted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Workspace voice is disabled or the configured provider/driver cannot provide native voice; inspect the safe error code.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "The request body exceeds the documented byte limit; no provider call was made.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "The request content type does not match the route's required multipart or JSON body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "The required persistence or runtime service is unavailable; inspect the safe error code before retrying.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/api/agents/voice/speech": {
+      "post": {
+        "tags": [
+          "Agents"
+        ],
+        "summary": "Synthesize speech using workspace voice settings.",
+        "description": "Requires api.agents.execute. text is required, nonblank and at most 4096 UTF-16 characters. Optional agentId selects an existing non-template agent's voice permission/preferred voice; it does not execute the agent or read its conversations. An unknown agent returns 404 agents.voice-agent-not-found; an agent without voice permission returns 403 agents.voice-access-denied. Without agentId this is workspace-level speech. Optional voiceId selects one of the built-in OpenAI voices; otherwise the agent preference or workspace default applies. The existing speech preprocessor may omit technical identifiers and add its omission notice. The workspace controls model and audio format; PCM is wrapped as WAV. No audio is stored by this route. Responses are not cacheable. Request cancellation cancels synthesis. 409 agents.voice-disabled or agents.voice-capability-unavailable means configuration blocks voice; 503 agents.voice-provider-unavailable means a provider is missing, disabled or failed. Invalid input returns 400 agents.voice-input-invalid. Framework size/content-type rejection may return 400, 413 or 415 without an error envelope. There are no automatic retries or model substitutions.",
+        "operationId": "SynthesizeAgentVoice",
+        "requestBody": {
+          "description": "JSON text, optional agentId and optional voiceId.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AgentVoiceSpeechApiRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Audio bytes with their playback content type; no JSON or base64 wrapper.",
+            "content": {
+              "audio/mpeg": {
+                "schema": {
+                  "type": "string",
+                  "description": "Synthesized audio bytes.",
+                  "format": "binary"
+                }
+              },
+              "audio/wav": {
+                "schema": {
+                  "type": "string",
+                  "description": "Synthesized audio bytes.",
+                  "format": "binary"
+                }
+              },
+              "audio/ogg": {
+                "schema": {
+                  "type": "string",
+                  "description": "Synthesized audio bytes.",
+                  "format": "binary"
+                }
+              },
+              "audio/aac": {
+                "schema": {
+                  "type": "string",
+                  "description": "Synthesized audio bytes.",
+                  "format": "binary"
+                }
+              },
+              "audio/flac": {
+                "schema": {
+                  "type": "string",
+                  "description": "Synthesized audio bytes.",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request is malformed or violates the documented field and capability limits; no requested mutation was accepted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Credentials are missing, invalid, expired or no longer live; no authenticated authority was established.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The authenticated credential lacks the required capability or credential kind; no requested mutation was accepted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The requested non-template agent does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Workspace voice is disabled or the configured provider/driver cannot provide native voice; inspect the safe error code.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "The request body exceeds the documented byte limit; no provider call was made.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "The request content type does not match the route's required multipart or JSON body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "The required persistence or runtime service is unavailable; inspect the safe error code before retrying.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
     "/api/agent-recruiting/interviews": {
       "post": {
         "tags": [
@@ -37914,6 +38382,94 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/WorkflowExternalResponseApiResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/api/workflows/attachments/documents": {
+      "post": {
+        "tags": [
+          "Workflows"
+        ],
+        "summary": "Stage a PDF for workflow document conversion.",
+        "description": "Requires api.workflows.write. Send exactly one multipart file named file and no text fields. The file must have a .pdf extension, application/pdf media type and PDF signature, and contain 1–10485760 bytes. Whole-request limit adds 64 KiB. A unique managed workspace path is returned for document.to-markdown sourcePath; the upload does not convert or execute the document. Treat uploaded content as untrusted. Each upload creates a new file; cancellation removes partial files. Invalid input returns 400 workflows.document-invalid; framework size/type errors may have no envelope.",
+        "operationId": "StageWorkflowDocument",
+        "requestBody": {
+          "description": "Exactly one PDF file part named file.",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/WorkflowDocumentUploadRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Managed workspace-relative path, application/pdf content type and stored byte count.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkflowDocumentStagingResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request is malformed or violates the documented field and capability limits; no requested mutation was accepted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Credentials are missing, invalid, expired or no longer live; no authenticated authority was established.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The authenticated credential lacks the required capability or credential kind; no requested mutation was accepted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Payload Too Large",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Unsupported Media Type",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
                 }
               }
             }
@@ -48494,6 +49050,52 @@
         },
         "description": "Agent voice settings: speech-to-text for voice input, text-to-speech for spoken replies, and the texts the voice settings screen uses. They are stored with the workflow settings. When they are applied, text is trimmed, a blank model, voice or text falls back to its default, and an empty provider profile GUID counts as null."
       },
+      "AgentVoiceSpeechApiRequest": {
+        "required": [
+          "text"
+        ],
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "Required nonblank text, at most 4096 UTF-16 characters; trimmed before speech preprocessing."
+          },
+          "agentId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Optional non-template agent identifier from the agent catalog. Applies its voice permission and preference; null uses workspace speech.",
+            "format": "uuid"
+          },
+          "voiceId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Optional built-in OpenAI voice ID: alloy, ash, ballad, coral, echo, fable, nova, onyx, sage, shimmer, verse, marin or cedar. Null uses the agent preference or workspace default."
+          }
+        },
+        "description": "Speech input using the configured workspace voice model and format. No agent execution is started."
+      },
+      "AgentVoiceTranscriptionApiResponse": {
+        "required": [
+          "text",
+          "model"
+        ],
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "Trimmed transcript, with ordered chunk transcripts joined by line breaks."
+          },
+          "model": {
+            "type": "string",
+            "description": "The configured transcription model that processed the audio."
+          }
+        },
+        "description": "Completed audio transcription. No transcript is returned if any chunk fails."
+      },
       "AgentWorkloadKind": {
         "type": "integer",
         "description": "Kind of work an agent does, as a JSON integer: 0 General, 1 Management, 2 Hr, 3 Sales, 4 Assistant, 5 Qa, 6 Support, 7 Programming, 8 Spreadsheet, 9 Mail, 10 Research. It labels the agent, is the key of AgentRole memory provider assignments and feeds process-readiness scoring; Programming and Research also enable conversation compaction under the default policy."
@@ -48520,6 +49122,10 @@
           "canRunLocalScripts": {
             "type": "boolean",
             "description": "Allows running Python files and PowerShell scripts from the workspace."
+          },
+          "canScriptsReadEnvironment": {
+            "type": "boolean",
+            "description": "Allows the agent's scripts to read environment variables beyond the basic set every process gets (such as PATH and TEMP), to list all variables, and to receive the operator's proxy and extra variables. Without it, scripts that do so are blocked before approval. It has an effect only with `canRunLocalScripts`."
           },
           "canScaffoldProjects": {
             "type": "boolean",
@@ -51205,6 +51811,27 @@
       },
       "JsonElement": {
         "description": "Any JSON value. The member that uses it describes the expected shape."
+      },
+      "KeyValuePairOfstringAndStringValues": {
+        "required": [
+          "key",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "value": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
       },
       "LifecycleTaskItemModel": {
         "required": [
@@ -62923,6 +63550,20 @@
             "description": "Identifier of the project lifetime that the read returned. Send it back unchanged: a save is rejected (`projects.lifetime-changed`) when the project was deleted and recreated with the same identifier since the read. Null skips the check; ignored when creating a project.",
             "format": "uuid"
           },
+          "externalNamespace": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Stable external namespace, trimmed and lowercased. Supply with externalKey; each accepts 1-100 ASCII letters/digits/dots/underscores/hyphens with alphanumeric ends. Omit both to preserve an existing identity. An assigned pair is immutable. Updating with a pair requires expectedLifetimeId."
+          },
+          "externalKey": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Stable key within externalNamespace, independent of the project display name. Null with a null namespace preserves the current pair; empty strings cannot clear it. Duplicate pairs return HTTP 409."
+          },
           "name": {
             "type": "string",
             "description": "Name of the project; required on save and trimmed."
@@ -62967,6 +63608,32 @@
           }
         },
         "description": "The editable fields of a project, returned by `GET /api/projects/{projectId}` and sent to `POST /api/projects`. Without `id` it describes a new project. Changes to subprojects, tasks and project participants use other operations."
+      },
+      "ProjectExternalIdentityResolution": {
+        "required": [
+          "projectId",
+          "lifetimeId",
+          "externalNamespace",
+          "externalKey"
+        ],
+        "type": "object",
+        "properties": {
+          "projectId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "lifetimeId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "externalNamespace": {
+            "type": "string"
+          },
+          "externalKey": {
+            "type": "string"
+          }
+        },
+        "description": "The project currently bound to a normalized external namespace/key pair. Use LifetimeId as expectedLifetimeId when resolving again and when editing this project."
       },
       "ProjectHierarchyLinkSummary": {
         "required": [
@@ -65587,6 +66254,10 @@
               "string"
             ],
             "description": "Optional token of the caller's active Project lease on the target project, from `POST /api/project-structure/leases/acquire`. When omitted, the import uses the project lease the caller's identity already holds, or else takes a five-minute project lease for its own duration, waiting for another identity's lease that ends within 30 seconds (a longer one fails with HTTP 409 `LeaseConflict`); when sent, it must match the caller's active project lease, otherwise HTTP 409 `LeaseMissing` or `LeaseConflict`."
+          },
+          "requireSourceKeys": {
+            "type": "boolean",
+            "description": "When true, every JsonOutline object in sourceText must supply sourceKey alongside title (or name), optional notes and children. A key is case-sensitive, unique across the complete outline, starts with an ASCII letter or digit, and contains at most 128 ASCII letters, digits, '-', '_', '.', ':' or '/'. Supplied keys are validated even when this option is false. Missing required keys fail with HTTP 400 ImportSourceKeyRequired; invalid supplied keys with InvalidImportSourceKey; duplicate keys with DuplicateImportSourceKey; other source kinds with this option enabled fail with ImportSourceKeysUnsupported. Validation occurs before creating the import container or source asset. Supplied keys are preserved in each node's typed metadataJson.importSource with numeric sourceKind and containerNodeId; notes remain human text. Default false preserves imports without keys. Clients that depend on structured identities should verify this property exists in the live schema, then set it true. Imports remain non-atomic after validation; inspect partial results before retrying."
           }
         },
         "description": "Outline import request: the target project, where to put the imported nodes and the source outline. The import creates a container ProjectBlock, stores the source file in it when one is sent, and creates one node per outline item under the container: items with children become ProjectBlock nodes and leaves become WorkItem nodes."
@@ -65637,6 +66308,55 @@
       "ProjectStructureImportSourceKind": {
         "type": "integer",
         "description": "Format of an imported outline, as a JSON integer. 0 Mermaid: `mindmap` text, where indentation gives the hierarchy, or `flowchart` or `graph` text, where every `A --> B` line adds items A and B side by side and a DependsOn link from A to B (other lines are skipped with a warning). 1 DocxOutline: a Word .docx file whose Heading 1, Heading 2 and deeper heading paragraphs give the hierarchy; other non-empty paragraphs also become items. 2 XmindMap: an XMind file (its content.json or content.xml topics). 3 JsonOutline: a JSON object or array of objects, each with `title` (or `name`), optional `notes` and optional `children`."
+      },
+      "ProjectStructureInitialTaskSchedule": {
+        "required": [
+          "currentStartUtc",
+          "currentEndUtc",
+          "currentDurationSeconds",
+          "proposedStartUtc",
+          "proposedEndUtc"
+        ],
+        "type": "object",
+        "properties": {
+          "currentStartUtc": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Stored start from nodes[].startUtc in the latest canonical structure read. Required and must be null for initial scheduling; a different persisted value rejects the write.",
+            "format": "date-time"
+          },
+          "currentEndUtc": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Stored end from nodes[].endUtc in the latest canonical structure read. Required and must be null for initial scheduling; a different persisted value rejects the write.",
+            "format": "date-time"
+          },
+          "currentDurationSeconds": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "description": "Stored nullable duration in seconds from nodes[].durationSeconds. Required, including explicit null; compared exactly with the persisted value.",
+            "format": "int32"
+          },
+          "proposedStartUtc": {
+            "type": "string",
+            "description": "Requested first planned start as an ISO 8601 instant with an offset; required and earlier than proposedEndUtc.",
+            "format": "date-time"
+          },
+          "proposedEndUtc": {
+            "type": "string",
+            "description": "Requested first planned end as an ISO 8601 instant with an offset; required and later than proposedStartUtc.",
+            "format": "date-time"
+          }
+        },
+        "description": "Initial planned interval for a canonical task whose stored start and end are both null. Read the node's dates and duration first, send all five members, and use this instead of scheduleChange. A changed snapshot is rejected as StaleTask; dependency constraints still apply."
       },
       "ProjectStructureLeaseAcquireRequest": {
         "required": [
@@ -68337,6 +69057,20 @@
           "pricing": {
             "description": "How the task's estimate was priced when it was created.",
             "$ref": "#/components/schemas/ProjectStructureTaskEstimateRefreshResult"
+          },
+          "resourceNodeId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Identifier of the resource node created under the task for a Workflow attachment; omitted when no resource node was created."
+          },
+          "resourceLinkTargetNodeId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Identifier of the existing Process definition node linked to the task; omitted when no resource link was created."
           }
         },
         "description": "Result of a committed task creation."
@@ -68516,6 +69250,13 @@
               "string"
             ],
             "description": "Identifier of the node created under the task for the resource (for example a workflow node); null when no node was created."
+          },
+          "linkTargetNodeId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Identifier of the existing Process definition node linked to the task; omitted for a Workflow attachment, whose new node is identified by createdNodeId."
           }
         },
         "description": "Result of a committed task resource attachment, with the repricing it caused."
@@ -68763,6 +69504,17 @@
               {
                 "description": "Project write admission returned as `expectedProjectAdmission` by the structure read, sent back unchanged. The HTTP operation requires it even though the schema allows null: when it is omitted, null or names another project, the update is rejected with HTTP 409 `ProjectLifetimeRefreshRequired` and nothing is written. Read the structure again to obtain a fresh admission; never construct one.",
                 "$ref": "#/components/schemas/ProjectWriteAdmission"
+              }
+            ]
+          },
+          "initialSchedule": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "description": "Optional first planned interval for an unscheduled task, for example a JSON outline import. Omit or send null to preserve the current schedule. Cannot be combined with scheduleChange. Echo the node's nullable dates and duration; changed values fail with StaleTask.",
+                "$ref": "#/components/schemas/ProjectStructureInitialTaskSchedule"
               }
             ]
           }
@@ -71875,6 +72627,516 @@
       "ProviderTransportKind": {
         "type": "integer",
         "description": "API style used to call a provider profile's models, as a JSON integer: 0 Responses (the OpenAI Responses API), 1 ChatCompletions (the Chat Completions API)."
+      },
+      "ProviderUsageConsumerKind": {
+        "type": "integer",
+        "description": "Consumer identity kind, as a JSON integer. Values: 0 Unattributed, 1 Agent, 2 SimpleChatDefinition, 3 SharedProviderRelay."
+      },
+      "ProviderUsageConsumerRow": {
+        "required": [
+          "consumerKind",
+          "consumerId",
+          "consumerName",
+          "totals",
+          "lastUsedAtUtc"
+        ],
+        "type": "object",
+        "properties": {
+          "consumerKind": {
+            "description": "Consumer identity kind, as a JSON integer. Values: 0 Unattributed, 1 Agent, 2 SimpleChatDefinition, 3 SharedProviderRelay.",
+            "$ref": "#/components/schemas/ProviderUsageConsumerKind"
+          },
+          "consumerId": {
+            "type": "string",
+            "description": "Consumer identifier within its kind; empty for unattributed usage."
+          },
+          "consumerName": {
+            "type": "string",
+            "description": "Current display name or the original selected chat definition revision name."
+          },
+          "totals": {
+            "description": "Usage aggregates for this grouping and the accepted interval.",
+            "$ref": "#/components/schemas/ProviderUsageTotals"
+          },
+          "lastUsedAtUtc": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Latest included usage occurrence in UTC, or null when absent.",
+            "format": "date-time"
+          }
+        },
+        "description": "Usage attributed to one consumer in the accepted interval."
+      },
+      "ProviderUsageModelRow": {
+        "required": [
+          "providerProfileId",
+          "providerName",
+          "providerKind",
+          "model",
+          "totals",
+          "lastUsedAtUtc"
+        ],
+        "type": "object",
+        "properties": {
+          "providerProfileId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Provider profile GUID captured by the evidence, or null for legacy evidence.",
+            "format": "uuid"
+          },
+          "providerName": {
+            "type": "string",
+            "description": "Provider display name captured by the evidence."
+          },
+          "providerKind": {
+            "description": "Provider kind as a JSON integer: 0 OpenAi, 1 AzureOpenAi, 2 Ollama, 3 ComfyUi.",
+            "$ref": "#/components/schemas/ProviderKind"
+          },
+          "model": {
+            "type": "string",
+            "description": "Provider model identifier captured by the evidence."
+          },
+          "totals": {
+            "description": "Usage aggregates for this grouping and the accepted interval.",
+            "$ref": "#/components/schemas/ProviderUsageTotals"
+          },
+          "lastUsedAtUtc": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Latest included usage occurrence in UTC, or null when absent.",
+            "format": "date-time"
+          }
+        },
+        "description": "Usage attributed to one provider model in the accepted interval."
+      },
+      "ProviderUsagePeriod": {
+        "type": "integer",
+        "description": "Rolling usage period as a JSON integer; wire query values are 7d, 14d, 1m, 1q and 1y. Values: 0 SevenDays, 1 FourteenDays, 2 Month, 3 Quarter, 4 Year."
+      },
+      "ProviderUsageProviderRow": {
+        "required": [
+          "providerProfileId",
+          "providerName",
+          "providerKind",
+          "totals",
+          "lastUsedAtUtc"
+        ],
+        "type": "object",
+        "properties": {
+          "providerProfileId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Provider profile GUID captured by the evidence, or null for legacy evidence.",
+            "format": "uuid"
+          },
+          "providerName": {
+            "type": "string",
+            "description": "Provider display name captured by the evidence."
+          },
+          "providerKind": {
+            "description": "Provider kind as a JSON integer: 0 OpenAi, 1 AzureOpenAi, 2 Ollama, 3 ComfyUi.",
+            "$ref": "#/components/schemas/ProviderKind"
+          },
+          "totals": {
+            "description": "Usage aggregates for this grouping and the accepted interval.",
+            "$ref": "#/components/schemas/ProviderUsageTotals"
+          },
+          "lastUsedAtUtc": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Latest included usage occurrence in UTC, or null when absent.",
+            "format": "date-time"
+          }
+        },
+        "description": "Usage attributed to one provider in the accepted interval."
+      },
+      "ProviderUsageQuery": {
+        "required": [
+          "selection",
+          "period",
+          "window"
+        ],
+        "type": "object",
+        "properties": {
+          "selection": {
+            "description": "Selected workload flags as a JSON integer. Values: 0 None, 1 Agents, 2 SimpleChats, 3 Both, 4 SharedProviderRelays, 7 All.",
+            "$ref": "#/components/schemas/ProviderUsageWorkloadSelection"
+          },
+          "period": {
+            "description": "Rolling period as a JSON integer; Month, Quarter and Year use calendar arithmetic. Values: 0 SevenDays, 1 FourteenDays, 2 Month, 3 Quarter, 4 Year.",
+            "$ref": "#/components/schemas/ProviderUsagePeriod"
+          },
+          "window": {
+            "description": "Exact shared occurrence interval for every selected source and dialog.",
+            "$ref": "#/components/schemas/ProviderUsageWindow"
+          }
+        },
+        "description": "Accepted workload and rolling period resolved once against a single UTC upper boundary."
+      },
+      "ProviderUsageSnapshot": {
+        "required": [
+          "selection",
+          "totals",
+          "consumers",
+          "providers",
+          "models",
+          "sources",
+          "updatedAtUtc"
+        ],
+        "type": "object",
+        "properties": {
+          "selection": {
+            "description": "Accepted workload flags, as a JSON integer. Values: 0 None, 1 Agents, 2 SimpleChats, 3 Both, 4 SharedProviderRelays, 7 All.",
+            "$ref": "#/components/schemas/ProviderUsageWorkloadSelection"
+          },
+          "totals": {
+            "description": "Usage aggregates for this grouping and the accepted interval.",
+            "$ref": "#/components/schemas/ProviderUsageTotals"
+          },
+          "consumers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProviderUsageConsumerRow"
+            },
+            "description": "Consumer aggregates for included observations."
+          },
+          "providers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProviderUsageProviderRow"
+            },
+            "description": "Provider aggregates for included observations."
+          },
+          "models": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProviderUsageModelRow"
+            },
+            "description": "Provider/model aggregates for included observations."
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProviderUsageSourceStatus"
+            },
+            "description": "Status of each selected source; inspect isComplete before interpreting zero totals."
+          },
+          "updatedAtUtc": {
+            "type": "string",
+            "description": "Latest included evidence timestamp; Unix epoch when no evidence exists. This is not generation time or coverage.",
+            "format": "date-time"
+          },
+          "query": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "description": "Exact resolved query for bounded reads; null only for explicitly unbounded legacy callers.",
+                "$ref": "#/components/schemas/ProviderUsageQuery"
+              }
+            ]
+          },
+          "generatedAtUtc": {
+            "type": "string",
+            "description": "UTC time this aggregate was generated; independent of latest usage occurrence.",
+            "format": "date-time"
+          },
+          "isComplete": {
+            "type": "boolean",
+            "description": "True only when all required selected sources are present and complete; false for partial, indexing, failed or absent sources."
+          }
+        },
+        "description": "Unified usage with the accepted query, exact UTC interval, generation time and per-source coverage."
+      },
+      "ProviderUsageSourceError": {
+        "required": [
+          "code",
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Stable source error code suitable for programmatic handling."
+          },
+          "message": {
+            "type": "string",
+            "description": "Safe human-readable explanation of incomplete source coverage."
+          }
+        },
+        "description": "Safe machine-readable reason and human-readable explanation for incomplete coverage."
+      },
+      "ProviderUsageSourceState": {
+        "type": "integer",
+        "description": "Source coverage state, as a JSON integer; indexing and failed sources do not certify zero usage. Values: 0 Complete, 1 Partial, 2 Failed, 3 Indexing."
+      },
+      "ProviderUsageSourceStatus": {
+        "required": [
+          "sourceName",
+          "workloadKind",
+          "state",
+          "updatedAtUtc",
+          "error"
+        ],
+        "type": "object",
+        "properties": {
+          "sourceName": {
+            "type": "string",
+            "description": "Stable source identifier; does not expose a canonical storage path."
+          },
+          "workloadKind": {
+            "description": "Source workload kind, as a JSON integer. Values: 0 Unknown, 1 Agent, 2 SimpleChat, 3 SharedProviderRelay.",
+            "$ref": "#/components/schemas/ProviderUsageWorkloadKind"
+          },
+          "state": {
+            "description": "Source coverage state, as a JSON integer. Values: 0 Complete, 1 Partial, 2 Failed, 3 Indexing.",
+            "$ref": "#/components/schemas/ProviderUsageSourceState"
+          },
+          "updatedAtUtc": {
+            "type": "string",
+            "description": "Latest included evidence timestamp; Unix epoch when no evidence exists. This is not generation time or coverage.",
+            "format": "date-time"
+          },
+          "error": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "description": "Safe incomplete-source reason, or null when no error is present.",
+                "$ref": "#/components/schemas/ProviderUsageSourceError"
+              }
+            ]
+          },
+          "coverageVerifiedAtUtc": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "UTC time when canonical coverage was verified, or null when unverified; ongoing indexed writes preserve coverage.",
+            "format": "date-time"
+          }
+        },
+        "description": "Coverage and error metadata for one selected usage source."
+      },
+      "ProviderUsageTokenCounts": {
+        "required": [
+          "inputTokens",
+          "cachedInputTokens",
+          "cacheWriteTokens",
+          "outputTokens",
+          "reasoningTokens",
+          "totalTokens"
+        ],
+        "type": "object",
+        "properties": {
+          "inputTokens": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Known input tokens, including cached input where reported.",
+            "format": "int64"
+          },
+          "cachedInputTokens": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Known cached input tokens; a subset of input tokens.",
+            "format": "int64"
+          },
+          "cacheWriteTokens": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Known cache-write input tokens.",
+            "format": "int64"
+          },
+          "outputTokens": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Known generated output tokens.",
+            "format": "int64"
+          },
+          "reasoningTokens": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Known reasoning tokens reported by the provider.",
+            "format": "int64"
+          },
+          "totalTokens": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Known total tokens; 64-bit sum without wrapping or clamping aggregate overflow.",
+            "format": "int64"
+          }
+        },
+        "description": "Token dimensions as signed 64-bit JSON integers; aggregate totals can exceed Int32 capacity."
+      },
+      "ProviderUsageTotals": {
+        "required": [
+          "executionCount",
+          "failedExecutionCount",
+          "cancelledExecutionCount",
+          "usageObservationCount",
+          "knownUsageObservationCount",
+          "unknownUsageObservationCount",
+          "pricedObservationCount",
+          "unpricedObservationCount",
+          "tokens",
+          "knownCostUsd"
+        ],
+        "type": "object",
+        "properties": {
+          "executionCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Distinct included workload/execution identities; does not count providerless runs.",
+            "format": "int32"
+          },
+          "failedExecutionCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Included distinct executions whose current outcome is failed.",
+            "format": "int32"
+          },
+          "cancelledExecutionCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Included distinct executions whose current outcome is cancelled.",
+            "format": "int32"
+          },
+          "usageObservationCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Included deduplicated usage observations, including unknown usage.",
+            "format": "int32"
+          },
+          "knownUsageObservationCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Observations with known usage evidence.",
+            "format": "int32"
+          },
+          "unknownUsageObservationCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Observations with missing or unavailable usage evidence.",
+            "format": "int32"
+          },
+          "pricedObservationCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Observations with an execution-time recorded price.",
+            "format": "int32"
+          },
+          "unpricedObservationCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Observations with no known recorded price; never assumed free.",
+            "format": "int32"
+          },
+          "tokens": {
+            "description": "Known token dimensions; unknown usage is counted separately.",
+            "$ref": "#/components/schemas/ProviderUsageTokenCounts"
+          },
+          "knownCostUsd": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
+            "description": "Sum of recorded decimal USD costs; excludes unpriced observations and never reprices history.",
+            "format": "double"
+          },
+          "imageCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Known image count from image-only observations; separate from token dimensions.",
+            "format": "int32"
+          }
+        },
+        "description": "Aggregates of included usage observations; distinct executions are identified by workload and execution ID."
+      },
+      "ProviderUsageWindow": {
+        "required": [
+          "fromUtc",
+          "toUtc"
+        ],
+        "type": "object",
+        "properties": {
+          "fromUtc": {
+            "type": "string",
+            "description": "Inclusive UTC occurrence lower boundary.",
+            "format": "date-time"
+          },
+          "toUtc": {
+            "type": "string",
+            "description": "Exclusive UTC occurrence upper boundary.",
+            "format": "date-time"
+          }
+        },
+        "description": "Resolved half-open UTC usage interval: FromUtc is inclusive and ToUtc is exclusive."
+      },
+      "ProviderUsageWorkloadKind": {
+        "type": "integer",
+        "description": "Origin of usage evidence, as a JSON integer. Values: 0 Unknown, 1 Agent, 2 SimpleChat, 3 SharedProviderRelay."
+      },
+      "ProviderUsageWorkloadSelection": {
+        "type": "integer",
+        "description": "Selected workload flags, as a JSON integer; the bounded API accepts only 1 Agents, 2 SimpleChats and 3 Both. Values: 0 None, 1 Agents, 2 SimpleChats, 3 Both, 4 SharedProviderRelays, 7 All."
       },
       "ProviderVerificationApiResponse": {
         "required": [
@@ -75085,6 +76347,45 @@
         "type": "integer",
         "description": "How a launch chose the definition version to run, as a JSON integer: 0 ExactSavedVersion (a `versionId` was given), 1 LatestActive (the latest Active version), 2 DraftPreview (an unsaved draft in a preview run)."
       },
+      "WorkflowDocumentStagingResult": {
+        "required": [
+          "relativePath",
+          "contentType",
+          "sizeBytes"
+        ],
+        "type": "object",
+        "properties": {
+          "relativePath": {
+            "type": "string",
+            "description": "Managed workspace-relative path to supply as document.to-markdown sourcePath."
+          },
+          "contentType": {
+            "type": "string",
+            "description": "Validated media type: application/pdf."
+          },
+          "sizeBytes": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Stored document size in bytes, at most 10485760.",
+            "format": "int64"
+          }
+        }
+      },
+      "WorkflowDocumentUploadRequest": {
+        "required": [
+          "file"
+        ],
+        "type": "object",
+        "properties": {
+          "file": {
+            "description": "One nonempty PDF, at most 10 MiB, with application/pdf media type.",
+            "$ref": "#/components/schemas/IFormFile"
+          }
+        }
+      },
       "WorkflowDurationAnalyticsSummary": {
         "required": [
           "availableRunCount",
@@ -78022,6 +79323,17 @@
           "supportsBackgroundResponses": {
             "type": "boolean",
             "description": "True when the provider supports background responses."
+          },
+          "modelCatalog": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProviderModelDisplayMetadata"
+            },
+            "description": "Model identifiers and display names published by the shared provider source; empty for local profiles. Use each model's identifier, not its display name, when selecting a model."
+          },
+          "isSourceManaged": {
+            "type": "boolean",
+            "description": "True when the provider profile is imported from and managed by a shared provider source. Model selection uses that source's published routing identifiers; custom model overrides are unavailable."
           }
         },
         "description": "A chat provider profile that LLM call components and nodes can use, returned by `GET /api/workflows/provider-options`. It contains no credentials."

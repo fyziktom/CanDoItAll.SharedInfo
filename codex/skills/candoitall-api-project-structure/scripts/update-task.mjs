@@ -193,18 +193,35 @@ async function main() {
     body.proposedProgressPercent = Number(options.progress);
   }
   if (options.start !== undefined || options.end !== undefined) {
-    body.scheduleChange = {
-      gesture: SET_INTERVAL,
-      affectedTasks: [
-        {
-          taskId,
-          previousStart: before.node.startUtc,
-          previousEnd: before.node.endUtc,
-          proposedStart: options.start ?? before.node.startUtc,
-          proposedEnd: options.end ?? before.node.endUtc,
-        },
-      ],
-    };
+    if (before.node.startUtc == null && before.node.endUtc == null) {
+      if (options.start === undefined || options.end === undefined) {
+        throw new Error('An unscheduled task requires both --start and --end.');
+      }
+      const document = requireSuccess(await call(baseUrl, 'GET', '/openapi/v1.json'), 'API capability read');
+      if (!document.components?.schemas?.ProjectStructureTaskUpdateAgentInput?.properties?.initialSchedule) {
+        throw new Error('This host does not support initialSchedule. Upgrade the task-update API before scheduling an imported task.');
+      }
+      body.initialSchedule = {
+        currentStartUtc: before.node.startUtc,
+        currentEndUtc: before.node.endUtc,
+        currentDurationSeconds: before.node.durationSeconds,
+        proposedStartUtc: options.start,
+        proposedEndUtc: options.end,
+      };
+    } else {
+      body.scheduleChange = {
+        gesture: SET_INTERVAL,
+        affectedTasks: [
+          {
+            taskId,
+            previousStart: before.node.startUtc,
+            previousEnd: before.node.endUtc,
+            proposedStart: options.start ?? before.node.startUtc,
+            proposedEnd: options.end ?? before.node.endUtc,
+          },
+        ],
+      };
+    }
   }
 
   const update = await call(

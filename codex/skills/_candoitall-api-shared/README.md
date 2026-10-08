@@ -1,83 +1,29 @@
 # CanDoItAll Web API Contract Support
 
-This non-discoverable support package contains the generated OpenAPI snapshot and shared
-access guidance used by the CanDoItAll API skills.
+This support package contains the generated OpenAPI snapshot and common access guidance
+for the API skills. Use the live document when a target host has a different version.
 
 ## Current snapshot
 
-- Artifact: [references/candoitall-web.openapi.json](references/candoitall-web.openapi.json)
-- Provenance: [manifest.json](manifest.json)
-- Source: CanDoItAll `development`, commit `32d296a92ce26c66bd539061fd2a8e3fe10cbaea`
-- Source tree: `203460f864ae4b2e65b3377ebb5fcdb4eb863ce4`; working tree clean
-- Dependency pins: Components `ff5289746573a6dd6456754a7764844627ddd49f` and FileTools `3a080ecd31068a77c1e1bd639f7a78e21c93db85`, both clean
-- Capture: clean Release Docker publication, Development environment, InMemory database,
-  private temporary roots and synthetic credentials, LinuxHeadless profile, McpToolHost worker policy
-- Exposure: main API, OpenAPI, Swagger, JWT, user authentication and HTTP management enabled
-- Document server: `http://localhost:5032/` inside an isolated container with no external network;
-  the workstation's existing operator hosts and publisher/client test pair were not changed
-- Runtime endpoints: `/openapi/v1.json` and `/swagger/v1/swagger.json`
-- Captured UTC: `2026-09-20T19:13:26.683676Z`
-- OpenAPI: `3.1.1`; **305 paths, 342 operations, 997 schemas**
-- SHA-256: `C7DA97AC7C0EA73CBEF1AAE47E6E03A6CF24C550CAFA2C893A1E6DA06C501A3A`
+- [Unmodified OpenAPI bytes](references/candoitall-web.openapi.json) and [provenance](manifest.json).
+- CanDoItAll `demos-repairs`, clean signed commit `16eb94433945e20259ad3cfc3d57751224a8f548`.
+- Source tree `38b01d3ef29b36b036de9dae44cdfe6c28ff539e`; dependency commits and image digest are in the manifest.
+- Release LinuxHeadless, Development, InMemory invented state, McpToolHost worker policy.
+- API, OpenAPI, Swagger, JWT, user authentication and access management all enabled.
+- Canonical `http://localhost:5032/` inside a network-none container, with no published ports.
+- Both anonymous document routes agree byte for byte; capture UTC `2026-10-08T07:53:02+00:00`.
+- OpenAPI 3.1.1: **310 paths, 347 operations, 1019 schemas**.
+- SHA-256 `6095DC7E69890DA6FD20662CC55320B87525D565F96E240E39622BE120E71C25`; 3,936,325 bytes.
 
-Both anonymous document requests returned byte-identical 3,881,813-byte content. The same
-publication was checked on a free Windows loopback port with the WindowsHeadless profile;
-the document differs only in `servers`. The manifest records that comparison's hash and
-capture address. Port identity is not source identity; the commit and dependency pins
-identify the published contract.
+This revision adds bounded PDF staging at `POST /api/workflows/attachments/documents`.
+See the [workflow document contract](../candoitall-api-workflows/references/document-attachments.md).
+Voice, immutable project identity, initial schedules and import identity remain included;
+their historical live proofs retain their own source commits in the manifest. The current
+capture is Linux-only; the previous Windows comparison is explicitly historical.
 
-| Route family | Paths | Operations |
-| --- | ---: | ---: |
-| /_dev | 10 | 10 |
-| /api/access | 11 | 15 |
-| /api/agent-recruiting | 6 | 6 |
-| /api/agents | 62 | 75 |
-| /api/crm-hr | 15 | 19 |
-| /api/llm-chat-operations | 4 | 4 |
-| /api/llm-chats | 8 | 10 |
-| /api/llm-conversations | 6 | 6 |
-| /api/memory-providers | 4 | 5 |
-| /api/plugins | 18 | 20 |
-| /api/processes | 20 | 20 |
-| /api/project-structure | 58 | 59 |
-| /api/projects | 10 | 13 |
-| /api/prompt-gallery | 10 | 11 |
-| /api/runtime | 2 | 2 |
-| /api/settings/workspace | 1 | 2 |
-| /api/shared-providers | 5 | 5 |
-| /api/storage-placement-recovery | 9 | 9 |
-| /api/workflows | 41 | 46 |
-| /authorized-files | 2 | 2 |
-| /managed-files | 1 | 1 |
-| /storage | 2 | 2 |
-
-These families account for every path and operation. Development diagnostics are included;
-Blazor pages and static assets are not API operations. The capture enables conditional
-account/session routes and includes the HTTP bearer/JWT scheme with operation security
-requirements. A differently configured deployment may expose fewer routes.
-
-## Current API improvements
-
-Compared with the previous snapshot at `3fb71dd5`, this contract adds 16 paths and 21
-operations, removes or renames no operation, and includes the current security behavior.
-The previous snapshot had 865 schemas; the current document has 997. The changes cover:
-
-- user login, self-session reads/logout, account lifecycle, capability discovery and
-  administrator-only machine/session registration management;
-- section-level read/write/execute capabilities while retaining existing exact policies;
-- process-definition catalog/detail/role/step reads;
-- workflow-template discovery and draft creation;
-- workspace business settings with explicit committed-write/read-back handling;
-- safe API errors, current stream revalidation, and anonymous Swagger/OpenAPI discovery.
-
-The security changes from `b82ffc57` are included: caller-owned workflow idempotency,
-withheld launch origin, protected runtime reads, bounded external agent context and
-caller-filtered analytics. Use the
-[partner migration matrix](references/partner-api-migration.md) for the client changes.
-
-Thirteen documented operation sets are checked against the snapshot and skill appendices,
-including API Access and Workspace Settings. The main host's Memory-provider API remains
-experimental; it does not expose a native Cognitive Memory compatibility family.
+Route-family counts and all thirteen documented operation sets are validated against the
+snapshot and skill appendices. Development diagnostics are included; application pages
+and static files are not API operations. Conditional account routes depend on host flags.
 
 ## Access and usage
 

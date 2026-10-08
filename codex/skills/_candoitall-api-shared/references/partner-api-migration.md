@@ -1,5 +1,13 @@
 # Partner API Migration Matrix
 
+## Additive project external identity
+
+The October project identity contract adds optional `externalNamespace` / `externalKey`
+fields to `ProjectEditorModel` and a direct lifetime-aware lookup. Existing clients that
+omit both fields preserve stored identities. Clients using a pair must retain its
+lifetime, handle duplicate/stale conflicts explicitly and never resolve by display
+name. See the [project identity contract](../../candoitall-api-project-structure/references/project-external-identity.md).
+
 Use this matrix when upgrading a partner adapter from the contract captured before
 CanDoItAll commit `75ea79252a3c3d442e7a404f619f167c4b3edfcf`. Confirm every route
 and schema against the target host's live OpenAPI document before changing production
@@ -98,6 +106,15 @@ login and management routes appear only when their independent settings are enab
 | Parse framework/API failures as HTML or suppress service faults with empty data | API transport failures return safe JSON with explicit status; domain envelopes remain distinct | Branch on status and the operation's documented JSON envelope; preserve 500/503 failures |
 
 ## Upgrade Gate
+
+For the additive voice routes in commit `a59e3af7`, a client that previously needed
+interactive voice UI can use `POST /api/agents/voice/transcriptions` and
+`POST /api/agents/voice/speech`. Use execute authority, explicit multipart media types,
+the bounded file/text contracts and safe failure handling described in the
+[voice reference](../../candoitall-api-agents/references/voice-api.md). Keep provider
+configuration in the engine; do not introduce direct-provider retries after engine
+errors. A typed brief does not require transcription, and a transcript remains editable
+before an agent run. Speech returns raw audio, not a chat response or execution receipt.
 
 Before removing a workaround:
 

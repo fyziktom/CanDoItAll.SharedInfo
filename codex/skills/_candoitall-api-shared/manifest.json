@@ -2,22 +2,21 @@
   "schemaVersion": 1,
   "source": {
     "repository": "CanDoItAll",
-    "branch": "development",
-    "commit": "32d296a92ce26c66bd539061fd2a8e3fe10cbaea",
-    "workingTreeClean": false,
-    "captureNote": "Captured anonymously from both HTTPS document routes of the running Development publisher at https://localhost:5312 with its local certificate trusted explicitly. Responses were byte-identical and all six new image-price properties have descriptions. Docker image candoitall-shared-manual:api-metadata-complete-20260920 was built from development HEAD plus reviewed changes; image source-diff fingerprint is 3f9750af3541c1f0058484bd550d8b430475cb366067a583d40edf117a3dc49b, Docker image ID sha256:f8e3658618a2ed640591b5f2612cb74f30426fa86ecac3c62100f95d41ccd342. API, OpenAPI, Swagger, JWT, user authentication and HTTP management remain enabled. Test users and persistent data were preserved. The checked-in document normalizes only servers[0].url from https://localhost:5312/ to http://localhost:5032/ as required by the shared snapshot contract; original runtime bytes SHA-256 DC3DCCB507CB238F78F554C425618AA3BF21DD5F86498E264E1336145A1593D8.",
+    "branch": "demos-repairs",
+    "commit": "16eb94433945e20259ad3cfc3d57751224a8f548",
+    "tree": "38b01d3ef29b36b036de9dae44cdfe6c28ff539e",
+    "workingTreeClean": true,
     "webProject": "src/App/CanDoItAll.Web/CanDoItAll.Web.csproj",
     "environment": "Development",
-    "generatedUtc": "2026-09-20T23:54:45Z",
+    "generatedUtc": "2026-10-08T07:53:02Z",
     "runtimeDocumentPaths": [
       "/openapi/v1.json",
       "/swagger/v1/swagger.json"
     ],
-    "tree": "203460f864ae4b2e65b3377ebb5fcdb4eb863ce4",
     "dependencies": [
       {
         "repository": "CanDoItAll.Components",
-        "commit": "ff5289746573a6dd6456754a7764844627ddd49f",
+        "commit": "e44176b2f454d143cc8edc9ba610cf4612fe99ec",
         "workingTreeClean": true
       },
       {
@@ -34,19 +33,74 @@
       "Api:UserAuthentication:Enabled": true,
       "Api:AccessManagement:Enabled": true
     },
-    "workingTreeStatusSha256": "7C133819B90E2E8EF39F2BB847DE58ECCDBF53CCED31E4FF5A7AEEDFB113A78B",
-    "workingTreeNote": "Uncommitted API/provider improvements on development HEAD, including image response validation, scoped Simple Chat serialization and image-price API descriptions. Runtime publication includes the production changes. This capture is not commit-clean provenance."
+    "captureNote": "Unmodified runtime bytes from the clean signed source in an isolated network-none LinuxHeadless Release container at canonical http://localhost:5032/, with InMemory invented state and credentials, all six API exposure flags enabled and McpToolHost worker policy. Both document routes are byte-identical. This capture was not repeated on Windows; the prior Windows comparison retains its original source identity. Earlier voice, identity and scheduling proofs are historical, not relabeled. The dedicated hotel deployment keeps user authentication and HTTP management disabled.",
+    "image": "candoitall-hotels-engine:16eb94433945e20259ad3cfc3d57751224a8f548",
+    "imageId": "sha256:0b27014399990a1b73b61f1b8ec8ecb8a694a0a68b73cf9606de0e4ae8c5baa8",
+    "verifiedVoiceDeployment": {
+      "url": "http://localhost:5532/",
+      "openApiSha256": "C05F005AF01061B3C2DAFF62D608FA6C4066289B02ECBEC4999AA2B52AD8A065",
+      "syntheticTtsAndSttPassed": true,
+      "sourceCommit": "a59e3af7dcba28b7c0bf4a7450898d468a7d6fc3"
+    },
+    "verifiedIdentityDeployment": {
+      "url": "http://localhost:5532/",
+      "openApiSha256": "62817CE53285C381BCB7B0979A6905131C7F8DE59DCBF57E1258DFAF68CE0698",
+      "checksPassed": 13,
+      "syntheticProbeDeleted": true,
+      "sourceCommit": "e09d18f9a99186740095fdf2817b0bc12464f07c"
+    },
+    "verifiedInitialScheduleDeployment": {
+      "url": "http://localhost:5532/",
+      "sourceCommit": "4dcf8291435aeda470ca11cb800c276d0576bfde",
+      "openApiSha256": "5648CF3BEA38EFF3E41DFCDE1E1F5DB26DCEBEEACA5970E243841990C8F0925B",
+      "sameTaskIds": true,
+      "scheduledTaskCount": 7,
+      "unitTestsPassed": 19,
+      "httpIntegrationTestsPassed": 23
+    },
+    "verifiedImportIdentityDeployment": {
+      "url": "http://localhost:5532/",
+      "sourceCommit": "b886b4ef96e9f2653525352cc2232b0af28342e6",
+      "openApiSha256": "3C0588CA6E2E2B4F0F42D68FA900311B66786509A9DE377FBD3B278AF67A872A",
+      "tasksWithPersistentSourceIdentity": 58,
+      "cleanNotes": true,
+      "duplicateRejectedBeforeWrites": true,
+      "functionalValidationCommit": "fe1806e616f6e031f898daaa96b8e06552c2a1f2",
+      "unitTestsPassed": 14,
+      "httpAndImportIntegrationTestsPassed": 35
+    },
+    "historicalCrossPlatformComparison": {
+      "runtimeProfile": "WindowsHeadless",
+      "captureUrl": "http://localhost:5542/",
+      "sha256": "2FC9353FC11559CD062E4E99E97FD39C6DF7C11C15C1430E07242E341032927E",
+      "allowedDifferences": [
+        "servers"
+      ],
+      "passed": true,
+      "sourceCommit": "b886b4ef96e9f2653525352cc2232b0af28342e6"
+    },
+    "verifiedDocumentStagingDeployment": {
+      "url": "http://localhost:5532/",
+      "sourceCommit": "16eb94433945e20259ad3cfc3d57751224a8f548",
+      "pdfWorkflowRunId": "24f79ab2-8159-4c46-ae6f-40d6c1d92e28",
+      "succeeded": true,
+      "previewTruncated": false,
+      "unitTestsPassed": 10,
+      "httpIntegrationTestsPassed": 6,
+      "converterTestsPassed": 9,
+      "note": "PDF upload and document.to-markdown succeeded in the read-only Linux deployment. Subsequent internal whitespace and transaction improvements do not change this captured HTTP contract."
+    }
   },
   "artifact": {
     "file": "references/candoitall-web.openapi.json",
-    "sha256": "AF5707270873F8474B794C55D28C59520D01E32D121EA2B7E24EBE307A7C93E4",
+    "sha256": "6095DC7E69890DA6FD20662CC55320B87525D565F96E240E39622BE120E71C25",
     "openapiVersion": "3.1.1",
     "documentTitle": "CanDoItAll.Web | v1",
     "documentVersion": "1.0.0",
     "serverUrl": "http://localhost:5032/",
-    "pathCount": 305,
-    "operationCount": 342,
-    "schemaCount": 997
+    "pathCount": 310,
+    "operationCount": 347,
+    "schemaCount": 1019
   },
   "routeFamilies": [
     {
@@ -66,8 +120,8 @@
     },
     {
       "prefix": "/api/agents",
-      "pathCount": 62,
-      "operationCount": 75
+      "pathCount": 65,
+      "operationCount": 78
     },
     {
       "prefix": "/api/crm-hr",
@@ -111,8 +165,8 @@
     },
     {
       "prefix": "/api/projects",
-      "pathCount": 10,
-      "operationCount": 13
+      "pathCount": 11,
+      "operationCount": 14
     },
     {
       "prefix": "/api/prompt-gallery",
@@ -141,8 +195,8 @@
     },
     {
       "prefix": "/api/workflows",
-      "pathCount": 41,
-      "operationCount": 46
+      "pathCount": 42,
+      "operationCount": 47
     },
     {
       "prefix": "/authorized-files",
@@ -349,6 +403,11 @@
           "operationId": "GetAgentBootstrap"
         },
         {
+          "method": "DELETE",
+          "path": "/api/agents/by-external-key/{externalNamespace}/{key}",
+          "operationId": "ArchiveAgentByExternalKey"
+        },
+        {
           "method": "GET",
           "path": "/api/agents/by-external-key/{externalNamespace}/{key}",
           "operationId": "GetAgentByExternalKey"
@@ -357,11 +416,6 @@
           "method": "PUT",
           "path": "/api/agents/by-external-key/{externalNamespace}/{key}",
           "operationId": "ProvisionAgentByExternalKey"
-        },
-        {
-          "method": "DELETE",
-          "path": "/api/agents/by-external-key/{externalNamespace}/{key}",
-          "operationId": "ArchiveAgentByExternalKey"
         },
         {
           "method": "GET",
@@ -539,6 +593,11 @@
           "operationId": "SaveAgentTeam"
         },
         {
+          "method": "DELETE",
+          "path": "/api/agents/teams/{teamId}",
+          "operationId": "DeleteAgentTeam"
+        },
+        {
           "method": "GET",
           "path": "/api/agents/teams/{teamId}",
           "operationId": "GetAgentTeam"
@@ -547,11 +606,6 @@
           "method": "PUT",
           "path": "/api/agents/teams/{teamId}",
           "operationId": "UpdateAgentTeam"
-        },
-        {
-          "method": "DELETE",
-          "path": "/api/agents/teams/{teamId}",
-          "operationId": "DeleteAgentTeam"
         },
         {
           "method": "GET",
@@ -564,24 +618,39 @@
           "operationId": "GetAgentTeamEditor"
         },
         {
-          "method": "PUT",
-          "path": "/api/agents/teams/{teamId}/members",
-          "operationId": "ReplaceAgentTeamMembers"
-        },
-        {
           "method": "POST",
           "path": "/api/agents/teams/{teamId}/members",
           "operationId": "UpdateAgentTeamMembers"
         },
         {
+          "method": "PUT",
+          "path": "/api/agents/teams/{teamId}/members",
+          "operationId": "ReplaceAgentTeamMembers"
+        },
+        {
           "method": "GET",
-          "path": "/api/agents/{agentId}",
-          "operationId": "GetAgentEditor"
+          "path": "/api/agents/usage",
+          "operationId": "GetAgentsUsage"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/voice/speech",
+          "operationId": "SynthesizeAgentVoice"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/voice/transcriptions",
+          "operationId": "TranscribeAgentVoice"
         },
         {
           "method": "DELETE",
           "path": "/api/agents/{agentId}",
           "operationId": "DeleteAgent"
+        },
+        {
+          "method": "GET",
+          "path": "/api/agents/{agentId}",
+          "operationId": "GetAgentEditor"
         },
         {
           "method": "POST",
@@ -866,6 +935,11 @@
         },
         {
           "method": "GET",
+          "path": "/api/projects/by-external-key/{externalNamespace}/{externalKey}",
+          "operationId": "ResolveProjectExternalIdentity"
+        },
+        {
+          "method": "GET",
           "path": "/api/projects/deletion-cleanups",
           "operationId": "ListPendingProjectDeletionCleanups"
         },
@@ -885,24 +959,24 @@
           "operationId": "ReconnectProjectSubproject"
         },
         {
+          "method": "DELETE",
+          "path": "/api/projects/{parentProjectId}/subprojects/{childProjectId}",
+          "operationId": "DetachProjectSubproject"
+        },
+        {
           "method": "POST",
           "path": "/api/projects/{parentProjectId}/subprojects/{childProjectId}",
           "operationId": "AttachProjectSubproject"
         },
         {
           "method": "DELETE",
-          "path": "/api/projects/{parentProjectId}/subprojects/{childProjectId}",
-          "operationId": "DetachProjectSubproject"
+          "path": "/api/projects/{projectId}",
+          "operationId": "DeleteProject"
         },
         {
           "method": "GET",
           "path": "/api/projects/{projectId}",
           "operationId": "GetProjectEditor"
-        },
-        {
-          "method": "DELETE",
-          "path": "/api/projects/{projectId}",
-          "operationId": "DeleteProject"
         },
         {
           "method": "POST",
@@ -1230,6 +1304,11 @@
           "operationId": "GetWorkflowAnalytics"
         },
         {
+          "method": "POST",
+          "path": "/api/workflows/attachments/documents",
+          "operationId": "StageWorkflowDocument"
+        },
+        {
           "method": "GET",
           "path": "/api/workflows/components",
           "operationId": "ListWorkflowComponents"
@@ -1240,14 +1319,14 @@
           "operationId": "SaveWorkflowComponent"
         },
         {
-          "method": "GET",
-          "path": "/api/workflows/components/{componentId}",
-          "operationId": "GetWorkflowComponent"
-        },
-        {
           "method": "DELETE",
           "path": "/api/workflows/components/{componentId}",
           "operationId": "DeleteWorkflowComponent"
+        },
+        {
+          "method": "GET",
+          "path": "/api/workflows/components/{componentId}",
+          "operationId": "GetWorkflowComponent"
         },
         {
           "method": "GET",
@@ -1280,14 +1359,14 @@
           "operationId": "ImportWorkflowDefinition"
         },
         {
-          "method": "GET",
-          "path": "/api/workflows/definitions/{workflowId}",
-          "operationId": "GetWorkflowDefinition"
-        },
-        {
           "method": "DELETE",
           "path": "/api/workflows/definitions/{workflowId}",
           "operationId": "DeleteWorkflowDefinition"
+        },
+        {
+          "method": "GET",
+          "path": "/api/workflows/definitions/{workflowId}",
+          "operationId": "GetWorkflowDefinition"
         },
         {
           "method": "POST",
@@ -1435,16 +1514,6 @@
           "operationId": "SaveWorkflowSettings"
         },
         {
-          "method": "POST",
-          "path": "/api/workflows/test-runs",
-          "operationId": "RunWorkflowTest"
-        },
-        {
-          "method": "POST",
-          "path": "/api/workflows/validate",
-          "operationId": "ValidateDraftWorkflowDefinition"
-        },
-        {
           "method": "GET",
           "path": "/api/workflows/templates",
           "operationId": "ListWorkflowTemplates"
@@ -1453,6 +1522,16 @@
           "method": "POST",
           "path": "/api/workflows/templates/{templateKey}/drafts",
           "operationId": "AddWorkflowTemplateToDrafts"
+        },
+        {
+          "method": "POST",
+          "path": "/api/workflows/test-runs",
+          "operationId": "RunWorkflowTest"
+        },
+        {
+          "method": "POST",
+          "path": "/api/workflows/validate",
+          "operationId": "ValidateDraftWorkflowDefinition"
         }
       ]
     },
