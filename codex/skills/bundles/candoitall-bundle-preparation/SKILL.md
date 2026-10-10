@@ -40,6 +40,16 @@ For an existing bundle, map its files to these semantic roles before changing st
 
 If all roles are usable, preserve the shape. Add a compatibility map to the root README only when needed. Repair missing meaning in place. Do not force a legacy or external bundle through the canonical scaffold solely to satisfy folder names.
 
+## Development Resource Planning
+
+Plan standard Debug/Release output reuse and serialized conflicting builds. Do not assign
+bundle-, stage- or attempt-named configurations or duplicate compiled output trees.
+For UI iteration, reuse a relevant dotnetwatch host when useful. Reuse suitable explicitly
+isolated test fixtures and bounded database leases; a new bundle/stage does not justify
+a Docker stack. Require a concrete test prerequisite/topology/lifecycle reason, recorded
+ownership and last-use cleanup for dedicated temporary fixtures. Historical execution
+commands do not prescribe new output configurations or resource provisioning.
+
 ## Content Profiles
 
 - `feedback`: QA notes, screenshots, review documents, concrete defects, or short issue lists. Emphasize literal note closure and observable regression proof.

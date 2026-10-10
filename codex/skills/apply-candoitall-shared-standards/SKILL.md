@@ -53,6 +53,10 @@ exception explicitly.
 - Treat SharedInfo and other sibling repositories as read-only unless the user explicitly
   includes them in the change scope.
 - Put normative shared rules in `SharedInfo/docs/standards`.
+- Apply `docs/standards/dotnet.md` development build and fixture reuse: standard
+  Debug/Release outputs, serialized builds, useful dotnetwatch UI iteration and reusable
+  isolated test fixtures. A bundle/stage does not justify custom output trees or a new
+  Docker stack; dedicated fixtures need a concrete test reason and last-use cleanup.
 - Put copy-ready shared examples in `SharedInfo/templates/repository`.
 - Put cross-repository coordination in `SharedInfo/tools/<area>`.
 - Keep the selected-partner contribution policy in SharedInfo and apply it to repository

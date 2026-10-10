@@ -16,6 +16,16 @@ Only reusable, maintained assets belong here. Product task bundles, screenshots,
 state, proof logs, app templates, and product-only skills remain in their owning
 repositories.
 
+## Development Resource Policy
+
+Codex instructions and execution bundles follow
+[development build and fixture reuse](dotnet.md#development-build-and-fixture-reuse):
+standard Debug/Release outputs, serialized conflicting builds, useful dotnetwatch UI
+iteration, and reusable explicitly isolated test fixtures. Never require a new build
+configuration/output tree or Docker stack merely because a bundle or stage starts.
+Record a concrete test reason and cleanup for any dedicated temporary fixture. Historical
+execution commands do not override this current policy.
+
 ## Skills
 
 - Each discoverable skill folder contains `SKILL.md` with only `name` and `description`

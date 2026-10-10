@@ -41,6 +41,11 @@ Apply these even before loading a task-specific document:
   Prefer user-facing entry packages over Abstractions, Core, or provider packages.
 - When a shared contract changes, update its standard, copy-ready template, tooling, and
   validation together.
+- Local development reuses standard Debug/Release `bin`/`obj` outputs and serializes
+  conflicting builds. Use dotnetwatch for useful UI iteration; never create build
+  configurations/output trees or Docker stacks merely for a new bundle or stage.
+- Reuse suitable explicitly isolated test fixtures and bounded database leases. Dedicated
+  fixtures require a concrete test reason, recorded ownership and last-use cleanup.
 - In repositories with `portability-static` or another reviewed source baseline, include
   that gate in CI/test repairs and affected source/build/tooling changes. Focused tests
   do not waive it. Review deltas before refreshing; require final no-write enforcement.

@@ -16,6 +16,21 @@ Start new Compose assets from
 own their resulting Dockerfiles, Compose files, operational scripts, secrets integration,
 and data.
 
+## Development And Bundle Fixtures
+
+Reuse a suitable explicitly isolated development/test fixture across related lanes.
+A new bundle or stage does not itself require a new Docker stack, image build or volume.
+Provision a dedicated fixture only when no suitable isolated fixture exists or the exact
+test needs its own container, OS, topology or destructive lifecycle. Database isolation
+can use bounded database leases on the isolated test server; ordinary application and
+retained manual-provider databases remain protected.
+
+Record ownership before creation, reconcile it after interruption, and clean temporary
+containers, exclusive volumes/networks and owned data after their last required use in
+disposal/finally paths. Reuse one temporary fixture across related lanes. Keep a small
+reviewed proof set and remove duplicate compiled outputs/staging. Never infer ownership
+from age, globally prune resources, or interrupt shared Docker services without authorization.
+
 ## Repository Contract
 
 Use this layout when the concern exists:

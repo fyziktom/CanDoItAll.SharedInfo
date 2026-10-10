@@ -20,6 +20,19 @@ SharedInfo is a child of this repository or that every machine uses the same roo
 - Test: `${TEST_COMMAND}`
 - Validate: `${VALIDATION_COMMAND}`
 
+## Development Build And Fixture Reuse
+
+- Reuse standard `Debug` and `Release` configurations and refresh existing `bin`/`obj`
+  outputs. Never create bundle-, stage-, attempt- or timestamp-named configurations or
+  compiled output trees. Serialize builds that share outputs.
+- Reuse dotnetwatch for relevant UI application/sandbox iteration when useful, then
+  confirm the affected build/tests on current standard outputs.
+- Reuse a suitable explicitly isolated test fixture and bounded database leases. Do not
+  create a Docker stack per bundle or stage. A dedicated fixture needs a concrete test
+  reason, recorded ownership and cleanup after its last use, including interruptions.
+- Preserve ordinary application/database instances, installed tools and useful unrelated
+  resources. Historical custom-configuration commands are execution records.
+
 ## Validation Closure
 
 Read this repository's testing guide and current CI workflow before choosing validation
