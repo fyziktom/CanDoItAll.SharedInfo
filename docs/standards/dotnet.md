@@ -2,21 +2,21 @@
 
 ## SDK
 
-- The reviewed family baseline is .NET SDK `10.0.302`, which carries the .NET
-  `10.0.10` runtime servicing baseline.
+- The reviewed family baseline is .NET SDK `10.0.402`, which carries the .NET
+  `10.0.13` runtime servicing baseline.
 - Track `global.json` in every .NET repository.
-- Pin `10.0.302` with `latestPatch` roll-forward and `allowPrerelease: false`.
+- Pin `10.0.402` with `latestPatch` roll-forward and `allowPrerelease: false`.
 - Update the family baseline through a reviewed SharedInfo change, then adopt it
   repository by repository.
 - CI must install the SDK selected by the repository `global.json`; do not duplicate a
   floating `10.0.x` SDK selector in workflow configuration.
 - Build and package automation must execute `dotnet` with the owning repository root as
   its working directory so SDK resolution cannot inherit another repository's policy.
-- .NET Docker build stages pin `mcr.microsoft.com/dotnet/sdk:10.0.302`. Framework-dependent
-  runtime stages independently pin `mcr.microsoft.com/dotnet/aspnet:10.0.10` or
-  `mcr.microsoft.com/dotnet/runtime:10.0.10`, as appropriate.
+- .NET Docker build stages pin `mcr.microsoft.com/dotnet/sdk:10.0.402`. Framework-dependent
+  runtime stages independently pin `mcr.microsoft.com/dotnet/aspnet:10.0.13` or
+  `mcr.microsoft.com/dotnet/runtime:10.0.13`, as appropriate.
 
-The 2026-07-24 inventory records the superseded `10.0.200`/`10.0.301` state. Inventories
+The 2026-07-24 and 2026-07-31 inventories record superseded SDK baselines. Inventories
 are historical evidence and do not override this normative baseline.
 
 Copy [`templates/repository/dotnet/global.json.template`](../../templates/repository/dotnet/global.json.template)

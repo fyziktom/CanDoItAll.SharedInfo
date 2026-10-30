@@ -111,8 +111,8 @@ Application-owned images must:
 .NET images must follow the SDK and runtime versions in the
 [.NET repository standard](dotnet.md). Pin build stages to the full SDK feature-band
 version and pin runtime stages separately to the corresponding servicing runtime version;
-an SDK tag such as `10.0.302` is not a valid substitute for an ASP.NET/runtime tag such as
-`10.0.10`.
+an SDK tag such as `10.0.402` is not a valid substitute for an ASP.NET/runtime tag such as
+`10.0.13`.
 
 Do not pass build credentials through Dockerfile `ARG` or `ENV`. Use BuildKit secret or
 SSH mounts. Use cache mounts for package caches where they materially reduce build time.
