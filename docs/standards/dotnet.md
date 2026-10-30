@@ -35,6 +35,28 @@ Keep product metadata, package versions, target frameworks, and component depend
 versions in the repository or projects that own them. Do not use the shared template as a
 central package-version service.
 
+## Development Build And Fixture Reuse
+
+- Local development and bundle execution reuse standard `Debug` and `Release`
+  configurations and refresh the existing project `bin`/`obj` outputs after changes.
+- Never create bundle-, stage-, attempt- or timestamp-named build configurations,
+  output directories or copies of the full compiled dependency graph.
+- Serialize builds that share outputs. Release an owned host's file locks before a
+  rebuild, then restart it. Source/package and asset-mode properties do not justify
+  another configuration; rebuild the same outputs when those properties change.
+- Preserve existing fixed asset-mode, target-framework and runtime suffixes required by
+  a project; reuse those bounded layouts without adding a directory for each run.
+- Reuse dotnetwatch for relevant UI application/sandbox iteration when hot reload is
+  useful. Finish with the required affected build and validation on current outputs.
+- Keep small reviewed logs/results separate from compiled outputs. Packaging/publish
+  staging and managed installed-tool shadow builds keep their owning lifecycle contracts.
+- Reuse a suitable explicitly isolated test server and bounded database leases. Do not
+  provision a Docker stack per bundle or stage. A dedicated fixture requires a concrete
+  test prerequisite, topology or lifecycle reason and cleanup after its last use.
+- Preserve ordinary application/database instances and useful unrelated resources.
+  Follow the [Docker fixture policy](docker.md#development-and-bundle-fixtures).
+- Historical custom-configuration commands describe past proof, not new build policy.
+
 ## Solutions And Projects
 
 - Prefer one canonical root `.slnx`.

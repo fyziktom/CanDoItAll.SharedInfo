@@ -34,6 +34,20 @@ Treat bundle meaning as the contract. Preserve the existing compatible shape and
 6. Run the closure gate. Move forward only when it passes or the bundle honestly records a blocker.
 7. Reopen earlier work when later evidence invalidates it.
 
+## Development Build And Fixture Reuse
+
+- Reuse standard Debug/Release configurations and refresh the same project bin/obj
+  outputs. Never name build configurations or output trees after bundles, stages,
+  attempts or builds. Serialize conflicting output writes.
+- Reuse the relevant dotnetwatch host for useful UI iteration; confirm the final affected
+  build and validation on current standard outputs.
+- Reuse a suitable explicitly isolated test server and bounded database leases. A bundle
+  or stage does not require a new Docker stack. Dedicated fixtures need a concrete test
+  prerequisite/topology/lifecycle reason, recorded ownership and last-use cleanup.
+- Preserve ordinary instances, installed tools and useful unrelated resources. Reconcile
+  owned fixtures on crash recovery before provisioning replacements. Historical custom
+  configuration commands are execution records, not current policy.
+
 ## Proof Tiers
 
 Proof tier controls evidence depth and durability, not test breadth. Use the focused

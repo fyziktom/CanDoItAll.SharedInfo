@@ -143,8 +143,33 @@ $sharedContractChecks = @(
             'latestPatch',
             'allowPrerelease: false',
             'repository root as',
-            'working directory'
+            'working directory',
+            'Development Build And Fixture Reuse',
+            'Never create bundle-',
+            'Serialize builds',
+            'Reuse dotnetwatch',
+            'provision a Docker stack per bundle or stage'
         )
+    },
+    [pscustomobject]@{
+        Path = 'docs/standards/codex.md'
+        RequiredText = @('Development Resource Policy', 'development-build-and-fixture-reuse')
+    },
+    [pscustomobject]@{
+        Path = 'docs/standards/docker.md'
+        RequiredText = @('Development And Bundle Fixtures', 'does not itself require a new Docker stack', 'last required use')
+    },
+    [pscustomobject]@{
+        Path = 'templates/repository/AGENTS.md'
+        RequiredText = @('Development Build And Fixture Reuse', 'standard `Debug` and `Release`', 'Docker stack per bundle or stage', 'cleanup after its last use')
+    },
+    [pscustomobject]@{
+        Path = 'codex/skills/bundles/candoitall-bundle-execution/SKILL.md'
+        RequiredText = @('Development Build And Fixture Reuse', 'standard Debug/Release', 'dotnetwatch', 'does not require a new Docker stack')
+    },
+    [pscustomobject]@{
+        Path = 'codex/skills/bundles/candoitall-bundle-preparation/SKILL.md'
+        RequiredText = @('Development Resource Planning', 'standard Debug/Release', 'does not justify', 'a Docker stack')
     },
     [pscustomobject]@{
         Path = 'templates/repository/dotnet/global.json.template'
