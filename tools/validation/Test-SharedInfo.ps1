@@ -138,8 +138,8 @@ $sharedContractChecks = @(
     [pscustomobject]@{
         Path = 'docs/standards/dotnet.md'
         RequiredText = @(
-            '10.0.402',
-            '10.0.13',
+            '10.0.403',
+            '10.0.14',
             'latestPatch',
             'allowPrerelease: false',
             'repository root as',
@@ -174,7 +174,7 @@ $sharedContractChecks = @(
     [pscustomobject]@{
         Path = 'templates/repository/dotnet/global.json.template'
         RequiredText = @(
-            '"version": "10.0.402"',
+            '"version": "10.0.403"',
             '"rollForward": "latestPatch"',
             '"allowPrerelease": false'
         )
@@ -182,8 +182,8 @@ $sharedContractChecks = @(
     [pscustomobject]@{
         Path = 'templates/repository/docker/Dockerfile.dotnet'
         RequiredText = @(
-            'ARG DOTNET_SDK_VERSION=10.0.402',
-            'ARG DOTNET_RUNTIME_VERSION=10.0.13',
+            'ARG DOTNET_SDK_VERSION=10.0.403',
+            'ARG DOTNET_RUNTIME_VERSION=10.0.14',
             'dotnet/sdk:${DOTNET_SDK_VERSION}',
             'dotnet/aspnet:${DOTNET_RUNTIME_VERSION}'
         )
@@ -247,8 +247,8 @@ $sharedContractChecks = @(
             'PackageProjectUrl',
             'RepositoryUrl',
             'accept `-Version`',
-            '10.0.402',
-            '10.0.13'
+            '10.0.403',
+            '10.0.14'
         )
     },
     [pscustomobject]@{
