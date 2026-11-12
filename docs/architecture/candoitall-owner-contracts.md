@@ -45,6 +45,12 @@ integration work.
 - Agent chat context is published through `IAgentChatContextRegistry` with one active
   scope per circuit. A provider that was superseded by a newer scope stands down; it
   does not throw and does not overwrite the live scope.
+- Accepted floating-chat execution owns a separate application scope and a frozen
+  context observation. Browser refresh detaches the view; the owner/profile-filtered
+  active-chat catalog reconnects it to the original run and safe module bookmark.
+  Circuit-owned drafts and window state are separate. Host restart recovery still
+  follows persisted run/receipt contracts; it never blindly replays tools. See the
+  [interactive chat lifetime guidance](../../codex/skills/candoitall-api-agents/references/interactive-chat-lifetime.md).
 
 ## How modules contribute safely
 

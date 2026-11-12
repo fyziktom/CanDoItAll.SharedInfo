@@ -76,6 +76,10 @@ and `api.provider-history.*` does not imply a new general history HTTP route.
 
 ## Chat And Execution
 
+For an existing floating UI chat, read [interactive chat lifetime](references/interactive-chat-lifetime.md)
+before recovering or resubmitting work after a refresh. Its application-owned execution
+survives a disconnected view; this does not change the HTTP command lifetime below.
+
 - Chat sessions: `/api/agents/{agentId}/chat-sessions`, rename, chat workspace, `/chat`, and `/chat/stream`.
 - Execution runs: blocking JSON and same-request SSE start routes at `/api/agents/execution-runs` and `/api/agents/{agentId}/execution-runs`, plus list, detail, and agent-scoped/global evidence routes.
 - Approvals: the run's approval list and blocking/SSE response commands under `/api/agents/execution-runs/{executionRunId}`.
@@ -120,7 +124,7 @@ They emit numbered canonical activity frames, an id-less safe
 `agent.command.completed` or `agent.command.failed` frame. An id-less command frame
 must not advance the canonical activity replay cursor.
 
-Every agent command runs only while its request is open: closing the connection cancels the run
+Every HTTP agent command runs only while its request is open: closing the connection cancels the run
 (stored as failed with outcome Cancelled) without undoing completed tool calls, and the id-less
 `agent.command.*` frames are not replayable. After a dropped connection, read
 `GET /api/agents/execution-runs/{executionRunId}` before sending the command again. Stream data

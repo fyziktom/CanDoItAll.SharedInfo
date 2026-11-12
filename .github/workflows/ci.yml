@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+      - name: Validate standards, skills, templates, OpenAPI and NuGet orchestration
+        shell: pwsh
+        run: ./tools/validation/Test-SharedInfo.ps1
+      - name: Verify task updater
+        run: node --test tools/validation/test-update-task.mjs

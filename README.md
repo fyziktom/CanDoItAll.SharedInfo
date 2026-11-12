@@ -1,5 +1,6 @@
 # CanDoItAll.SharedInfo
 
+[![CI](https://github.com/fyziktom/CanDoItAll.SharedInfo/actions/workflows/ci.yml/badge.svg?branch=main&event=push)](https://github.com/fyziktom/CanDoItAll.SharedInfo/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 The source of truth for conventions and cross-repository developer assets shared by the
@@ -55,6 +56,9 @@ Validate this repository:
 ```powershell
 .\tools\validation\Test-SharedInfo.ps1
 ```
+
+GitHub CI runs this validation, including the OpenAPI/skill route parity and NuGet
+orchestration regression checks, plus the task-updater tests on pull requests and `main`.
 
 Preview installation of the maintained Codex skills:
 
