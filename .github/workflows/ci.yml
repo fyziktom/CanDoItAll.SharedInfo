@@ -17,15 +17,9 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v6
       - name: Check native Compose template parsing
-        shell: pwsh
         run: |
           docker compose version
-          $composeArgs = @('compose', '--profile', '*', '--env-file', (Resolve-Path templates/repository/docker/.env.example).Path, '-f', (Resolve-Path templates/repository/docker/compose.yaml).Path, 'config', '--format', 'json')
-          $diagnostics = @(& docker @composeArgs 2>&1)
-          if ($LASTEXITCODE -ne 0) {
-            $diagnostics | Write-Output
-            exit $LASTEXITCODE
-          }
+          docker compose --profile '*' --env-file templates/repository/docker/.env.example -f templates/repository/docker/compose.yaml config --quiet
       - name: Validate standards, skills, templates, OpenAPI and NuGet orchestration
         shell: pwsh
         run: ./tools/validation/Test-SharedInfo.ps1
