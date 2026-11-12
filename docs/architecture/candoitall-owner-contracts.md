@@ -45,6 +45,12 @@ integration work.
 - Agent chat context is published through `IAgentChatContextRegistry` with one active
   scope per circuit. A provider that was superseded by a newer scope stands down; it
   does not throw and does not overwrite the live scope.
+- Accepted floating-chat execution owns a separate application scope and a frozen
+  context observation. Browser refresh detaches the view; the owner/profile-filtered
+  active-chat catalog reconnects it to the original run and safe module bookmark.
+  Circuit-owned drafts and window state are separate. Host restart recovery still
+  follows persisted run/receipt contracts; it never blindly replays tools. See the
+  [interactive chat lifetime guidance](../../codex/skills/candoitall-api-agents/references/interactive-chat-lifetime.md).
 
 ## How modules contribute safely
 
@@ -73,9 +79,8 @@ from in its manifest; it is captured from the product's `development` branch, wh
 the module-decoupling work. A snapshot describes one build: the live `/openapi/v1.json`
 of the target host stays authoritative when it differs.
 
-Behavior newer than the current snapshot is recorded in the shared package's README and in the
-security delta of its partner migration matrix: workflow idempotency keys and their lookup belong
-to the caller that recorded them, workflow cancellation and analytics no longer return a run's
-launch origin, the `/api/runtime` snapshots need a bearer token where API authorization is on,
-HTTP agent run starts refuse a caller context that claims a process step or binds host folders,
-and Project Structure analytics returns recorded bodies only to the caller that made the call.
+The November snapshot includes the caller-scoped security contracts and the conditional
+project, policy, planning and cancellation operations described in the shared package's
+[partner migration matrix](../../codex/skills/_candoitall-api-shared/references/partner-api-migration.md).
+Read its [capture provenance and limitations](../../codex/skills/_candoitall-api-shared/README.md)
+before treating historical deployment or cross-platform checks as evidence for this build.

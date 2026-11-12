@@ -1,6 +1,6 @@
 ---
 name: candoitall-api-processes
-description: Use when discovering CanDoItAll process definitions, roles and steps, or launching, dispatching, cancelling, reworking and observing process runs through the HTTP API.
+description: Use when discovering CanDoItAll process definitions, roles and steps, or launching, dispatching, cancelling, reviewing planning decisions, reconciling accounting, reworking and observing process runs through the HTTP API.
 ---
 
 # CanDoItAll Processes API
@@ -48,7 +48,9 @@ Missing definitions return 404, while infrastructure failures remain service err
 | Durable launch | `POST /api/processes/launch` |
 | Prepared launch status | `GET /api/processes/launch/{admissionId}` |
 | Dispatch | `POST /api/processes/runs/{runId}/dispatch` |
-| Cancel | `POST /api/processes/runs/{runId}/cancel` |
+| Selected child cancellation (legacy) | `POST /api/processes/runs/{runId}/cancel` |
+| Root cancellation admission | `POST /api/processes/runs/{runId}/cancellation` |
+| Cancellation progress | `GET /api/processes/runs/{runId}/cancellation` |
 | Rework | `POST /api/processes/runs/{runId}/steps/{stepInstanceId}/rework` |
 | Live list | `GET /api/processes/live` |
 | Live detail | `GET /api/processes/runs/{runId}` |
@@ -96,17 +98,24 @@ The launch endpoint still creates a durable run when readiness allows launch. Th
 still activated, and the dispatch recovery scan can run its ready steps later. Do not
 use it to pause a run.
 
-After a lost or failed launch response, resend the identical request with the same
-`callerIntentId` (or `preparedAdmissionId`); it returns the same run and creates nothing
-new. `GET /api/processes/launch/{admissionId}` reads a preparation only when you already
-hold its id, for example from the check. A 400 or 403 does not prove that no preparation
-was saved.
+After a lost or failed launch response, first observe
+`GET /api/processes/launch/intents/{callerIntentId}` under the original caller/profile/surface.
+A found admission restores its saved review; 404 does not prove an in-flight request
+cannot finish. An exact retry retains the same full request and `callerIntentId` (or
+`preparedAdmissionId`); never create a replacement intent to resolve uncertainty.
+`GET /api/processes/launch/{admissionId}` reads a preparation when you already hold its id.
+A 400 or 403 does not prove that no preparation was saved.
 
 With authorization enabled, the token needs `sub` and `exp` claims. A preparation is
 bound to that subject, and the launch must happen before the token that created the
 preparation expires and while the project's lifetime is unchanged.
 
 ## Operator Actions
+
+Root cancellation uses the bodyless `/cancellation` admission and its progress read;
+acceptance does not mean descendant cleanup finished. The legacy `/cancel` example below
+is for a selected child only. Follow the [current Process recovery and planning workflow](../_candoitall-api-shared/references/conditional-operations.md#process-launch-root-cancellation-and-planning-review)
+for intent lookup, root cancellation, exact child review and separate accounting settlement.
 
 Dispatch ready work:
 
@@ -265,24 +274,30 @@ the project-structure operation result and process readback.
 | Method | Route |
 | --- | --- |
 | `GET` | `/api/processes/contract` |
+| `GET` | `/api/processes/definitions` |
+| `GET` | `/api/processes/definitions/{definitionKey}` |
+| `GET` | `/api/processes/definitions/{definitionKey}/roles` |
+| `GET` | `/api/processes/definitions/{definitionKey}/steps` |
 | `GET` | `/api/processes/events/stream` |
 | `POST` | `/api/processes/launch` |
 | `POST` | `/api/processes/launch/check` |
+| `GET` | `/api/processes/launch/decision-contracts` |
+| `GET` | `/api/processes/launch/intents/{callerIntentId}` |
 | `GET` | `/api/processes/launch/{admissionId}` |
 | `GET` | `/api/processes/live` |
 | `GET` | `/api/processes/runs` |
 | `GET` | `/api/processes/runs/analytics` |
 | `GET` | `/api/processes/runs/{runId}` |
 | `POST` | `/api/processes/runs/{runId}/cancel` |
+| `GET` | `/api/processes/runs/{runId}/cancellation` |
+| `POST` | `/api/processes/runs/{runId}/cancellation` |
 | `POST` | `/api/processes/runs/{runId}/dispatch` |
 | `GET` | `/api/processes/runs/{runId}/events/stream` |
 | `GET` | `/api/processes/runs/{runId}/graph` |
 | `GET` | `/api/processes/runs/{runId}/history` |
+| `GET` | `/api/processes/runs/{runId}/steps/{stepInstanceId}/planning/{executionRunId}/review` |
+| `POST` | `/api/processes/runs/{runId}/steps/{stepInstanceId}/planning/{executionRunId}/review` |
+| `POST` | `/api/processes/runs/{runId}/steps/{stepInstanceId}/planning/{executionRunId}/review/accounting` |
 | `POST` | `/api/processes/runs/{runId}/steps/{stepInstanceId}/rework` |
 | `GET` | `/api/processes/runs/{runId}/summary` |
-| `GET` | `/api/processes/definitions` |
-| `GET` | `/api/processes/definitions/{definitionKey}` |
-| `GET` | `/api/processes/definitions/{definitionKey}/roles` |
-| `GET` | `/api/processes/definitions/{definitionKey}/steps` |
-
 <!-- api-docs-skills-parity:routes:end -->

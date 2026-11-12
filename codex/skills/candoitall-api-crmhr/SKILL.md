@@ -1,6 +1,6 @@
 ---
 name: candoitall-api-crmhr
-description: Use when listing, creating, or relating CanDoItAll CRM/HR parties; managing workforce profiles, skills, and capacity; or operating recruiting applications, interviews, lifecycle tasks, support assignments, and candidate conversion through the HTTP API.
+description: Use when listing, creating, or relating CanDoItAll CRM/HR parties; managing AI business stewardship, workforce profiles, skills, and capacity; or operating recruiting applications, interviews, lifecycle tasks, support assignments, and candidate conversion through the HTTP API.
 ---
 
 # CanDoItAll CRM/HR API
@@ -51,6 +51,10 @@ scenarios.
 Body enums currently use the Web host's numeric encoding; use the reference mapping or a typed .NET client rather than guessing values.
 
 ## Party And Relationship Rules
+
+For AI-party business stewardship, use the [conditional stewardship workflow](../_candoitall-api-shared/references/conditional-operations.md#workspace-policy-and-crm-business-stewardship).
+Read and save `/api/crm-hr/ai-stewards/{partyId}` with both CRM/HR read and write capabilities,
+retaining the original even when no profile exists. This does not edit technical Agent settings.
 
 - Party collection reads are source-paged. Keep `pageSize` within the documented limit; follow `pageIndex` rather than loading every record.
 - Only directory reads (the party and workforce lists and `GET /api/crm-hr/parties/{partyId}`)
@@ -117,3 +121,14 @@ Body enums currently use the Web host's numeric encoding; use the reference mapp
   `errors[].code`. Party creation, an application save that creates a candidate, and conversion
   save in steps: after any failure, search or read back before retrying.
 - After API source changes, run the focused `CrmHrApiIntegrationTests`, build the Web project, inspect OpenAPI, and refresh this skill if routes or DTOs changed.
+
+## AI Business Stewardship Routes
+
+<!-- api-docs-skills-parity:ai-stewardship-routes:start -->
+
+| Method | Route |
+| --- | --- |
+| `GET` | `/api/crm-hr/ai-stewards/{partyId}` |
+| `PUT` | `/api/crm-hr/ai-stewards/{partyId}` |
+
+<!-- api-docs-skills-parity:ai-stewardship-routes:end -->

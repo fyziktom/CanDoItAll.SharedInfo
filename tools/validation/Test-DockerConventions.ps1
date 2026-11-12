@@ -257,8 +257,7 @@ if (-not $dockerCommand) {
 else {
     $composeArguments = [System.Collections.Generic.List[string]]::new()
     $composeArguments.Add('compose')
-    $composeArguments.Add('--profile')
-    $composeArguments.Add('*')
+    $composeArguments.Add('--profile=*')
     if ($resolvedEnvFile) {
         $composeArguments.Add('--env-file')
         $composeArguments.Add($resolvedEnvFile)
