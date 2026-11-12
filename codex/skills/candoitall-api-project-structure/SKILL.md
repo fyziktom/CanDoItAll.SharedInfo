@@ -1,6 +1,6 @@
 ---
 name: candoitall-api-project-structure
-description: Use when creating, reading, editing, running, or reviewing CanDoItAll projects and project-structure nodes through the HTTP API instead of the removed ProjectStructure MCP server.
+description: Use when creating, reading, editing, running, or reviewing CanDoItAll projects and project-structure nodes, conditional project definitions and lifecycle operations, or Structure change feeds through the HTTP API.
 ---
 
 # CanDoItAll Project Structure API
@@ -48,6 +48,11 @@ Use this skill when a task needs project, hierarchy, project-structure, dependen
   `managedStorageDisposition`.
 
 ## Stable Project Provisioning
+
+For new concurrent integrations, prefer the conditional definition and lifecycle operations
+in the [current write/recovery workflow](../_candoitall-api-shared/references/conditional-operations.md#project-definitions-and-lifecycle).
+That reference also covers the bounded Structure refresh feeds. The routes below remain
+the compatibility provisioning surface; do not infer exact-retry guarantees for them.
 
 Use `POST /api/projects` with an optional external namespace/key pair and resolve it
 through `GET /api/projects/by-external-key/{externalNamespace}/{externalKey}`. The pair
@@ -261,7 +266,10 @@ Project Structure routes mirrored by the shared OpenAPI snapshot.
 | `GET` | `/api/project-structure/projects/{projectId}/assets/{nodeId}` |
 | `GET` | `/api/project-structure/projects/{projectId}/assets/{nodeId}/content` |
 | `POST` | `/api/project-structure/projects/{projectId}/assets/{nodeId}/revisions` |
+| `GET` | `/api/project-structure/projects/{projectId}/changes` |
+| `GET` | `/api/project-structure/projects/{projectId}/changes/stream` |
 | `POST` | `/api/project-structure/projects/{projectId}/checklists/query` |
+| `GET` | `/api/project-structure/projects/{projectId}/definition` |
 | `GET` | `/api/project-structure/projects/{projectId}/deletion-cleanups` |
 | `GET` | `/api/project-structure/projects/{projectId}/deletion-completion-notices` |
 | `POST` | `/api/project-structure/projects/{projectId}/dependencies/link` |
@@ -315,14 +323,23 @@ Project Structure routes mirrored by the shared OpenAPI snapshot.
 | `POST` | `/api/projects` |
 | `GET` | `/api/projects/access-list` |
 | `GET` | `/api/projects/by-external-key/{externalNamespace}/{externalKey}` |
+| `GET` | `/api/projects/definition-operations/{namespaceId}/{epoch}/{operationId}` |
+| `GET` | `/api/projects/definition-write-context` |
+| `POST` | `/api/projects/definitions` |
 | `GET` | `/api/projects/deletion-cleanups` |
 | `GET` | `/api/projects/deletion-completion-notices` |
 | `GET` | `/api/projects/hierarchy-links` |
+| `POST` | `/api/projects/lifecycle-operations` |
+| `GET` | `/api/projects/lifecycle-operations/{namespaceId}/{epoch}/{operationId}` |
+| `GET` | `/api/projects/lifecycle-write-context` |
 | `POST` | `/api/projects/{childProjectId}/reconnect-subproject` |
 | `DELETE` | `/api/projects/{parentProjectId}/subprojects/{childProjectId}` |
 | `POST` | `/api/projects/{parentProjectId}/subprojects/{childProjectId}` |
 | `DELETE` | `/api/projects/{projectId}` |
 | `GET` | `/api/projects/{projectId}` |
+| `GET` | `/api/projects/{projectId}/definition` |
+| `PUT` | `/api/projects/{projectId}/definition` |
+| `PUT` | `/api/projects/{projectId}/definition/scalars` |
 | `POST` | `/api/projects/{projectId}/deletion-cleanups/{participantId}/{recoveryId}/retry` |
 | `GET` | `/api/projects/{projectId}/hierarchy` |
 <!-- api-docs-skills-parity:projects-routes:end -->

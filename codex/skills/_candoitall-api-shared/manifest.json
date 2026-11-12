@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "source": {
     "repository": "CanDoItAll",
-    "branch": "demos-repairs",
-    "commit": "16eb94433945e20259ad3cfc3d57751224a8f548",
-    "tree": "38b01d3ef29b36b036de9dae44cdfe6c28ff539e",
+    "branch": "development",
+    "commit": "a74a8aa4d40d09be5537de82ac2fb2c87cc9f8b2",
+    "tree": "43d49f7c27a48a6e8dc7481e52fc249f8ec7f1d9",
     "workingTreeClean": true,
     "webProject": "src/App/CanDoItAll.Web/CanDoItAll.Web.csproj",
     "environment": "Development",
-    "generatedUtc": "2026-10-08T07:53:02Z",
+    "generatedUtc": "2026-11-12T11:10:22Z",
     "runtimeDocumentPaths": [
       "/openapi/v1.json",
       "/swagger/v1/swagger.json"
@@ -16,12 +16,12 @@
     "dependencies": [
       {
         "repository": "CanDoItAll.Components",
-        "commit": "e44176b2f454d143cc8edc9ba610cf4612fe99ec",
+        "commit": "ccb643e6e6f383ca0e5260b6edf41b00a606ee28",
         "workingTreeClean": true
       },
       {
         "repository": "CanDoItAll.FileTools",
-        "commit": "3a080ecd31068a77c1e1bd639f7a78e21c93db85",
+        "commit": "18b12495db92f3c1c19a81a8a0a1f2a6a0a1d73c",
         "workingTreeClean": true
       }
     ],
@@ -33,9 +33,9 @@
       "Api:UserAuthentication:Enabled": true,
       "Api:AccessManagement:Enabled": true
     },
-    "captureNote": "Unmodified runtime bytes from the clean signed source in an isolated network-none LinuxHeadless Release container at canonical http://localhost:5032/, with InMemory invented state and credentials, all six API exposure flags enabled and McpToolHost worker policy. Both document routes are byte-identical. This capture was not repeated on Windows; the prior Windows comparison retains its original source identity. Earlier voice, identity and scheduling proofs are historical, not relabeled. The dedicated hotel deployment keeps user authentication and HTTP management disabled.",
-    "image": "candoitall-hotels-engine:16eb94433945e20259ad3cfc3d57751224a8f548",
-    "imageId": "sha256:0b27014399990a1b73b61f1b8ec8ecb8a694a0a68b73cf9606de0e4ae8c5baa8",
+    "captureNote": "Unmodified runtime bytes from the clean development source and pinned dependency trees. All three source contexts were exact git archives. The maintained Dockerfile build stage produced the Release publication with UseAppHost=false; the isolated SDK container ran that publication as LinuxHeadless at canonical http://localhost:5032/ with no network or published ports, InMemory synthetic state/credentials, all six API exposure flags enabled and McpToolHost worker policy. Both anonymous document routes are byte-identical. The final runtime-image apt download stalled and was cancelled; this is publication/schema evidence, not proof of that image build. The attempted Windows comparison was refused by the installed manager environment-key policy before launch; no current cross-platform equivalence is claimed. Earlier deployment and cross-platform proofs retain their historical source commits below.",
+    "image": "candoitall-openapi-capture:a74a8aa4-20261112",
+    "imageId": "sha256:dbb190ba239eb5aff1645b8869fa5b3c33685fb5a7352291be5dec1dec7c2410",
     "verifiedVoiceDeployment": {
       "url": "http://localhost:5532/",
       "openApiSha256": "C05F005AF01061B3C2DAFF62D608FA6C4066289B02ECBEC4999AA2B52AD8A065",
@@ -89,18 +89,29 @@
       "httpIntegrationTestsPassed": 6,
       "converterTestsPassed": 9,
       "note": "PDF upload and document.to-markdown succeeded in the read-only Linux deployment. Subsequent internal whitespace and transaction improvements do not change this captured HTTP contract."
+    },
+    "runtimeProfile": "LinuxHeadless",
+    "configuration": "Release",
+    "buildTarget": "build",
+    "sdkVersion": "10.0.403",
+    "runtimeVersion": "10.0.14",
+    "applicationArchiveSha256": "492995D9FDD4A184AD4C966E1AD640C1C7668FB7DB56D93FC9483D6BDE5987A2",
+    "windowsComparisonAttempt": {
+      "status": "NotRun",
+      "reason": "Managed environment-key policy rejected synthetic BootstrapAdmin password hash before launch."
     }
   },
   "artifact": {
     "file": "references/candoitall-web.openapi.json",
-    "sha256": "6095DC7E69890DA6FD20662CC55320B87525D565F96E240E39622BE120E71C25",
+    "sha256": "88D7A7C4101FBAB0900945BE932E120D147BB0E9AF14882B90336892745B4315",
     "openapiVersion": "3.1.1",
     "documentTitle": "CanDoItAll.Web | v1",
     "documentVersion": "1.0.0",
     "serverUrl": "http://localhost:5032/",
-    "pathCount": 310,
-    "operationCount": 347,
-    "schemaCount": 1019
+    "pathCount": 332,
+    "operationCount": 375,
+    "schemaCount": 1205,
+    "byteCount": 4743574
   },
   "routeFamilies": [
     {
@@ -120,13 +131,13 @@
     },
     {
       "prefix": "/api/agents",
-      "pathCount": 65,
-      "operationCount": 78
+      "pathCount": 69,
+      "operationCount": 83
     },
     {
       "prefix": "/api/crm-hr",
-      "pathCount": 15,
-      "operationCount": 19
+      "pathCount": 16,
+      "operationCount": 21
     },
     {
       "prefix": "/api/llm-chat-operations",
@@ -155,18 +166,18 @@
     },
     {
       "prefix": "/api/processes",
-      "pathCount": 20,
-      "operationCount": 20
+      "pathCount": 25,
+      "operationCount": 27
     },
     {
       "prefix": "/api/project-structure",
-      "pathCount": 58,
-      "operationCount": 59
+      "pathCount": 61,
+      "operationCount": 62
     },
     {
       "prefix": "/api/projects",
-      "pathCount": 11,
-      "operationCount": 14
+      "pathCount": 19,
+      "operationCount": 23
     },
     {
       "prefix": "/api/prompt-gallery",
@@ -180,8 +191,8 @@
     },
     {
       "prefix": "/api/settings/workspace",
-      "pathCount": 1,
-      "operationCount": 2
+      "pathCount": 2,
+      "operationCount": 4
     },
     {
       "prefix": "/api/shared-providers",
@@ -504,6 +515,11 @@
         },
         {
           "method": "POST",
+          "path": "/api/agents/execution-runs/{executionRunId}/planning/actions",
+          "operationId": "ApplyAgentPlanningAction"
+        },
+        {
+          "method": "POST",
           "path": "/api/agents/execution-runs/{executionRunId}/reconcile-cancellation",
           "operationId": "ReconcileCancelledAgentExecutionRun"
         },
@@ -511,6 +527,11 @@
           "method": "POST",
           "path": "/api/agents/execution-runs/{executionRunId}/recover",
           "operationId": "RecoverAgentExecutionRun"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/execution-runs/{executionRunId}/saved-receipts/read",
+          "operationId": "ReadAgentSavedEffectReceipts"
         },
         {
           "method": "GET",
@@ -699,6 +720,21 @@
         },
         {
           "method": "GET",
+          "path": "/api/agents/{agentId}/decision-data-policy",
+          "operationId": "GetAgentDecisionDataPolicy"
+        },
+        {
+          "method": "PUT",
+          "path": "/api/agents/{agentId}/decision-data-policy",
+          "operationId": "ReplaceAgentDecisionDataPolicy"
+        },
+        {
+          "method": "POST",
+          "path": "/api/agents/{agentId}/decision-data-policy/lookup",
+          "operationId": "LookupAgentDecisionDataPolicyOperation"
+        },
+        {
+          "method": "GET",
           "path": "/api/agents/{agentId}/execution-log",
           "operationId": "ListAgentExecutionLog"
         },
@@ -818,6 +854,26 @@
         },
         {
           "method": "GET",
+          "path": "/api/processes/definitions",
+          "operationId": "ListProcessDefinitions"
+        },
+        {
+          "method": "GET",
+          "path": "/api/processes/definitions/{definitionKey}",
+          "operationId": "GetProcessDefinition"
+        },
+        {
+          "method": "GET",
+          "path": "/api/processes/definitions/{definitionKey}/roles",
+          "operationId": "GetProcessDefinitionRoles"
+        },
+        {
+          "method": "GET",
+          "path": "/api/processes/definitions/{definitionKey}/steps",
+          "operationId": "GetProcessDefinitionSteps"
+        },
+        {
+          "method": "GET",
           "path": "/api/processes/events/stream",
           "operationId": "StreamProcessRunEvents"
         },
@@ -830,6 +886,16 @@
           "method": "POST",
           "path": "/api/processes/launch/check",
           "operationId": "CheckProcessLaunch"
+        },
+        {
+          "method": "GET",
+          "path": "/api/processes/launch/decision-contracts",
+          "operationId": "ListProcessDecisionContracts"
+        },
+        {
+          "method": "GET",
+          "path": "/api/processes/launch/intents/{callerIntentId}",
+          "operationId": "GetProcessLaunchIntentStatus"
         },
         {
           "method": "GET",
@@ -862,6 +928,16 @@
           "operationId": "CancelProcessRun"
         },
         {
+          "method": "GET",
+          "path": "/api/processes/runs/{runId}/cancellation",
+          "operationId": "GetProcessCancellationProgress"
+        },
+        {
+          "method": "POST",
+          "path": "/api/processes/runs/{runId}/cancellation",
+          "operationId": "RequestRootProcessCancellation"
+        },
+        {
           "method": "POST",
           "path": "/api/processes/runs/{runId}/dispatch",
           "operationId": "DispatchProcessRun"
@@ -882,6 +958,21 @@
           "operationId": "GetProcessRunHistory"
         },
         {
+          "method": "GET",
+          "path": "/api/processes/runs/{runId}/steps/{stepInstanceId}/planning/{executionRunId}/review",
+          "operationId": "GetProcessPlanningReview"
+        },
+        {
+          "method": "POST",
+          "path": "/api/processes/runs/{runId}/steps/{stepInstanceId}/planning/{executionRunId}/review",
+          "operationId": "ApplyProcessPlanningReview"
+        },
+        {
+          "method": "POST",
+          "path": "/api/processes/runs/{runId}/steps/{stepInstanceId}/planning/{executionRunId}/review/accounting",
+          "operationId": "ReconcileProcessPlanningAccounting"
+        },
+        {
           "method": "POST",
           "path": "/api/processes/runs/{runId}/steps/{stepInstanceId}/rework",
           "operationId": "RequestProcessStepRework"
@@ -890,26 +981,6 @@
           "method": "GET",
           "path": "/api/processes/runs/{runId}/summary",
           "operationId": "GetProcessRunRecordSummary"
-        },
-        {
-          "method": "GET",
-          "path": "/api/processes/definitions",
-          "operationId": "ListProcessDefinitions"
-        },
-        {
-          "method": "GET",
-          "path": "/api/processes/definitions/{definitionKey}",
-          "operationId": "GetProcessDefinition"
-        },
-        {
-          "method": "GET",
-          "path": "/api/processes/definitions/{definitionKey}/roles",
-          "operationId": "GetProcessDefinitionRoles"
-        },
-        {
-          "method": "GET",
-          "path": "/api/processes/definitions/{definitionKey}/steps",
-          "operationId": "GetProcessDefinitionSteps"
         }
       ]
     },
@@ -940,6 +1011,21 @@
         },
         {
           "method": "GET",
+          "path": "/api/projects/definition-operations/{namespaceId}/{epoch}/{operationId}",
+          "operationId": "GetProjectDefinitionOperation"
+        },
+        {
+          "method": "GET",
+          "path": "/api/projects/definition-write-context",
+          "operationId": "GetProjectDefinitionWriteContext"
+        },
+        {
+          "method": "POST",
+          "path": "/api/projects/definitions",
+          "operationId": "CreateProjectDefinition"
+        },
+        {
+          "method": "GET",
           "path": "/api/projects/deletion-cleanups",
           "operationId": "ListPendingProjectDeletionCleanups"
         },
@@ -952,6 +1038,21 @@
           "method": "GET",
           "path": "/api/projects/hierarchy-links",
           "operationId": "ListProjectHierarchyLinks"
+        },
+        {
+          "method": "POST",
+          "path": "/api/projects/lifecycle-operations",
+          "operationId": "SubmitProjectLifecycleOperation"
+        },
+        {
+          "method": "GET",
+          "path": "/api/projects/lifecycle-operations/{namespaceId}/{epoch}/{operationId}",
+          "operationId": "LookupProjectLifecycleOperation"
+        },
+        {
+          "method": "GET",
+          "path": "/api/projects/lifecycle-write-context",
+          "operationId": "GetProjectLifecycleWriteContext"
         },
         {
           "method": "POST",
@@ -979,6 +1080,21 @@
           "operationId": "GetProjectEditor"
         },
         {
+          "method": "GET",
+          "path": "/api/projects/{projectId}/definition",
+          "operationId": "GetProjectDefinition"
+        },
+        {
+          "method": "PUT",
+          "path": "/api/projects/{projectId}/definition",
+          "operationId": "ReplaceProjectDefinition"
+        },
+        {
+          "method": "PUT",
+          "path": "/api/projects/{projectId}/definition/scalars",
+          "operationId": "UpdateProjectDefinitionScalars"
+        },
+        {
           "method": "POST",
           "path": "/api/projects/{projectId}/deletion-cleanups/{participantId}/{recoveryId}/retry",
           "operationId": "RetryPendingProjectDeletionCleanup"
@@ -999,297 +1115,312 @@
         {
           "method": "POST",
           "path": "/api/project-structure/analytics/query",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "POST",
           "path": "/api/project-structure/imports",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "POST",
           "path": "/api/project-structure/knowledge/query",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "POST",
           "path": "/api/project-structure/leases/acquire",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "GET",
           "path": "/api/project-structure/leases/current",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "POST",
           "path": "/api/project-structure/leases/release",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "POST",
           "path": "/api/project-structure/leases/renew",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "GET",
           "path": "/api/project-structure/node-catalog",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "GET",
           "path": "/api/project-structure/projects",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "POST",
           "path": "/api/project-structure/projects",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "POST",
           "path": "/api/project-structure/projects/{parentProjectId}/subprojects",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "PUT",
           "path": "/api/project-structure/projects/{projectId}",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "POST",
           "path": "/api/project-structure/projects/{projectId}/approvals/request",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "POST",
           "path": "/api/project-structure/projects/{projectId}/assets",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "GET",
           "path": "/api/project-structure/projects/{projectId}/assets/{nodeId}",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "GET",
           "path": "/api/project-structure/projects/{projectId}/assets/{nodeId}/content",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "POST",
           "path": "/api/project-structure/projects/{projectId}/assets/{nodeId}/revisions",
-          "operationId": null
+          "operationId": ""
+        },
+        {
+          "method": "GET",
+          "path": "/api/project-structure/projects/{projectId}/changes",
+          "operationId": ""
+        },
+        {
+          "method": "GET",
+          "path": "/api/project-structure/projects/{projectId}/changes/stream",
+          "operationId": ""
         },
         {
           "method": "POST",
           "path": "/api/project-structure/projects/{projectId}/checklists/query",
-          "operationId": null
+          "operationId": ""
+        },
+        {
+          "method": "GET",
+          "path": "/api/project-structure/projects/{projectId}/definition",
+          "operationId": ""
         },
         {
           "method": "GET",
           "path": "/api/project-structure/projects/{projectId}/deletion-cleanups",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "GET",
           "path": "/api/project-structure/projects/{projectId}/deletion-completion-notices",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "POST",
           "path": "/api/project-structure/projects/{projectId}/dependencies/link",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "POST",
           "path": "/api/project-structure/projects/{projectId}/dependencies/query",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "POST",
           "path": "/api/project-structure/projects/{projectId}/dependencies/unlink",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "GET",
           "path": "/api/project-structure/projects/{projectId}/hierarchy",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "POST",
           "path": "/api/project-structure/projects/{projectId}/links",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "POST",
           "path": "/api/project-structure/projects/{projectId}/links/unlink",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "POST",
           "path": "/api/project-structure/projects/{projectId}/nodes",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "POST",
           "path": "/api/project-structure/projects/{projectId}/nodes/copy",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "POST",
           "path": "/api/project-structure/projects/{projectId}/nodes/delete",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "POST",
           "path": "/api/project-structure/projects/{projectId}/nodes/markers",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "POST",
           "path": "/api/project-structure/projects/{projectId}/nodes/move",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "POST",
           "path": "/api/project-structure/projects/{projectId}/nodes/move-to-new-subproject",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "POST",
           "path": "/api/project-structure/projects/{projectId}/nodes/priorities",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "POST",
           "path": "/api/project-structure/projects/{projectId}/nodes/progress",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "POST",
           "path": "/api/project-structure/projects/{projectId}/nodes/recompose",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "POST",
           "path": "/api/project-structure/projects/{projectId}/nodes/reparent",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "POST",
           "path": "/api/project-structure/projects/{projectId}/nodes/statuses",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "PUT",
           "path": "/api/project-structure/projects/{projectId}/nodes/{nodeId}",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "POST",
           "path": "/api/project-structure/projects/{projectId}/nodes/{nodeId}/command",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "POST",
           "path": "/api/project-structure/projects/{projectId}/nodes/{nodeId}/delete",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "POST",
           "path": "/api/project-structure/projects/{projectId}/nodes/{nodeId}/markers",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "POST",
           "path": "/api/project-structure/projects/{projectId}/nodes/{nodeId}/metadata",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "POST",
           "path": "/api/project-structure/projects/{projectId}/nodes/{nodeId}/move-descendants-to-project",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "POST",
           "path": "/api/project-structure/projects/{projectId}/nodes/{nodeId}/priority",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "POST",
           "path": "/api/project-structure/projects/{projectId}/nodes/{nodeId}/process-definition",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "POST",
           "path": "/api/project-structure/projects/{projectId}/nodes/{nodeId}/process/start",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "POST",
           "path": "/api/project-structure/projects/{projectId}/nodes/{nodeId}/progress",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "POST",
           "path": "/api/project-structure/projects/{projectId}/nodes/{nodeId}/reparent",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "POST",
           "path": "/api/project-structure/projects/{projectId}/nodes/{nodeId}/status",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "POST",
           "path": "/api/project-structure/projects/{projectId}/nodes/{nodeId}/type",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "POST",
           "path": "/api/project-structure/projects/{projectId}/nodes/{nodeId}/workflow-add-options",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "POST",
           "path": "/api/project-structure/projects/{projectId}/nodes/{nodeId}/workflow-definition",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "POST",
           "path": "/api/project-structure/projects/{projectId}/nodes/{nodeId}/workflow/start",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "GET",
           "path": "/api/project-structure/projects/{projectId}/nodes/{nodeId}/workflow/status",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "POST",
           "path": "/api/project-structure/projects/{projectId}/plan/summary",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "POST",
           "path": "/api/project-structure/projects/{projectId}/structure/read",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "POST",
           "path": "/api/project-structure/projects/{projectId}/tasks",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "PUT",
           "path": "/api/project-structure/projects/{projectId}/tasks/{taskId}",
-          "operationId": null
+          "operationId": ""
         },
         {
           "method": "POST",
           "path": "/api/project-structure/projects/{projectId}/tasks/{taskId}/resource",
-          "operationId": null
+          "operationId": ""
         }
       ]
     },
@@ -1664,8 +1795,36 @@
           "method": "PUT",
           "path": "/api/settings/workspace",
           "operationId": "SaveWorkspaceSettings"
+        },
+        {
+          "method": "GET",
+          "path": "/api/settings/workspace/v2",
+          "operationId": "GetWorkspaceSettingsV2"
+        },
+        {
+          "method": "PUT",
+          "path": "/api/settings/workspace/v2",
+          "operationId": "SaveWorkspaceSettingsV2"
         }
       ]
+    },
+    {
+      "name": "CRM/HR AI Business Stewardship API",
+      "prefix": "/api/crm-hr/ai-stewards",
+      "skillFile": "../candoitall-api-crmhr/SKILL.md",
+      "operations": [
+        {
+          "method": "GET",
+          "path": "/api/crm-hr/ai-stewards/{partyId}",
+          "operationId": "GetCrmHrAiSteward"
+        },
+        {
+          "method": "PUT",
+          "path": "/api/crm-hr/ai-stewards/{partyId}",
+          "operationId": "ReplaceCrmHrAiSteward"
+        }
+      ],
+      "routeAppendix": "api-docs-skills-parity:ai-stewardship-routes"
     }
   ]
 }

@@ -6,22 +6,32 @@ for the API skills. Use the live document when a target host has a different ver
 ## Current snapshot
 
 - [Unmodified OpenAPI bytes](references/candoitall-web.openapi.json) and [provenance](manifest.json).
-- CanDoItAll `demos-repairs`, clean signed commit `16eb94433945e20259ad3cfc3d57751224a8f548`.
-- Source tree `38b01d3ef29b36b036de9dae44cdfe6c28ff539e`; dependency commits and image digest are in the manifest.
+- CanDoItAll `development`, clean commit `a74a8aa4d40d09be5537de82ac2fb2c87cc9f8b2`.
+- Source tree `43d49f7c27a48a6e8dc7481e52fc249f8ec7f1d9`; dependency commits and image digest are in the manifest.
+- All three source contexts are exact Git archives; the maintained Dockerfile build stage
+  published with SDK 10.0.403 and runtime 10.0.14.
 - Release LinuxHeadless, Development, InMemory invented state, McpToolHost worker policy.
 - API, OpenAPI, Swagger, JWT, user authentication and access management all enabled.
 - Canonical `http://localhost:5032/` inside a network-none container, with no published ports.
-- Both anonymous document routes agree byte for byte; capture UTC `2026-10-08T07:53:02+00:00`.
-- OpenAPI 3.1.1: **310 paths, 347 operations, 1019 schemas**.
-- SHA-256 `6095DC7E69890DA6FD20662CC55320B87525D565F96E240E39622BE120E71C25`; 3,936,325 bytes.
+- Both anonymous document routes agree byte for byte; capture UTC `2026-11-12T11:10:22Z`.
+- OpenAPI 3.1.1: **332 paths, 375 operations, 1205 schemas**.
+- SHA-256 `88D7A7C4101FBAB0900945BE932E120D147BB0E9AF14882B90336892745B4315`; 4,743,574 bytes.
 
-This revision adds bounded PDF staging at `POST /api/workflows/attachments/documents`.
-See the [workflow document contract](../candoitall-api-workflows/references/document-attachments.md).
-Voice, immutable project identity, initial schedules and import identity remain included;
-their historical live proofs retain their own source commits in the manifest. The current
-capture is Linux-only; the previous Windows comparison is explicitly historical.
+This revision adds 28 operations for conditional project editing and lifecycle changes,
+Structure refresh feeds, decision policies, planning review, saved receipts, root process
+cancellation and CRM business stewardship. See [conditional operations and recovery](references/conditional-operations.md)
+and the [partner migration matrix](references/partner-api-migration.md). Refresh-safe
+floating chat execution is documented separately in [interactive chat lifetime](../candoitall-api-agents/references/interactive-chat-lifetime.md);
+it does not change HTTP request lifetimes.
 
-Route-family counts and all thirteen documented operation sets are validated against the
+The current capture ran the Release publication inside the isolated Linux SDK image.
+The final runtime-image package download stalled and was cancelled. The installed manager
+rejected the synthetic bootstrap password-hash environment setting before starting the
+Windows comparison, so current cross-platform equivalence is unverified. Earlier voice,
+project identity, schedule, import, PDF staging and Windows proofs retain their historical
+source commits in the manifest.
+
+Route-family counts and all fourteen documented operation sets are validated against the
 snapshot and skill appendices. Development diagnostics are included; application pages
 and static files are not API operations. Conditional account routes depend on host flags.
 

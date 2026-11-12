@@ -1,6 +1,6 @@
 ---
 name: candoitall-api-agents
-description: Use when managing CanDoItAll agents, voice transcription/synthesis, SSE activity, provider completions, attachments, approvals, execution evidence, remote imports, stable external-key provisioning, portable JSON Schema output, or recruiting through the HTTP API.
+description: Use when managing CanDoItAll agents, decision-data policies, planning review, voice transcription/synthesis, SSE activity, provider completions, attachments, approvals, execution evidence, remote imports, stable external-key provisioning, portable JSON Schema output, or recruiting through the HTTP API.
 ---
 
 # CanDoItAll Agents API
@@ -75,6 +75,9 @@ content remains owned by the agent run. Metadata access does not grant content a
 and `api.provider-history.*` does not imply a new general history HTTP route.
 
 ## Chat And Execution
+
+For decision-data policy replacement, exact planning actions and authorized saved-receipt
+reads, use the [conditional-operation workflow](../_candoitall-api-shared/references/conditional-operations.md#agent-policy-planning-and-saved-receipts).
 
 For an existing floating UI chat, read [interactive chat lifetime](references/interactive-chat-lifetime.md)
 before recovering or resubmitting work after a refresh. Its application-owned execution
@@ -358,8 +361,10 @@ the public voice routes. Refresh it with the shared manifest's operation set.
 | `GET` | `/api/agents/execution-runs/{executionRunId}/checkpoints` |
 | `POST` | `/api/agents/execution-runs/{executionRunId}/pending-approvals` |
 | `POST` | `/api/agents/execution-runs/{executionRunId}/pending-approvals/stream` |
+| `POST` | `/api/agents/execution-runs/{executionRunId}/planning/actions` |
 | `POST` | `/api/agents/execution-runs/{executionRunId}/reconcile-cancellation` |
 | `POST` | `/api/agents/execution-runs/{executionRunId}/recover` |
+| `POST` | `/api/agents/execution-runs/{executionRunId}/saved-receipts/read` |
 | `GET` | `/api/agents/execution-runs/{executionRunId}/tool-receipts` |
 | `POST` | `/api/agents/import` |
 | `POST` | `/api/agents/import-package` |
@@ -397,6 +402,9 @@ the public voice routes. Refresh it with the shared manifest's operation set.
 | `POST` | `/api/agents/{agentId}/chat/stream` |
 | `POST` | `/api/agents/{agentId}/clone` |
 | `POST` | `/api/agents/{agentId}/convert-to-template` |
+| `GET` | `/api/agents/{agentId}/decision-data-policy` |
+| `PUT` | `/api/agents/{agentId}/decision-data-policy` |
+| `POST` | `/api/agents/{agentId}/decision-data-policy/lookup` |
 | `GET` | `/api/agents/{agentId}/execution-log` |
 | `GET` | `/api/agents/{agentId}/execution-runs` |
 | `POST` | `/api/agents/{agentId}/execution-runs` |

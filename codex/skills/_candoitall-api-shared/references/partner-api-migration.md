@@ -1,5 +1,25 @@
 # Partner API Migration Matrix
 
+## November 2026 contract refresh
+
+The `development` snapshot at `a74a8aa4d40d09be5537de82ac2fb2c87cc9f8b2` contains
+375 operations, including 28 additions since the October 8 snapshot. No route/method
+pair was removed. This does not imply unchanged behavior for existing operations.
+
+| Integration behavior | Current contract | Migration |
+| --- | --- | --- |
+| Cancel a root process with `/runs/{runId}/cancel` | The legacy command refuses root mutation and remains for a selected child | Submit the bodyless `/runs/{runId}/cancellation` POST and follow its GET progress; accepted cancellation is not completed descendant cleanup |
+| Create a new intent after a lost process launch response | Intent lookup can recover the original admission under the original caller, profile and surface | Observe `/launch/intents/{callerIntentId}` and retain the complete original request; 404 does not prove no in-flight request can finish |
+| Edit project definitions, hierarchy or lifecycle using freshly reread values after an uncertain write | Conditional operations bind originals and full operation addresses to the caller and dataset | Prefer the definition/lifecycle write-context and receipt APIs; retain the complete original command for exact lookup or retry, and follow cleanup obligations |
+| Update workspace or agent decision policy without the original observation | Workspace v2 and agent policy replacement use conditional full-policy contracts | Read before writing, preserve the original expectation and distinguish a root policy from an inheritable agent override |
+| Treat planning refresh, saved receipts or accounting settlement as permission to replay effects | Separate operations review original decisions, disclose authorized receipts and settle original child accounting | Use the exact original identities and current permissions; uncertainty never authorizes a fresh action automatically |
+| Poll the entire Structure or edit technical Agent settings through CRM | Bounded Structure change feeds and conditional CRM business stewardship are available | Honor `requiresRefresh`; keep business stewardship separate from technical Agent configuration |
+
+Read [conditional operations and recovery](conditional-operations.md) for the operation
+families and their recovery rules. Use the generated schemas for complete request shapes.
+The floating UI's refresh-safe execution is a separate application lifetime contract;
+see [interactive chat lifetime](../../candoitall-api-agents/references/interactive-chat-lifetime.md).
+
 ## Additive project external identity
 
 The October project identity contract adds optional `externalNamespace` / `externalKey`

@@ -1,6 +1,6 @@
 ---
 name: candoitall-api-workspace-settings
-description: Use when reading or updating CanDoItAll workspace business defaults through the HTTP API, including workspace name, default provider, output format, currency, culture and notes.
+description: Use when reading or conditionally updating CanDoItAll workspace business defaults and root decision policy through the HTTP API, including workspace name, default provider, output format, currency, culture and notes.
 ---
 
 # CanDoItAll Workspace Settings API
@@ -19,6 +19,11 @@ administrator configuration belong to the separate [access skill](../candoitall-
   not grant either business capability. These routes also require the main API switch.
 
 ## Read, update and reconcile
+
+Prefer the [conditional v2 workflow](../_candoitall-api-shared/references/conditional-operations.md#workspace-policy-and-crm-business-stewardship)
+when editing defaults and the root decision policy. Read `/api/settings/workspace/v2`
+and retain its original dataset/head before replacement. The six-field recipe below is
+the compatibility v1 surface and does not supply the v2 concurrency or policy contract.
 
 Read the current settings before editing. Change only the requested business defaults
 and retain the other values. Send only the six fields of `WorkspaceSettingsApiRequest`
@@ -41,5 +46,6 @@ or exposure switches.
 | --- | --- |
 | `GET` | `/api/settings/workspace` |
 | `PUT` | `/api/settings/workspace` |
-
+| `GET` | `/api/settings/workspace/v2` |
+| `PUT` | `/api/settings/workspace/v2` |
 <!-- api-docs-skills-parity:routes:end -->
