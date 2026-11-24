@@ -1,6 +1,6 @@
 ---
 name: candoitall-api-llm-chats
-description: Use when managing ordinary CanDoItAll Simple Chat definitions, conversations, durable turns, replayable SSE, cancellation, or recovery through the HTTP API; use the agents API skill for agent chat sessions and governed agent runs.
+description: Use for CanDoItAll Simple Chat definitions, shared chat templates, conversations, durable turns, replayable SSE, cancellation, or recovery through the HTTP API.
 ---
 
 # CanDoItAll LLM Chats API
@@ -14,7 +14,8 @@ sessions, tools, skills, MCP access, memory, or governed agent execution runs.
 - Start the CanDoItAll web app and inspect Swagger UI at `/swagger`.
 - Check `/api/access/status` before assuming bearer tokens are required.
 - When API authorization is enabled (`authorizationEnabled`), send `Authorization: Bearer <token>`
-  with the exact LLM Chat scope. Follow the shared
+  with the operation's exact scope. Ordinary chat operations use the LLM Chat scopes.
+  Reading a shared template uses `api.shared-simple-chats.read`. Follow the shared
   [authentication and capability rules](../_candoitall-api-shared/references/access-and-authentication.md)
   for login, credential expiry, HTTPS and Swagger authorization.
 - Use the shared
@@ -23,11 +24,12 @@ sessions, tools, skills, MCP access, memory, or governed agent execution runs.
 - When the target differs, use its live `/openapi/v1.json` or
   `/swagger/v1/swagger.json` document.
 
-The three route families have distinct responsibilities:
+Use the route family for the requested operation.
 
 | Base path | Responsibility |
 | --- | --- |
 | `/api/llm-chats` | Definition catalog, provider/model options, lifecycle, and conversation creation |
+| `/api/shared-simple-chats/v1/templates` | Explicitly shared draft or active definitions, their system instructions and avatar previews |
 | `/api/llm-conversations` | Conversation paging, transcript reads, rename/archive, turn admission, and exact active-turn recovery |
 | `/api/llm-chat-operations` | Durable turn status, replayable events, cancellation, and evidence-based reconciliation |
 
@@ -40,7 +42,7 @@ The three route families have distinct responsibilities:
    `/editor` resource when the system prompt and complete editable revision are required.
 4. Preserve the returned numeric ETag. Update with `PUT /api/llm-chats/{definitionId}`. PUT
    replaces the whole configuration: an omitted or null optional member takes its empty or
-   default meaning (no `tags` removes all tags, no `responseFormat` removes the response format).
+   default meaning (omitting `tags` clears custom tags, omitting `responseFormat` clears the response format).
    Read `/editor` and send every value back, with the concurrency token in the body or as a
    single strong `If-Match` value such as `"3"`, quotes included.
 5. Activate, suspend, or archive through the typed lifecycle route; do not emulate state changes by
@@ -57,6 +59,11 @@ A conversation pins the definition revision current at creation. Later definitio
 existing conversations.
 
 ## Shared providers and request history
+
+Use `api.shared-simple-chats.read` to read a publisher's template. Its instructions
+are visible to any caller with this scope while the definition is shared. Import creates
+a local draft with the chosen model and an empty conversation history. See
+[remote instances and shared templates](../_candoitall-api-shared/references/remote-instances.md).
 
 Provider options list only enabled chat provider profiles, which may include profiles imported
 from a shared-provider publication (they are not marked). Use the returned `providerProfileId`,
@@ -211,3 +218,14 @@ provider exceptions, internal request fingerprints, or server filesystem paths.
 | `GET` | `/api/llm-chat-operations/{operationId}/events` |
 | `POST` | `/api/llm-chat-operations/{operationId}/reconcile` |
 <!-- api-docs-skills-parity:llm-chat-operation-routes:end -->
+
+## Shared Simple Chat template routes
+
+<!-- api-docs-skills-parity:shared-simple-chat-routes:start -->
+
+| Method | Route |
+| --- | --- |
+| `GET` | `/api/shared-simple-chats/v1/templates` |
+| `GET` | `/api/shared-simple-chats/v1/templates/{id}` |
+| `GET` | `/api/shared-simple-chats/v1/templates/{id}/avatar` |
+<!-- api-docs-skills-parity:shared-simple-chat-routes:end -->

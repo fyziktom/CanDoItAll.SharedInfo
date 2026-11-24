@@ -82,6 +82,13 @@ capabilities are independent; requesting execution does not grant read access.
 | Memory providers | `api.memory-providers.read`, `api.memory-providers.write`, `api.memory-providers.query` |
 | Simple Chats | Exact `api.llm-chats.read`, `api.llm-chats.manage`, `api.llm-chats.execute` |
 | Shared providers | `api.shared-providers.catalog.read`, `api.shared-providers.invoke` |
+| Shared agent templates | Exact `api.shared-agent-templates.read` |
+| Shared Simple Chat templates | Exact `api.shared-simple-chats.read` |
+| Shared workflow templates | Exact `api.shared-workflows.read` |
+
+Shared template catalogs are exposed when both the main API and JWT authorization
+are enabled. Publication and ordinary API visibility are independent per definition.
+See [remote instances and shared templates](remote-instances.md).
 
 The compatibility `api` umbrella remains accepted only where the target policy supports
 it; it never substitutes for an exact scope or administrator session. Request-history

@@ -9,6 +9,12 @@ Use this skill for catalog discovery and inference against a CanDoItAll publishe
 Source registration, imports, publication administration and request-history management
 remain application/UI operations; do not invent remote administration routes.
 
+The consumer keeps its connections under **Settings → Remote instances**. A provider
+imported from a connection can serve locally imported agents, Simple Chats and workflows.
+Template discovery requires separate catalog read scopes. The import dialog matches the
+publisher and model, and lets the operator select a compatible substitute. See
+[remote instances and shared templates](../_candoitall-api-shared/references/remote-instances.md).
+
 ## Contract and access
 
 Check `GET /api/access/status` and the target host's `/openapi/v1.json` or

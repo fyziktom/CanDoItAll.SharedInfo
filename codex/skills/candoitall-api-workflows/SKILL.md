@@ -1,6 +1,6 @@
 ---
 name: candoitall-api-workflows
-description: Use when resolving CanDoItAll workflows by stable identity, launching idempotently, or managing definitions, lifecycle, runtime runs, SSE signals, requests, artifacts, events, executors, and analytics through the HTTP API.
+description: Use when resolving CanDoItAll workflows by stable identity, reading shared workflow templates, launching idempotently, or managing definitions, lifecycle, runs, SSE signals, requests, artifacts, events, executors, and analytics through the HTTP API.
 ---
 
 # CanDoItAll Workflows API
@@ -34,6 +34,13 @@ Use this skill when a task needs workflow authoring, lifecycle control, runtime 
   when removing display-name lookup or a partner-side run-submission ledger.
 
 ## Definition And Authoring Work
+
+For a definition published by another instance, use the shared workflow catalog
+with `api.shared-workflows.read`. It lists eligible shared draft and active workflows.
+Its detail includes the saved graph, inputs, portable components and model requirements.
+The import dialog creates a local draft and binds its steps to compatible models.
+The built-in template-key catalog under `/api/workflows/templates` serves local authoring.
+See [remote instances and shared templates](../_candoitall-api-shared/references/remote-instances.md).
 
 - Contract discovery: `GET /api/workflows/contract`.
 - Settings: `GET /api/workflows/settings`, `POST /api/workflows/settings`.
@@ -318,3 +325,13 @@ lineage.
 | `POST` | `/api/workflows/templates/{templateKey}/drafts` |
 
 <!-- api-docs-skills-parity:routes:end -->
+
+## Shared workflow template routes
+
+<!-- api-docs-skills-parity:shared-workflow-routes:start -->
+
+| Method | Route |
+| --- | --- |
+| `GET` | `/api/shared-workflows/v1/templates` |
+| `GET` | `/api/shared-workflows/v1/templates/{id}` |
+<!-- api-docs-skills-parity:shared-workflow-routes:end -->

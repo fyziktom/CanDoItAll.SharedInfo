@@ -1,6 +1,16 @@
 # Partner API Migration Matrix
 
-## November 2026 contract refresh
+## November 24, 2026 shared definitions
+
+Clients that copy an agent, Simple Chat or workflow can now read the publisher's
+scoped template catalog. Use the definition's **Sharing** settings to choose whether
+authorized clients can discover it through the ordinary API and whether it appears in the template catalog.
+An ordinary definition lookup can return 404 after the publisher turns off API
+availability. Previously admitted operations retain their status and recovery paths.
+For the catalog routes, exact permissions and local provider choice, see
+[remote instances and shared templates](remote-instances.md).
+
+## November 12, 2026 contract refresh
 
 The `development` snapshot at `a74a8aa4d40d09be5537de82ac2fb2c87cc9f8b2` contains
 375 operations, including 28 additions since the October 8 snapshot. No route/method

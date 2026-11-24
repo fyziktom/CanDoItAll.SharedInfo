@@ -68,6 +68,10 @@ For shared-provider catalog discovery and compatible inference, install
 For ordinary Simple Chat definitions, conversations, and durable turns, install
 `candoitall-api-llm-chats` with the same `_candoitall-api-shared` support package.
 
+For published templates, install the agent, Simple Chat or workflow API skill for
+the definition you need, together with `_candoitall-api-shared`. It includes the
+[catalog scopes and import guide](skills/_candoitall-api-shared/references/remote-instances.md).
+
 Use the bundled snapshot when it matches the target source version. Otherwise, use the
 running web host's `/openapi/v1.json` or `/swagger/v1/swagger.json` document.
 

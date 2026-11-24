@@ -1,6 +1,6 @@
 ---
 name: candoitall-api-agents
-description: Use when managing CanDoItAll agents, decision-data policies, planning review, voice transcription/synthesis, SSE activity, provider completions, attachments, approvals, execution evidence, remote imports, stable external-key provisioning, portable JSON Schema output, or recruiting through the HTTP API.
+description: Use when managing CanDoItAll agents, shared agent templates, decision-data policies, planning review, voice transcription/synthesis, SSE activity, provider completions, attachments, approvals, execution evidence, package imports, stable external-key provisioning, portable JSON Schema output, or recruiting through the HTTP API.
 ---
 
 # CanDoItAll Agents API
@@ -62,6 +62,12 @@ for the other.
   providers (`/api/memory-providers`), and are not injected into agent runs.
 
 ## Shared providers and request evidence
+
+For a template from another instance, read the publisher's shared agent catalog with
+`api.shared-agent-templates.read`. A template carries portable instructions and inline
+skills. Registered tools and other installed capabilities are resolved locally by kind
+and key. ZIP package import has its own backup and restore contract. See
+[remote instances and shared templates](../_candoitall-api-shared/references/remote-instances.md).
 
 Provider/model selection can include imported shared publications. Preserve returned
 profile/model identities and capability/thinking constraints; an unavailable import
@@ -435,3 +441,14 @@ the public voice routes. Refresh it with the shared manifest's operation set.
 | `POST` | `/api/agent-recruiting/interviews/{interviewId}/attempts` |
 | `POST` | `/api/agent-recruiting/interviews/{interviewId}/reviews` |
 <!-- api-docs-skills-parity:agent-recruiting-routes:end -->
+
+## Shared agent template routes
+
+<!-- api-docs-skills-parity:shared-agent-template-routes:start -->
+
+| Method | Route |
+| --- | --- |
+| `GET` | `/api/shared-agent-templates/v1/templates` |
+| `GET` | `/api/shared-agent-templates/v1/templates/{id}` |
+| `GET` | `/api/shared-agent-templates/v1/templates/{id}/avatar` |
+<!-- api-docs-skills-parity:shared-agent-template-routes:end -->

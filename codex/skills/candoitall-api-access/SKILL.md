@@ -38,6 +38,9 @@ cannot substitute. Ordinary users cannot be promoted through account properties.
 
 1. Read `/api/access/scopes` and select only the requested, user-selectable capabilities.
    Read/write/execute grants are independent; an empty business selection is self-session only.
+   For a connected instance, grant the exact read scopes for its selected template
+   catalogs. Add provider catalog and invocation access when it will also use a
+   published model. See [remote instance permissions](../_candoitall-api-shared/references/remote-instances.md).
 2. Search `/api/access/users` before creating an account when avoiding duplicates matters.
    Paging uses `offset` and `pageSize` (default 25, maximum 100).
 3. Create with explicit `userName`, `displayName`, `password`, `enabled` and `scopes`.
