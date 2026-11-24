@@ -39,6 +39,8 @@ For a definition published by another instance, use the shared workflow catalog
 with `api.shared-workflows.read`. It lists eligible shared draft and active workflows.
 Its detail includes the saved graph, inputs, portable components and model requirements.
 The import dialog creates a local draft and binds its steps to compatible models.
+Ordinary workflow catalog and detail responses expose the managed `api` and
+`shared` tags in `tags`.
 The built-in template-key catalog under `/api/workflows/templates` serves local authoring.
 See [remote instances and shared templates](../_candoitall-api-shared/references/remote-instances.md).
 

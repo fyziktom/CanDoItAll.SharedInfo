@@ -1,14 +1,19 @@
 # Partner API Migration Matrix
 
-## November 24, 2026 shared definitions
+## November 24, 2026 shared definitions and account preferences
 
 Clients that copy an agent, Simple Chat or workflow can now read the publisher's
 scoped template catalog. Use the definition's **Sharing** settings to choose whether
-authorized clients can discover it through the ordinary API and whether it appears in the template catalog.
+authorized clients can discover it through the ordinary API and whether it appears
+in the template catalog.
 An ordinary definition lookup can return 404 after the publisher turns off API
 availability. Previously admitted operations retain their status and recovery paths.
 For the catalog routes, exact permissions and local provider choice, see
 [remote instances and shared templates](remote-instances.md).
+
+Clients with a registered user or administrator session can read and patch their
+own theme and menu settings at `/api/access/preferences`. Send only the fields
+the user changed. See [the API access skill](../../candoitall-api-access/SKILL.md).
 
 ## November 12, 2026 contract refresh
 

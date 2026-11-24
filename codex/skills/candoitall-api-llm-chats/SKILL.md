@@ -55,6 +55,10 @@ write: an empty string means no prompt, and null is rejected. Invocation attempt
 kind and thinking effort as integers. Thinking effort is a typed provider/model capability; do not
 put a duplicate effort value in free-form model parameters.
 
+`avatarImageUrl` accepts a bundled avatar, an absolute HTTP(S) URL of up to 2,048
+characters, or a PNG, JPEG, GIF or WebP data URL with up to 128 KiB of decoded
+image data. Send null or an empty string to clear it.
+
 A conversation pins the definition revision current at creation. Later definition edits do not mutate
 existing conversations.
 

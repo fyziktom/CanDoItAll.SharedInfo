@@ -30670,6 +30670,139 @@
         ]
       }
     },
+    "/api/access/preferences": {
+      "get": {
+        "tags": [
+          "API"
+        ],
+        "summary": "Read personal UI preferences",
+        "description": "Read the current registered account's theme and main-menu preference across browsers and devices. Anonymous, machine and legacy credentials cannot access account preferences.",
+        "operationId": "GetUserUiPreferences",
+        "responses": {
+          "200": {
+            "description": "The current account's saved UI preferences, or their documented defaults.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserUiPreferences"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Credentials are missing, invalid, expired or no longer live; no authenticated authority was established.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The authenticated credential lacks the required capability or credential kind; no requested mutation was accepted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "The required persistence or runtime service is unavailable; inspect the safe error code before retrying.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "API"
+        ],
+        "summary": "Update personal UI preferences",
+        "description": "Merge only supplied fields into the current registered account's UI preferences. The server selects the account from the validated session; concurrent changes to other fields are retained.",
+        "operationId": "UpdateUserUiPreferences",
+        "requestBody": {
+          "description": "Optional theme and main-menu collapsed fields. Omitted or null fields remain unchanged; caller-selected account identifiers and unknown fields are rejected.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserUiPreferencesPatch"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The complete saved UI preferences after applying this patch.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserUiPreferences"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request is malformed or violates the documented field and capability limits; no requested mutation was accepted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Credentials are missing, invalid, expired or no longer live; no authenticated authority was established.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The authenticated credential lacks the required capability or credential kind; no requested mutation was accepted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "The required persistence or runtime service is unavailable; inspect the safe error code before retrying.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
     "/api/access/logout": {
       "post": {
         "tags": [
@@ -37256,6 +37389,16 @@
           }
         ],
         "responses": {
+          "404": {
+            "description": "The agent is unavailable through this API.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
           "200": {
             "description": "The configured override and original expectation.",
             "content": {
@@ -37288,16 +37431,6 @@
           },
           "403": {
             "description": "The authenticated credential lacks the required capability or credential kind; no requested mutation was accepted.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "The addressed resource or retained receipt was not observed. A missing receipt does not establish rollback of an earlier uncertain request.",
             "content": {
               "application/json": {
                 "schema": {
@@ -37364,6 +37497,16 @@
           "required": true
         },
         "responses": {
+          "404": {
+            "description": "The agent is unavailable through this API.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
           "200": {
             "description": "Exact acceptance, definite rejection or unconfirmed outcome. FollowupRequired preserves known acceptance when postcommit work failed.",
             "content": {
@@ -37531,6 +37674,16 @@
           "required": true
         },
         "responses": {
+          "404": {
+            "description": "The agent is unavailable through this API.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
           "200": {
             "description": "The agent was saved. The body is the agent identifier as a JSON string (a GUID); read the agent to get the stored values and its new revision.",
             "content": {
@@ -37649,6 +37802,16 @@
           }
         ],
         "responses": {
+          "404": {
+            "description": "The agent is unavailable through this API.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
           "200": {
             "description": "The editable form of the agent, including its current revision.",
             "content": {
@@ -37695,6 +37858,16 @@
           }
         ],
         "responses": {
+          "404": {
+            "description": "The agent is unavailable through this API.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
           "200": {
             "description": "The agent no longer exists (it was deleted or never existed). The body is `{ \"ok\": true }`.",
             "content": {
@@ -37775,6 +37948,16 @@
           "required": true
         },
         "responses": {
+          "404": {
+            "description": "The agent is unavailable through this API.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
           "200": {
             "description": "The clone was created. The body is the new agent's identifier as a JSON string (a GUID).",
             "content": {
@@ -37826,6 +38009,16 @@
           "required": true
         },
         "responses": {
+          "404": {
+            "description": "The agent is unavailable through this API.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
           "200": {
             "description": "The template was created. The body is the new template's agent identifier as a JSON string (a GUID).",
             "content": {
@@ -37866,6 +38059,16 @@
           }
         ],
         "responses": {
+          "404": {
+            "description": "The agent is unavailable through this API.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
           "200": {
             "description": "The package was written. The body gives its server path and a short summary.",
             "content": {
@@ -37904,6 +38107,16 @@
           "required": true
         },
         "responses": {
+          "404": {
+            "description": "The agent is unavailable through this API.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
           "200": {
             "description": "The agent was imported. The body is its identifier as a JSON string (a GUID), the identifier stored in the package.",
             "content": {
@@ -37995,6 +38208,16 @@
           },
           "412": {
             "description": "Nothing was imported: `expectedAgentVersion` does not equal the current revision of the agent to replace (`agent-package.version-conflict`). Read the agent again and decide whether to replace it.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The agent is unavailable through this API.",
             "content": {
               "application/json": {
                 "schema": {
@@ -39615,6 +39838,16 @@
           }
         ],
         "responses": {
+          "404": {
+            "description": "The agent is unavailable through this API.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
           "200": {
             "description": "The proof was published on the agent's assignment and on the catalog capability. The body is `{ \"ok\": true }`; read the agent to see the proof status, which can be Failed.",
             "content": {
@@ -39788,6 +40021,16 @@
           }
         ],
         "responses": {
+          "404": {
+            "description": "The agent is unavailable through this API.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
           "200": {
             "description": "The agent's memory notes, ordered by creation time, newest first.",
             "content": {
@@ -39829,6 +40072,16 @@
           "required": true
         },
         "responses": {
+          "404": {
+            "description": "The agent is unavailable through this API.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
           "200": {
             "description": "The note was saved. The body is the note identifier as a JSON string (a GUID).",
             "content": {
@@ -39908,6 +40161,16 @@
           }
         ],
         "responses": {
+          "404": {
+            "description": "The agent is unavailable through this API.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
           "200": {
             "description": "The agent's chat sessions; an empty array when there are none.",
             "content": {
@@ -39957,6 +40220,16 @@
           }
         ],
         "responses": {
+          "404": {
+            "description": "The agent is unavailable through this API.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
           "200": {
             "description": "The created session, or the existing session named by `chatSessionId`.",
             "content": {
@@ -40017,6 +40290,16 @@
           "required": true
         },
         "responses": {
+          "404": {
+            "description": "The agent is unavailable through this API.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
           "200": {
             "description": "Chat session with its accepted title.",
             "content": {
@@ -40095,6 +40378,16 @@
           }
         ],
         "responses": {
+          "404": {
+            "description": "The agent is unavailable through this API.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
           "200": {
             "description": "The agent's chat workspace.",
             "content": {
@@ -40145,6 +40438,16 @@
           "required": true
         },
         "responses": {
+          "404": {
+            "description": "The agent is unavailable through this API.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
           "200": {
             "description": "The run finished or stopped for approvals: the reply message, the run metric, the run identifier and its state (5 Completed, 6 Failed or 3 WaitingOnTool).",
             "content": {
@@ -40593,6 +40896,16 @@
           "required": true
         },
         "responses": {
+          "404": {
+            "description": "The agent is unavailable through this API.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
           "200": {
             "description": "The run finished or stopped for approvals: its identifier, response text, metric, state (5 Completed, 6 Failed or 3 WaitingOnTool) and structured output when requested.",
             "content": {
@@ -40900,6 +41213,16 @@
           "required": true
         },
         "responses": {
+          "404": {
+            "description": "The agent is unavailable through this API.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
           "200": {
             "description": "The run finished or stopped for approvals: its identifier, response text, metric, state (5 Completed, 6 Failed or 3 WaitingOnTool) and structured output when requested.",
             "content": {
@@ -42086,6 +42409,16 @@
           "required": true
         },
         "responses": {
+          "404": {
+            "description": "The agent is unavailable through this API.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
           "200": {
             "description": "The `text/event-stream` described above. Unless the client disconnects it ends with `agent.command.completed` or `agent.command.failed`.",
             "content": {
@@ -42204,6 +42537,16 @@
           "required": true
         },
         "responses": {
+          "404": {
+            "description": "The agent is unavailable through this API.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
           "200": {
             "description": "The `text/event-stream` described above. Unless the client disconnects it ends with `agent.command.completed` or `agent.command.failed`.",
             "content": {
@@ -42334,6 +42677,16 @@
           "required": true
         },
         "responses": {
+          "404": {
+            "description": "The agent is unavailable through this API.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
           "200": {
             "description": "The `text/event-stream` described above. Unless the client disconnects it ends with `agent.command.completed` or `agent.command.failed`.",
             "content": {
@@ -42868,6 +43221,16 @@
           "required": true
         },
         "responses": {
+          "404": {
+            "description": "The requested non-template agent does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
           "200": {
             "description": "Audio bytes with their playback content type; no JSON or base64 wrapper.",
             "content": {
@@ -42930,16 +43293,6 @@
           },
           "403": {
             "description": "The authenticated credential lacks the required capability or credential kind; no requested mutation was accepted.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "The requested non-template agent does not exist.",
             "content": {
               "application/json": {
                 "schema": {
@@ -45503,6 +45856,16 @@
               }
             }
           },
+          "404": {
+            "description": "The addressed resource or retained receipt was not observed. A missing receipt does not establish rollback of an earlier uncertain request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
           "409": {
             "description": "The original expectation, authority or requested transition conflicts with observed state. Inspect the typed outcome and retain any unresolved original intent before choosing another action.",
             "content": {
@@ -46366,6 +46729,16 @@
               }
             }
           },
+          "404": {
+            "description": "The addressed resource or retained receipt was not observed. A missing receipt does not establish rollback of an earlier uncertain request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
           "409": {
             "description": "The original expectation, authority or requested transition conflicts with observed state. Inspect the typed outcome and retain any unresolved original intent before choosing another action.",
             "content": {
@@ -46533,6 +46906,16 @@
           },
           "400": {
             "description": "The request is malformed or violates the documented field and capability limits; no requested mutation was accepted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The addressed resource or retained receipt was not observed. A missing receipt does not establish rollback of an earlier uncertain request.",
             "content": {
               "application/json": {
                 "schema": {
@@ -47147,6 +47530,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/WorkflowTestRunResult"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The selected workflow is unavailable through the workflow API. No test run was started.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
                 }
               }
             }
@@ -53890,6 +54283,581 @@
           }
         ]
       }
+    },
+    "/api/shared-agent-templates/v1/templates": {
+      "get": {
+        "tags": [
+          "Shared Agent Templates"
+        ],
+        "summary": "List shared agent templates",
+        "description": "List template summaries in the current publisher workspace. Requires the shared agent template read scope.",
+        "operationId": "ListRemoteAgentTemplates",
+        "responses": {
+          "200": {
+            "description": "Portable template summaries.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RemoteAgentTemplateSummary"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Credentials are missing, invalid, expired or no longer live; no authenticated authority was established.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The authenticated credential lacks the required capability or credential kind; no requested mutation was accepted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The original expectation, authority or requested transition conflicts with observed state. Inspect the typed outcome and retain any unresolved original intent before choosing another action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/api/shared-agent-templates/v1/templates/{id}": {
+      "get": {
+        "tags": [
+          "Shared Agent Templates"
+        ],
+        "summary": "Read a shared agent template",
+        "description": "Read portable instructions, inline skills and local capability requirements for one template.",
+        "operationId": "GetRemoteAgentTemplate",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Publisher-local template ID from the shared catalog.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A portable definition for local import.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RemoteAgentTemplate"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Credentials are missing, invalid, expired or no longer live; no authenticated authority was established.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The authenticated credential lacks the required capability or credential kind; no requested mutation was accepted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The addressed resource or retained receipt was not observed. A missing receipt does not establish rollback of an earlier uncertain request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The original expectation, authority or requested transition conflicts with observed state. Inspect the typed outcome and retain any unresolved original intent before choosing another action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/api/shared-agent-templates/v1/templates/{id}/avatar": {
+      "get": {
+        "tags": [
+          "Shared Agent Templates"
+        ],
+        "summary": "Read a shared agent avatar",
+        "description": "Read the embedded raster avatar of a currently shared agent template at its catalog revision.",
+        "operationId": "GetRemoteAgentTemplateAvatar",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Publisher-local ID of a shared template with an embedded avatar.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A bounded template avatar.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RemoteTemplateEmbeddedAvatar"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Credentials are missing, invalid, expired or no longer live; no authenticated authority was established.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The authenticated credential lacks the required capability or credential kind; no requested mutation was accepted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The addressed resource or retained receipt was not observed. A missing receipt does not establish rollback of an earlier uncertain request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The original expectation, authority or requested transition conflicts with observed state. Inspect the typed outcome and retain any unresolved original intent before choosing another action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/api/shared-simple-chats/v1/templates": {
+      "get": {
+        "tags": [
+          "Shared Simple Chats"
+        ],
+        "summary": "List shared Simple Chats",
+        "description": "List explicitly published draft and active definitions with their avatars. Requires the shared Simple Chat read scope.",
+        "operationId": "ListRemoteSimpleChatTemplates",
+        "responses": {
+          "200": {
+            "description": "Visible Simple Chat template summaries.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RemoteTemplateRow"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Credentials are missing, invalid, expired or no longer live; no authenticated authority was established.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The authenticated credential lacks the required capability or credential kind; no requested mutation was accepted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The original expectation, authority or requested transition conflicts with observed state. Inspect the typed outcome and retain any unresolved original intent before choosing another action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/api/shared-simple-chats/v1/templates/{id}": {
+      "get": {
+        "tags": [
+          "Shared Simple Chats"
+        ],
+        "summary": "Read a shared Simple Chat",
+        "description": "Read the published definition, system instructions, model preference and output settings. Requires the shared Simple Chat read scope.",
+        "operationId": "GetRemoteSimpleChatTemplate",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Publisher-local ID of an explicitly shared Simple Chat definition.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The current portable Simple Chat revision.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RemoteSimpleChatTemplate"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Credentials are missing, invalid, expired or no longer live; no authenticated authority was established.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The authenticated credential lacks the required capability or credential kind; no requested mutation was accepted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The addressed resource or retained receipt was not observed. A missing receipt does not establish rollback of an earlier uncertain request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The original expectation, authority or requested transition conflicts with observed state. Inspect the typed outcome and retain any unresolved original intent before choosing another action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/api/shared-simple-chats/v1/templates/{id}/avatar": {
+      "get": {
+        "tags": [
+          "Shared Simple Chats"
+        ],
+        "summary": "Read a shared Simple Chat avatar",
+        "description": "Read the embedded avatar of the currently shared definition with its publisher and revision.",
+        "operationId": "GetRemoteSimpleChatAvatar",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Publisher-local ID of the Simple Chat with an embedded avatar.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The bounded Simple Chat avatar.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RemoteTemplateEmbeddedAvatar"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Credentials are missing, invalid, expired or no longer live; no authenticated authority was established.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The authenticated credential lacks the required capability or credential kind; no requested mutation was accepted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The addressed resource or retained receipt was not observed. A missing receipt does not establish rollback of an earlier uncertain request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The original expectation, authority or requested transition conflicts with observed state. Inspect the typed outcome and retain any unresolved original intent before choosing another action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/api/shared-workflows/v1/templates": {
+      "get": {
+        "tags": [
+          "Shared workflows"
+        ],
+        "summary": "List shared workflows",
+        "description": "Read the explicitly shared active and draft workflows on this publisher. Requires shared workflow read access.",
+        "operationId": "ListRemoteWorkflowTemplates",
+        "responses": {
+          "200": {
+            "description": "The current shareable workflow catalog.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RemoteTemplateRow"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Credentials are missing, invalid, expired or no longer live; no authenticated authority was established.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The authenticated credential lacks the required capability or credential kind; no requested mutation was accepted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The original expectation, authority or requested transition conflicts with observed state. Inspect the typed outcome and retain any unresolved original intent before choosing another action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/api/shared-workflows/v1/templates/{id}": {
+      "get": {
+        "tags": [
+          "Shared workflows"
+        ],
+        "summary": "Read a shared workflow",
+        "description": "Read a saved workflow graph, input descriptors, portable LLM components and model requirements. Requires shared workflow read access.",
+        "operationId": "GetRemoteWorkflowTemplate",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Publisher-local identity of an explicitly published workflow.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The current portable workflow definition.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RemoteWorkflowDocument"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Credentials are missing, invalid, expired or no longer live; no authenticated authority was established.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The authenticated credential lacks the required capability or credential kind; no requested mutation was accepted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The addressed resource or retained receipt was not observed. A missing receipt does not establish rollback of an earlier uncertain request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The original expectation, authority or requested transition conflicts with observed state. Inspect the typed outcome and retain any unresolved original intent before choosing another action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -55299,6 +56267,17 @@
               "string"
             ],
             "description": "Avatar image reference, or null when none is set. The product uses a bundled avatar path (for example `_content/CanDoItAll.Components.BaseLib/assets/identity/avatars/avatar-01.jpg`) or a `data:` image URL; the API stores any trimmed text."
+          },
+          "apiAvailable": {
+            "type": "boolean",
+            "description": "Whether the agent is available through the ordinary HTTP API."
+          },
+          "sharedTemplate": {
+            "type": [
+              "null",
+              "boolean"
+            ],
+            "description": "Explicit remote template publication. Older records without this preference retain their original local template publication."
           }
         },
         "description": "Stored technical agent definition: the Agents-owned configuration and identity that agent execution runs use. Returned by `GET /api/agents` and `GET /api/agents/teams/{teamId}/agents`. The CRM/HR party that represents an agent is a projection of this record, not another definition. To change an agent, read and save its editor form (`GET /api/agents/{agentId}`, `POST /api/agents`)."
@@ -55405,6 +56384,17 @@
           "isTemplate": {
             "type": "boolean",
             "description": "True to store the agent as a template used to create working agents."
+          },
+          "apiAvailable": {
+            "type": "boolean",
+            "description": "Whether the agent can be discovered and used through the ordinary HTTP API. Defaults to true."
+          },
+          "sharedTemplate": {
+            "type": [
+              "null",
+              "boolean"
+            ],
+            "description": "Whether to publish this definition as a remote template. Omission preserves existing consent. A new definition is private by default."
           },
           "templateKey": {
             "type": "string",
@@ -63598,11 +64588,11 @@
           },
           "avatarImageUrl": {
             "type": "string",
-            "description": "Image shown for the definition: an absolute `http` or `https` URL, or a bundled avatar path such as `_content/CanDoItAll.Components.BaseLib/assets/identity/avatars/avatar-01.jpg` (avatars 01 to 08). At most 2,048 characters; null or empty stores no image."
+            "description": "Avatar for the definition. Accepts a bundled avatar, an absolute HTTP or HTTPS URL of up to 2,048 characters, or a base64 data URL containing a PNG, JPEG, GIF or WebP image of up to 128 KiB. Null or empty clears the image."
           },
           "systemPrompt": {
             "type": "string",
-            "description": "Instructions sent to the model as the system message of every turn, stored exactly as sent. Send it on every create and update: null is rejected, an empty string means no system prompt. At most 400,000 characters. Only the manage-scoped editor read returns it."
+            "description": "Instructions sent to the model as the system message of every turn, stored exactly as sent. Send it on every create and update: null is rejected, an empty string means no system prompt. At most 400,000 characters. The editor read and explicitly shared template read return these instructions to authorized callers."
           },
           "providerProfileId": {
             "type": "string",
@@ -90629,6 +91619,744 @@
         "additionalProperties": false,
         "description": "This attempt was refused with known no-commit knowledge. It cannot resolve a different earlier unconfirmed attempt."
       },
+      "RemoteAgentInlineSkill": {
+        "required": [
+          "name",
+          "description",
+          "instructions",
+          "resources"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Lowercase hyphenated name exposed to the skill runtime."
+          },
+          "description": {
+            "type": "string",
+            "description": "Purpose of the skill shown during discovery."
+          },
+          "instructions": {
+            "type": "string",
+            "description": "Skill guidance supplied on activation."
+          },
+          "resources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RemoteAgentSkillResource"
+            },
+            "description": "Named in-memory resources accompanying the instructions."
+          }
+        },
+        "description": "Text and embedded resources of an inline skill."
+      },
+      "RemoteAgentSkillResource": {
+        "required": [
+          "name",
+          "content",
+          "description"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name used to request the resource from the skill."
+          },
+          "content": {
+            "type": "string",
+            "description": "Embedded text returned by the local skill runtime."
+          },
+          "description": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Optional purpose or usage guidance for this resource."
+          }
+        },
+        "description": "One named text resource bundled with an inline skill."
+      },
+      "RemoteAgentTemplate": {
+        "required": [
+          "id",
+          "name",
+          "roleTitle",
+          "summary",
+          "instructions",
+          "workload",
+          "tags",
+          "capabilities",
+          "updatedAtUtc"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Publisher-local template ID. The local working copy receives a fresh ID.",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "description": "Display name of the agent to create."
+          },
+          "roleTitle": {
+            "type": "string",
+            "description": "Role title shown in the agent editor."
+          },
+          "summary": {
+            "type": "string",
+            "description": "Short description of the agent's purpose."
+          },
+          "instructions": {
+            "type": "string",
+            "description": "System instructions for the local agent."
+          },
+          "workload": {
+            "allOf": [
+              {
+                "description": "Workload category: 0 General, 1 Management, 2 Hr, 3 Sales, 4 Assistant, 5 Qa, 6 Support, 7 Programming, 8 Spreadsheet, 9 Mail, 10 Research.",
+                "$ref": "#/components/schemas/AgentWorkloadKind"
+              }
+            ],
+            "description": "Workload category: 0 General, 1 Management, 2 Hr, 3 Sales, 4 Assistant, 5 Qa, 6 Support, 7 Programming, 8 Spreadsheet, 9 Mail, 10 Research."
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Searchable labels assigned to the definition."
+          },
+          "capabilities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RemoteAgentTemplateCapability"
+            },
+            "description": "Capability declarations required by this template."
+          },
+          "updatedAtUtc": {
+            "type": "string",
+            "description": "Revision timestamp of the agent definition shown in the catalog.",
+            "format": "date-time"
+          },
+          "publisherId": {
+            "type": "string",
+            "description": "Public identity of the publishing instance.",
+            "format": "uuid"
+          },
+          "catalogRevision": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Publisher catalog revision from which the content and all dependencies were read.",
+            "format": "int64"
+          },
+          "avatarImageUrl": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Avatar carried into the local agent."
+          },
+          "preferredModel": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "description": "Preferred published model and capabilities needed for the local agent.",
+                "$ref": "#/components/schemas/RemoteTemplateModelRequirement"
+              }
+            ],
+            "description": "Preferred published model and capabilities needed for the local agent."
+          }
+        },
+        "description": "Version-one portable definition for creating an independent local draft agent."
+      },
+      "RemoteAgentTemplateCapability": {
+        "required": [
+          "kind",
+          "key",
+          "inlineSkill"
+        ],
+        "type": "object",
+        "properties": {
+          "kind": {
+            "allOf": [
+              {
+                "description": "Capability category: 0 McpServer, 1 Skill, 2 Tool, 3 Plugin, 4 Rag, 5 AiContext, 6 Memory (retired).",
+                "$ref": "#/components/schemas/CapabilityKind"
+              }
+            ],
+            "description": "Capability category: 0 McpServer, 1 Skill, 2 Tool, 3 Plugin, 4 Rag, 5 AiContext, 6 Memory (retired)."
+          },
+          "key": {
+            "type": "string",
+            "description": "Stable normalized capability key used to resolve a local installation."
+          },
+          "inlineSkill": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "description": "Portable skill content when this declaration represents an inline skill. All other declarations require a matching local capability.",
+                "$ref": "#/components/schemas/RemoteAgentInlineSkill"
+              }
+            ],
+            "description": "Portable skill content when this declaration represents an inline skill. All other declarations require a matching local capability."
+          }
+        },
+        "description": "An assigned runtime capability identified by its kind and catalog key."
+      },
+      "RemoteAgentTemplateSummary": {
+        "required": [
+          "id",
+          "name",
+          "summary",
+          "updatedAtUtc",
+          "capabilityCount"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Publisher-local template ID for the template detail route.",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "description": "Display name of the template."
+          },
+          "summary": {
+            "type": "string",
+            "description": "Short description of the agent's purpose."
+          },
+          "updatedAtUtc": {
+            "type": "string",
+            "description": "Revision timestamp of the agent definition.",
+            "format": "date-time"
+          },
+          "capabilityCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Number of assigned skills, tools and other capabilities.",
+            "format": "int32"
+          },
+          "publisherId": {
+            "type": "string",
+            "description": "Public identity of the publishing instance.",
+            "format": "uuid"
+          },
+          "catalogRevision": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Publisher catalog revision at selection, including capability changes.",
+            "format": "int64"
+          },
+          "avatarImageUrl": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Avatar displayed when selecting a template."
+          },
+          "hasEmbeddedAvatar": {
+            "type": "boolean",
+            "description": "Whether to read the embedded image from this template's authenticated avatar route."
+          }
+        },
+        "description": "One selectable agent template in the publisher workspace."
+      },
+      "RemoteSimpleChatResponseFormat": {
+        "required": [
+          "requireJson",
+          "schemaJson",
+          "schemaName",
+          "schemaDescription"
+        ],
+        "type": "object",
+        "properties": {
+          "requireJson": {
+            "type": "boolean",
+            "description": "Whether the model must respond with JSON."
+          },
+          "schemaJson": {
+            "type": "string",
+            "description": "Optional JSON schema for structured responses."
+          },
+          "schemaName": {
+            "type": "string",
+            "description": "Name of the response schema."
+          },
+          "schemaDescription": {
+            "type": "string",
+            "description": "Explanation of the requested response schema."
+          }
+        },
+        "description": "An optional response format for conversations created from this definition."
+      },
+      "RemoteSimpleChatSettings": {
+        "required": [
+          "temperature",
+          "modelParameterConfigurationJson",
+          "thinkingEffort"
+        ],
+        "type": "object",
+        "properties": {
+          "temperature": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
+            "description": "Optional model temperature, from zero to two.",
+            "format": "double"
+          },
+          "modelParameterConfigurationJson": {
+            "type": "string",
+            "description": "Optional JSON object containing the definition's output token limits."
+          },
+          "thinkingEffort": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "description": "Requested reasoning effort, 0 None, 1 Low, 2 Medium, 3 High, 4 ExtraHigh, 5 Max or 6 Minimal.",
+                "$ref": "#/components/schemas/AgentReasoningEffortLevel"
+              }
+            ],
+            "description": "Requested reasoning effort, 0 None, 1 Low, 2 Medium, 3 High, 4 ExtraHigh, 5 Max or 6 Minimal."
+          }
+        },
+        "description": "Portable parameters for the selected chat model."
+      },
+      "RemoteSimpleChatTemplate": {
+        "required": [
+          "row",
+          "systemPrompt",
+          "tags",
+          "settings",
+          "timeout",
+          "responseFormat",
+          "model"
+        ],
+        "type": "object",
+        "properties": {
+          "row": {
+            "allOf": [
+              {
+                "description": "Publisher identity, definition identity, revision, display text and avatar.",
+                "$ref": "#/components/schemas/RemoteTemplateRow"
+              }
+            ],
+            "description": "Publisher identity, definition identity, revision, display text and avatar."
+          },
+          "systemPrompt": {
+            "type": "string",
+            "description": "System instructions used when a new conversation is started."
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Labels from the published definition."
+          },
+          "settings": {
+            "allOf": [
+              {
+                "description": "Model settings authored on the Simple Chat definition.",
+                "$ref": "#/components/schemas/RemoteSimpleChatSettings"
+              }
+            ],
+            "description": "Model settings authored on the Simple Chat definition."
+          },
+          "timeout": {
+            "pattern": "^-?(\\d+\\.)?\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,7})?$",
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Optional execution time limit of the definition."
+          },
+          "responseFormat": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "description": "Requested local response format and optional output schema.",
+                "$ref": "#/components/schemas/RemoteSimpleChatResponseFormat"
+              }
+            ],
+            "description": "Requested local response format and optional output schema."
+          },
+          "model": {
+            "allOf": [
+              {
+                "description": "Required model features and the preferred published routing model.",
+                "$ref": "#/components/schemas/RemoteTemplateModelRequirement"
+              }
+            ],
+            "description": "Required model features and the preferred published routing model."
+          }
+        },
+        "description": "The explicitly shared current revision of a Simple Chat definition."
+      },
+      "RemoteTemplateEmbeddedAvatar": {
+        "required": [
+          "publisherId",
+          "templateId",
+          "catalogRevision",
+          "imageUrl"
+        ],
+        "type": "object",
+        "properties": {
+          "publisherId": {
+            "type": "string",
+            "description": "Public identity of the publishing instance.",
+            "format": "uuid"
+          },
+          "templateId": {
+            "type": "string",
+            "description": "Template whose avatar was read.",
+            "format": "uuid"
+          },
+          "catalogRevision": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Publisher catalog revision at the time of the read.",
+            "format": "int64"
+          },
+          "imageUrl": {
+            "type": "string",
+            "description": "Validated raster image data URL."
+          }
+        },
+        "description": "An embedded catalog avatar bound to its publisher and catalog revision."
+      },
+      "RemoteTemplateModelRequirement": {
+        "required": [
+          "label",
+          "purpose"
+        ],
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Name of the model-dependent step in the template."
+          },
+          "purpose": {
+            "allOf": [
+              {
+                "description": "Provider purpose: 0 Chat, 1 ImageGeneration.",
+                "$ref": "#/components/schemas/ProviderProfilePurpose"
+              }
+            ],
+            "description": "Provider purpose: 0 Chat, 1 ImageGeneration."
+          },
+          "structuredOutput": {
+            "type": "boolean",
+            "description": "Whether this step requires structured model output.",
+            "default": false
+          },
+          "vision": {
+            "type": "boolean",
+            "description": "Whether this step requires image inputs.",
+            "default": false
+          },
+          "tools": {
+            "type": "boolean",
+            "description": "Whether this step requires function tools.",
+            "default": false
+          },
+          "modelName": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Human-readable model used on the publisher, when configured."
+          },
+          "publishedModel": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Public routing model of the publisher's shared provider, when published."
+          },
+          "thinkingEffort": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "description": "Explicit thinking effort required by the definition, 0 None, 1 Low, 2 Medium, 3 High, 4 ExtraHigh, 5 Max or 6 Minimal. An omitted value allows the model default.",
+                "$ref": "#/components/schemas/AgentReasoningEffortLevel"
+              }
+            ],
+            "description": "Explicit thinking effort required by the definition, 0 None, 1 Low, 2 Medium, 3 High, 4 ExtraHigh, 5 Max or 6 Minimal. An omitted value allows the model default."
+          },
+          "requiresModelPrice": {
+            "type": "boolean",
+            "description": "Whether the local model must have a configured price or an explicit free tariff.",
+            "default": false
+          }
+        },
+        "description": "The model capabilities needed by one part of a shared definition."
+      },
+      "RemoteTemplateRow": {
+        "required": [
+          "id",
+          "publisherId",
+          "name",
+          "summary",
+          "avatarImageUrl",
+          "updatedAtUtc"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Identity of the definition on the publisher.",
+            "format": "uuid"
+          },
+          "publisherId": {
+            "type": "string",
+            "description": "Public identity of the publishing instance.",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "description": "Display name of the definition."
+          },
+          "summary": {
+            "type": "string",
+            "description": "Short description for the import catalog."
+          },
+          "avatarImageUrl": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Optional avatar for the pre-import catalog."
+          },
+          "updatedAtUtc": {
+            "type": "string",
+            "description": "Time at which this definition revision was updated.",
+            "format": "date-time"
+          },
+          "catalogRevision": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Catalog or definition concurrency revision when provided by its owner.",
+            "format": "int64",
+            "default": 0
+          },
+          "versionId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Version identity when provided by the definition owner.",
+            "format": "uuid"
+          },
+          "hasEmbeddedAvatar": {
+            "type": "boolean",
+            "description": "Whether an embedded raster avatar is available on the authenticated avatar route."
+          }
+        },
+        "description": "A selectable shared definition at a particular publisher revision."
+      },
+      "RemoteWorkflowBinding": {
+        "required": [
+          "nodeId",
+          "componentIndex",
+          "modelIndex"
+        ],
+        "type": "object",
+        "properties": {
+          "nodeId": {
+            "allOf": [
+              {
+                "description": "Graph-scoped identifier of the relevant node.",
+                "$ref": "#/components/schemas/WorkflowNodeId"
+              }
+            ],
+            "description": "Graph-scoped identifier of the relevant node."
+          },
+          "componentIndex": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "description": "Zero-based component index for LLM calls, or null for a model-based executor.",
+            "format": "int32"
+          },
+          "modelIndex": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Zero-based index of the effective model used by the node.",
+            "format": "int32"
+          }
+        },
+        "description": "The portable component and model used by a particular graph node."
+      },
+      "RemoteWorkflowComponent": {
+        "required": [
+          "name",
+          "modality",
+          "modelSettings",
+          "instructions",
+          "inputShape",
+          "resultShape",
+          "modelIndex"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Display name of the component in the receiving library."
+          },
+          "modality": {
+            "allOf": [
+              {
+                "description": "Input modality used to select a compatible local model, 0 Text, 1 Vision, 2 Audio, 3 Image or 4 Multimodal.",
+                "$ref": "#/components/schemas/WorkflowModality"
+              }
+            ],
+            "description": "Input modality used to select a compatible local model, 0 Text, 1 Vision, 2 Audio, 3 Image or 4 Multimodal."
+          },
+          "modelSettings": {
+            "allOf": [
+              {
+                "description": "Authored parameters for generating the model response.",
+                "$ref": "#/components/schemas/WorkflowModelSettings"
+              }
+            ],
+            "description": "Authored parameters for generating the model response."
+          },
+          "instructions": {
+            "type": "string",
+            "description": "Versioned prompt content used by the component."
+          },
+          "inputShape": {
+            "allOf": [
+              {
+                "description": "Shape accepted by the component.",
+                "$ref": "#/components/schemas/WorkflowValueShape"
+              }
+            ],
+            "description": "Shape accepted by the component."
+          },
+          "resultShape": {
+            "allOf": [
+              {
+                "description": "Shape produced by the component.",
+                "$ref": "#/components/schemas/WorkflowValueShape"
+              }
+            ],
+            "description": "Shape produced by the component."
+          },
+          "modelIndex": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Zero-based index of the component's model requirement.",
+            "format": "int32"
+          }
+        },
+        "description": "The portable instructions and IO contract of a localizable workflow LLM component."
+      },
+      "RemoteWorkflowDocument": {
+        "required": [
+          "row",
+          "graph",
+          "inputs",
+          "components",
+          "bindings",
+          "models",
+          "createdAtUtc"
+        ],
+        "type": "object",
+        "properties": {
+          "row": {
+            "allOf": [
+              {
+                "description": "Published workflow identity, current native version and catalog timestamp.",
+                "$ref": "#/components/schemas/RemoteTemplateRow"
+              }
+            ],
+            "description": "Published workflow identity, current native version and catalog timestamp."
+          },
+          "graph": {
+            "allOf": [
+              {
+                "description": "Workflow nodes, ports, routing and canvas layout with publisher-local bindings removed.",
+                "$ref": "#/components/schemas/WorkflowGraph"
+              }
+            ],
+            "description": "Workflow nodes, ports, routing and canvas layout with publisher-local bindings removed."
+          },
+          "inputs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WorkflowInputParameterDescriptor"
+            },
+            "description": "Authored input descriptors and their portable defaults."
+          },
+          "components": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RemoteWorkflowComponent"
+            },
+            "description": "LLM component templates used by the graph, in binding order."
+          },
+          "bindings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RemoteWorkflowBinding"
+            },
+            "description": "Model and component indices for individual graph nodes."
+          },
+          "models": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RemoteTemplateModelRequirement"
+            },
+            "description": "The provider capabilities and public model preference required by each binding."
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "description": "Publisher-assigned creation time identifying this workflow's lifetime across edits.",
+            "format": "date-time"
+          }
+        },
+        "description": "A saved workflow prepared for creating a private local draft. References to models and components are indices within this document."
+      },
       "RenameLlmChatConversationApiRequest": {
         "required": [
           "title",
@@ -92327,6 +94055,11 @@
         "type": "integer",
         "description": "How an icon is identified, as a JSON integer: 0 MaterialIcon (`value` is a Material icon name), 1 StaticAsset (`value` is the path of an application image asset), 2 PackageAsset (`value` is a path inside the plugin package named by `packageId`, whose icon `GET /api/plugins/packages/{packageId}/icon` serves)."
       },
+      "UiThemeMode": {
+        "type": "integer",
+        "description": "Application theme: 0 Light, 1 Dark. Values: 0 Light, 1 Dark.",
+        "default": 0
+      },
       "Unconfirmed": {
         "required": [
           "status"
@@ -92370,6 +94103,52 @@
         },
         "additionalProperties": false,
         "description": "Original typed command. Do not alter its values, ordering or expectation while retrying this operation."
+      },
+      "UserUiPreferences": {
+        "type": "object",
+        "properties": {
+          "theme": {
+            "allOf": [
+              {
+                "description": "Saved application theme.",
+                "$ref": "#/components/schemas/UiThemeMode"
+              }
+            ],
+            "description": "Saved application theme. Values: 0 Light, 1 Dark."
+          },
+          "mainMenuCollapsed": {
+            "type": "boolean",
+            "description": "Whether the main navigation is minimized.",
+            "default": true
+          }
+        },
+        "description": "Personal UI preferences. New users start with the light theme and minimized main menu."
+      },
+      "UserUiPreferencesPatch": {
+        "type": "object",
+        "properties": {
+          "theme": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "description": "New application theme, or null to retain the saved theme.",
+                "$ref": "#/components/schemas/UiThemeMode"
+              }
+            ],
+            "description": "New application theme, or null to retain the saved theme. Values: 0 Light, 1 Dark."
+          },
+          "mainMenuCollapsed": {
+            "type": [
+              "null",
+              "boolean"
+            ],
+            "description": "New minimized-main-menu state, or null to retain the saved state."
+          }
+        },
+        "additionalProperties": false,
+        "description": "A personal UI preference patch. Omitted or null fields retain their saved values."
       },
       "WorkflowAnalyticsSnapshot": {
         "required": [
@@ -92741,6 +94520,13 @@
             "description": "Time the version was stored, as an instant with offset.",
             "format": "date-time"
           },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Current instance-managed tags. api marks API availability and shared marks template sharing."
+          },
           "templateKey": {
             "type": "string",
             "description": "Template key when the workflow was installed from a workflow template; empty otherwise. Not unique."
@@ -93088,6 +94874,13 @@
           "validation": {
             "description": "Validation against the current components, providers, backends and settings; an invalid version cannot be published or started.",
             "$ref": "#/components/schemas/WorkflowValidationResult"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Current instance-managed tags of this workflow, including on reads of historical versions."
           }
         },
         "description": "A stored workflow definition version with its validation result, computed when it was read."
@@ -98765,6 +100558,15 @@
     },
     {
       "name": "LLM Chat Operations"
+    },
+    {
+      "name": "Shared Agent Templates"
+    },
+    {
+      "name": "Shared Simple Chats"
+    },
+    {
+      "name": "Shared workflows"
     }
   ]
 }

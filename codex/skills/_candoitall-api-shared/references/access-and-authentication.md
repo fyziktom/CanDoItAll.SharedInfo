@@ -12,7 +12,7 @@ The product owns [deployment configuration and password provisioning](https://gi
 | `Api:Enabled=false` | Main API is absent. Separately mapped runtime, Project Structure and file routes retain their own switches and policies. |
 | Main API on, JWT off, user authentication and management off | Trusted open business API; no account isolation or HTTP administration. |
 | `Api:Authorization:Enabled=true`, user authentication off | Machine/legacy business access. Login, self-session and HTTP management routes are absent. |
-| `Api:UserAuthentication:Enabled=true` | Login/me/logout are mapped. Main API, JWT, a valid configured administrator hash and valid session lifetime are required. |
+| `Api:UserAuthentication:Enabled=true` | Login, current identity, logout and personal UI preferences are mapped. Main API, JWT, a valid configured administrator hash and valid session lifetime are required. |
 | `Api:AccessManagement:Enabled=true` | Account, capability-catalog and token administration are mapped; user authentication must also be enabled. A registered configured-administrator session is required. |
 | `Api:OpenApiEnabled=true` | Both `/openapi/v1.json` and `/swagger/v1/swagger.json` are anonymous, even with JWT enabled. |
 | `Api:SwaggerUiEnabled=true` and OpenAPI enabled | `/swagger` loads anonymously. Disabling Swagger UI leaves the documents available; disabling OpenAPI disables both documents and UI. |

@@ -66,7 +66,10 @@ for the other.
 For a template from another instance, read the publisher's shared agent catalog with
 `api.shared-agent-templates.read`. A template carries portable instructions and inline
 skills. Registered tools and other installed capabilities are resolved locally by kind
-and key. ZIP package import has its own backup and restore contract. See
+and key. In the ordinary agent definition, `apiAvailable` controls API availability
+and `sharedTemplate` controls publication. For older agents with a null
+`sharedTemplate`, `isTemplate` supplies the publication setting.
+ZIP package import has its own backup and restore contract. See
 [remote instances and shared templates](../_candoitall-api-shared/references/remote-instances.md).
 
 Provider/model selection can include imported shared publications. Preserve returned

@@ -23,6 +23,12 @@ administrator manages access; business operations use separately granted capabil
 
 ## Session workflow
 
+Read the current account's theme and menu settings with `GET /api/access/preferences`.
+Send only changed fields with `PATCH` to the same route. `theme` is 0 (Light) or
+1 (Dark). `mainMenuCollapsed` is a boolean. Omitted or null fields keep their
+saved values. Both operations use the current registered user or administrator
+session and work with an empty business-scope selection.
+
 1. Use the intended host and the caller's supplied or privately configured credentials.
    Send `userName` and `password` to `POST /api/access/login`; never print credentials.
 2. Send the returned token as `Authorization: Bearer <token>`. Use `GET /api/access/me`
@@ -74,6 +80,8 @@ one-time plaintext only through the caller's intended private credential channel
 | `GET` | `/api/access/status` |
 | `POST` | `/api/access/login` |
 | `GET` | `/api/access/me` |
+| `GET` | `/api/access/preferences` |
+| `PATCH` | `/api/access/preferences` |
 | `POST` | `/api/access/logout` |
 | `GET` | `/api/access/scopes` |
 | `GET` | `/api/access/users` |

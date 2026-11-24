@@ -6,34 +6,31 @@ for the API skills. Use the live document when a target host has a different ver
 ## Current snapshot
 
 - [Unmodified OpenAPI bytes](references/candoitall-web.openapi.json) and [provenance](manifest.json).
-- CanDoItAll `development`, clean commit `a74a8aa4d40d09be5537de82ac2fb2c87cc9f8b2`.
-- Source tree `43d49f7c27a48a6e8dc7481e52fc249f8ec7f1d9`; dependency commits and image digest are in the manifest.
-- All three source contexts are exact Git archives; the maintained Dockerfile build stage
+- CanDoItAll `development`, clean commit `42f01bacf68c3a71451c3dca7e91e79c4ec6162a`.
+- Source tree `c8d612f16ec13791b9df635586258316aff5c198`. The manifest records the dependency commits, archive hashes and image digest.
+- All three source contexts are exact Git archives. The maintained Dockerfile build stage
   published with SDK 10.0.403 and runtime 10.0.14.
-- Release LinuxHeadless, Development, InMemory invented state, McpToolHost worker policy.
+- Release LinuxHeadless and WindowsHeadless, Development, synthetic InMemory state, McpToolHost worker policy.
 - API, OpenAPI, Swagger, JWT, user authentication and access management all enabled.
 - Canonical `http://localhost:5032/` inside a network-none container, with no published ports.
-- Both anonymous document routes agree byte for byte; capture UTC `2026-11-12T11:10:22Z`.
-- OpenAPI 3.1.1: **332 paths, 375 operations, 1205 schemas**.
-- SHA-256 `88D7A7C4101FBAB0900945BE932E120D147BB0E9AF14882B90336892745B4315`; 4,743,574 bytes.
+- Both anonymous document routes agree byte for byte on each platform. The canonical capture was taken at `2026-11-24T13:29:09Z`.
+- OpenAPI 3.1.1 contains **341 paths, 385 operations and 1,222 schemas**.
+- The 4,805,513-byte export has SHA-256 `D23B1252EBAF7CB659E7AA87C4209A12A37C7345F0FAE4067E58593FE1BE4D94`.
 
-This revision adds 28 operations for conditional project editing and lifecycle changes,
-Structure refresh feeds, decision policies, planning review, saved receipts, root process
-cancellation and CRM business stewardship. See [conditional operations and recovery](references/conditional-operations.md)
-and the [partner migration matrix](references/partner-api-migration.md). Refresh-safe
-floating chat execution is documented separately in [interactive chat lifetime](../candoitall-api-agents/references/interactive-chat-lifetime.md);
-it does not change HTTP request lifetimes.
+Since the November 12 snapshot, eight new reads expose explicitly shared agents,
+Simple Chats and workflows. Two new operations read and patch the signed-in
+account's UI preferences. All 375 previous method/path pairs are present.
+See [remote instances and shared templates](references/remote-instances.md),
+[access and authentication](references/access-and-authentication.md) and the
+[partner migration matrix](references/partner-api-migration.md).
 
-The current capture ran the Release publication inside the isolated Linux SDK image.
-The final runtime-image package download stalled and was cancelled. The installed manager
-rejected the synthetic bootstrap password-hash environment setting before starting the
-Windows comparison, so current cross-platform equivalence is unverified. Earlier voice,
-project identity, schedule, import, PDF staging and Windows proofs retain their historical
-source commits in the manifest.
+The Linux host used an isolated SDK container. The Windows host served the same
+portable Release publication on a separate loopback listener. Comparing the parsed
+documents found one difference, the `servers` array containing each host's URL.
 
-Route-family counts and all fourteen documented operation sets are validated against the
-snapshot and skill appendices. Development diagnostics are included; application pages
-and static files are not API operations. Conditional account routes depend on host flags.
+The validator checks 25 route families and all 17 documented operation sets
+against the export and skill appendices. The snapshot includes Development
+diagnostics and the account routes enabled by this host configuration.
 
 ## Access and usage
 

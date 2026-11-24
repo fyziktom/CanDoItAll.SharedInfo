@@ -3,12 +3,12 @@
   "source": {
     "repository": "CanDoItAll",
     "branch": "development",
-    "commit": "a74a8aa4d40d09be5537de82ac2fb2c87cc9f8b2",
-    "tree": "43d49f7c27a48a6e8dc7481e52fc249f8ec7f1d9",
+    "commit": "42f01bacf68c3a71451c3dca7e91e79c4ec6162a",
+    "tree": "c8d612f16ec13791b9df635586258316aff5c198",
     "workingTreeClean": true,
     "webProject": "src/App/CanDoItAll.Web/CanDoItAll.Web.csproj",
     "environment": "Development",
-    "generatedUtc": "2026-11-12T11:10:22Z",
+    "generatedUtc": "2026-11-24T13:29:09Z",
     "runtimeDocumentPaths": [
       "/openapi/v1.json",
       "/swagger/v1/swagger.json"
@@ -16,13 +16,17 @@
     "dependencies": [
       {
         "repository": "CanDoItAll.Components",
-        "commit": "ccb643e6e6f383ca0e5260b6edf41b00a606ee28",
-        "workingTreeClean": true
+        "commit": "73d31f3ea38b5d134b3057cb8fd6d56f2b018fbe",
+        "workingTreeClean": true,
+        "tree": "6528284a43dfe96661589b649cbfafe3da2da8d0",
+        "archiveSha256": "8D1825558D771DC72533103FB7DFDF8E3D273544A707C82B626E0020CE83AEB6"
       },
       {
         "repository": "CanDoItAll.FileTools",
         "commit": "18b12495db92f3c1c19a81a8a0a1f2a6a0a1d73c",
-        "workingTreeClean": true
+        "workingTreeClean": true,
+        "tree": "e9839f5d0942073f63131edb45cf2b3e3f1e0c33",
+        "archiveSha256": "D85971BB5EC02883DD0F2E81333169307BFC5FEE723A7DD01B0F83ED38DB0DB9"
       }
     ],
     "apiConfiguration": {
@@ -33,9 +37,9 @@
       "Api:UserAuthentication:Enabled": true,
       "Api:AccessManagement:Enabled": true
     },
-    "captureNote": "Unmodified runtime bytes from the clean development source and pinned dependency trees. All three source contexts were exact git archives. The maintained Dockerfile build stage produced the Release publication with UseAppHost=false; the isolated SDK container ran that publication as LinuxHeadless at canonical http://localhost:5032/ with no network or published ports, InMemory synthetic state/credentials, all six API exposure flags enabled and McpToolHost worker policy. Both anonymous document routes are byte-identical. The final runtime-image apt download stalled and was cancelled; this is publication/schema evidence, not proof of that image build. The attempted Windows comparison was refused by the installed manager environment-key policy before launch; no current cross-platform equivalence is claimed. Earlier deployment and cross-platform proofs retain their historical source commits below.",
-    "image": "candoitall-openapi-capture:a74a8aa4-20261112",
-    "imageId": "sha256:dbb190ba239eb5aff1645b8869fa5b3c33685fb5a7352291be5dec1dec7c2410",
+    "captureNote": "Release publication from exact Git archives of the product and both CI-pinned dependencies. A network-isolated Linux SDK container served both anonymous document routes at the canonical URL using synthetic InMemory state and all six API exposure flags. WindowsHeadless ran the same portable publication on a private loopback listener. The two document routes matched byte for byte on each host. Only the servers array differed between platforms.",
+    "image": "candoitall-contract-capture:42f01bacf-20261124",
+    "imageId": "sha256:63c64c5c676f71de04b4a62b1443b0d3d9da78ee3cc0e22cc0cbdbc27d7c489b",
     "verifiedVoiceDeployment": {
       "url": "http://localhost:5532/",
       "openApiSha256": "C05F005AF01061B3C2DAFF62D608FA6C4066289B02ECBEC4999AA2B52AD8A065",
@@ -95,23 +99,29 @@
     "buildTarget": "build",
     "sdkVersion": "10.0.403",
     "runtimeVersion": "10.0.14",
-    "applicationArchiveSha256": "492995D9FDD4A184AD4C966E1AD640C1C7668FB7DB56D93FC9483D6BDE5987A2",
-    "windowsComparisonAttempt": {
-      "status": "NotRun",
-      "reason": "Managed environment-key policy rejected synthetic BootstrapAdmin password hash before launch."
+    "applicationArchiveSha256": "7AB811E0A12F6ED0EC6669F47F4D502FE832AFC147E00DF65BEFA7574C6A6463",
+    "crossPlatformComparison": {
+      "runtimeProfile": "WindowsHeadless",
+      "captureUrl": "http://127.0.0.1:59453/",
+      "sha256": "884D8A04DD6EBA8E4CC15DE150B1A6FF560116854E37AC10B3056FD338AF2F37",
+      "allowedDifferences": [
+        "servers"
+      ],
+      "passed": true,
+      "sourceCommit": "42f01bacf68c3a71451c3dca7e91e79c4ec6162a"
     }
   },
   "artifact": {
     "file": "references/candoitall-web.openapi.json",
-    "sha256": "88D7A7C4101FBAB0900945BE932E120D147BB0E9AF14882B90336892745B4315",
+    "sha256": "D23B1252EBAF7CB659E7AA87C4209A12A37C7345F0FAE4067E58593FE1BE4D94",
     "openapiVersion": "3.1.1",
     "documentTitle": "CanDoItAll.Web | v1",
     "documentVersion": "1.0.0",
     "serverUrl": "http://localhost:5032/",
-    "pathCount": 332,
-    "operationCount": 375,
-    "schemaCount": 1205,
-    "byteCount": 4743574
+    "pathCount": 341,
+    "operationCount": 385,
+    "schemaCount": 1222,
+    "byteCount": 4805513
   },
   "routeFamilies": [
     {
@@ -121,8 +131,8 @@
     },
     {
       "prefix": "/api/access",
-      "pathCount": 11,
-      "operationCount": 15
+      "pathCount": 12,
+      "operationCount": 17
     },
     {
       "prefix": "/api/agent-recruiting",
@@ -195,9 +205,24 @@
       "operationCount": 4
     },
     {
+      "prefix": "/api/shared-agent-templates",
+      "pathCount": 3,
+      "operationCount": 3
+    },
+    {
       "prefix": "/api/shared-providers",
       "pathCount": 5,
       "operationCount": 5
+    },
+    {
+      "prefix": "/api/shared-simple-chats",
+      "pathCount": 3,
+      "operationCount": 3
+    },
+    {
+      "prefix": "/api/shared-workflows",
+      "pathCount": 2,
+      "operationCount": 2
     },
     {
       "prefix": "/api/storage-placement-recovery",
@@ -1720,6 +1745,16 @@
           "operationId": "GetApiSession"
         },
         {
+          "method": "GET",
+          "path": "/api/access/preferences",
+          "operationId": "GetUserUiPreferences"
+        },
+        {
+          "method": "PATCH",
+          "path": "/api/access/preferences",
+          "operationId": "UpdateUserUiPreferences"
+        },
+        {
           "method": "POST",
           "path": "/api/access/logout",
           "operationId": "LogoutApiSession"
@@ -1825,6 +1860,70 @@
         }
       ],
       "routeAppendix": "api-docs-skills-parity:ai-stewardship-routes"
+    },
+    {
+      "name": "Shared Agent Templates API",
+      "prefix": "/api/shared-agent-templates",
+      "skillFile": "../candoitall-api-agents/SKILL.md",
+      "routeAppendix": "api-docs-skills-parity:shared-agent-template-routes",
+      "operations": [
+        {
+          "method": "GET",
+          "path": "/api/shared-agent-templates/v1/templates",
+          "operationId": "ListRemoteAgentTemplates"
+        },
+        {
+          "method": "GET",
+          "path": "/api/shared-agent-templates/v1/templates/{id}",
+          "operationId": "GetRemoteAgentTemplate"
+        },
+        {
+          "method": "GET",
+          "path": "/api/shared-agent-templates/v1/templates/{id}/avatar",
+          "operationId": "GetRemoteAgentTemplateAvatar"
+        }
+      ]
+    },
+    {
+      "name": "Shared Simple Chats API",
+      "prefix": "/api/shared-simple-chats",
+      "skillFile": "../candoitall-api-llm-chats/SKILL.md",
+      "routeAppendix": "api-docs-skills-parity:shared-simple-chat-routes",
+      "operations": [
+        {
+          "method": "GET",
+          "path": "/api/shared-simple-chats/v1/templates",
+          "operationId": "ListRemoteSimpleChatTemplates"
+        },
+        {
+          "method": "GET",
+          "path": "/api/shared-simple-chats/v1/templates/{id}",
+          "operationId": "GetRemoteSimpleChatTemplate"
+        },
+        {
+          "method": "GET",
+          "path": "/api/shared-simple-chats/v1/templates/{id}/avatar",
+          "operationId": "GetRemoteSimpleChatAvatar"
+        }
+      ]
+    },
+    {
+      "name": "Shared Workflows API",
+      "prefix": "/api/shared-workflows",
+      "skillFile": "../candoitall-api-workflows/SKILL.md",
+      "routeAppendix": "api-docs-skills-parity:shared-workflow-routes",
+      "operations": [
+        {
+          "method": "GET",
+          "path": "/api/shared-workflows/v1/templates",
+          "operationId": "ListRemoteWorkflowTemplates"
+        },
+        {
+          "method": "GET",
+          "path": "/api/shared-workflows/v1/templates/{id}",
+          "operationId": "GetRemoteWorkflowTemplate"
+        }
+      ]
     }
   ]
 }
