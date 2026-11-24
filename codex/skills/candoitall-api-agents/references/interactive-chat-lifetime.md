@@ -6,6 +6,12 @@ the view without cancelling that turn. Reopen it through Active chats instead of
 submitting the same prompt again. The restored view observes the original conversation,
 run and activity stream, including a pending approval or continuation.
 
+For a pending tool request, **Approve once** permits the call and **Reject and
+continue** lets the agent respond to the rejection. **Cancel pending run** stops the
+run while the chat stays open. **Keep active** hides the floating window with the
+decision still pending. To cancel the run and close the window together, confirm
+**Cancel run and stop chat**. The saved conversation remains available in history.
+
 Discovery uses the verified issuer and subject plus the current workspace profile,
 not a circuit, browser or login-session identifier. The same authenticated user can
 rediscover work from another browser. A deployment shares one workspace owner across
