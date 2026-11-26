@@ -25,6 +25,13 @@ replaces tool policy, project admission, approval or current disclosure authoriz
 A database-profile change invalidates the old execution lifetime rather than moving
 the run into the replacement database.
 
+To have an agent publish a workbook, open the project's Structure page and start the
+floating chat there. Both the page action and the shell's floating chat button carry
+the current project into a new chat. A chat started on the Agents page has no active
+project. After a refresh, reopen the original conversation to review its pending
+decision or the committed asset. For a revision, verify the new asset under the
+original and read its content.
+
 Window geometry and unsent drafts belong to the view; do not promise that a full browser
 reload restores them. Active execution and pending continuation context are retained
 independently. Recent terminal chat metadata has bounded retention; persisted run and

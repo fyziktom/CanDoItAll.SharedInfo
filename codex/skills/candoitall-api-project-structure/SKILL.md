@@ -212,8 +212,15 @@ validation: inspect any partial result before deliberately resetting or retrying
   content, never in notes. Generic node creation rejects File nodes and `mermaid` subtypes
   (HTTP 400 `ManagedAssetCreationRequired`); store changed content as a revision with
   `/assets/{nodeId}/revisions`, which adds a new asset node linked to the original.
-- Other generated files are also `File` nodes with an appropriate subtype, created through the
-  asset route, not invented project block enum names.
+- Store a generated workbook as a `File` asset. For a revision through HTTP, send
+  `media.fileName`, `media.contentType` and `media.base64Data`. Missing media returns
+  HTTP 400 `MediaPayloadRequired` before the revision is created. Read the returned
+  node's content and check its `revisionParentNodeId` against the original.
+- An agent working in the project can pass the workbook path returned by its workspace
+  tool as `request.sourceWorkspacePath` to `project_structure_asset_create` or
+  `project_structure_asset_create_revision`. Supply exactly one content source. For
+  a revision, pass the existing asset's ID as `nodeId`. This keeps binary data out
+  of the model conversation.
 - Write approval blockers into the graph with `/approvals/request` instead of leaving them only in chat.
 - Deleting projected `process-run:*` nodes hides the process-run branch from that project structure; it does not delete the backing process history.
 - Project deletion can return `409 projects.delete-cleanup-pending` after the project commit when participant cleanup remains. List pending cleanup, honor `canRetryNow` and `retryAvailableAtUtc`, retry only the exact participant/recovery id, and retain completion warnings as operator evidence.

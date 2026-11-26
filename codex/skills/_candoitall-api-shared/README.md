@@ -6,16 +6,16 @@ for the API skills. Use the live document when a target host has a different ver
 ## Current snapshot
 
 - [Unmodified OpenAPI bytes](references/candoitall-web.openapi.json) and [provenance](manifest.json).
-- CanDoItAll `development`, clean commit `42f01bacf68c3a71451c3dca7e91e79c4ec6162a`.
-- Source tree `c8d612f16ec13791b9df635586258316aff5c198`. The manifest records the dependency commits, archive hashes and image digest.
+- CanDoItAll `development`, clean commit `14c124c46103fded47040a29040a767333238fb5`.
+- Source tree `3f4fce0c761eac126418fd8da2bbc21c033552e6`. The manifest records the dependency commits, archive hashes and image digest.
 - All three source contexts are exact Git archives. The maintained Dockerfile build stage
   published with SDK 10.0.403 and runtime 10.0.14.
 - Release LinuxHeadless and WindowsHeadless, Development, synthetic InMemory state, McpToolHost worker policy.
 - API, OpenAPI, Swagger, JWT, user authentication and access management all enabled.
 - Canonical `http://localhost:5032/` inside a network-none container, with no published ports.
-- Both anonymous document routes agree byte for byte on each platform. The canonical capture was taken at `2026-11-24T13:29:09Z`.
+- Both anonymous document routes agree byte for byte on each platform. The canonical capture was taken at `2026-11-26T00:06:35Z`.
 - OpenAPI 3.1.1 contains **341 paths, 385 operations and 1,222 schemas**.
-- The 4,805,513-byte export has SHA-256 `D23B1252EBAF7CB659E7AA87C4209A12A37C7345F0FAE4067E58593FE1BE4D94`.
+- The 4,805,251-byte export has SHA-256 `F2FFE0C7D1A7F6C386866CA8EA04D91DD0CA40C74BBB600AA5D57E6BF0B1A23A`.
 
 Since the November 12 snapshot, eight new reads expose explicitly shared agents,
 Simple Chats and workflows. Two new operations read and patch the signed-in
@@ -23,6 +23,10 @@ account's UI preferences. All 375 previous method/path pairs are present.
 See [remote instances and shared templates](references/remote-instances.md),
 [access and authentication](references/access-and-authentication.md) and the
 [partner migration matrix](references/partner-api-migration.md).
+
+The project asset revision operation now documents the required inline media and the
+HTTP 400 response for missing media. The in-process agent tool also accepts a scoped
+workspace file for revisions.
 
 The Linux host used an isolated SDK container. The Windows host served the same
 portable Release publication on a separate loopback listener. Comparing the parsed

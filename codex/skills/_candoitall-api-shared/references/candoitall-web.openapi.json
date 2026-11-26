@@ -27536,7 +27536,7 @@
           "Project Structure"
         ],
         "summary": "Create a revision of an asset: a new asset node with new content, linked to the original.",
-        "description": "Stores the new content as a new asset node of the same type under the original asset and links it to the original with DerivedFrom; the result's `revisionParentNodeId` names the original. The original node and its content stay unchanged. Omitted subtype and metadata are copied from the original. Always send `media`: a null value creates a revision node without content and then fails with HTTP 400 `AssetRequired`, leaving that node in the structure. Repeating a request creates another revision.\n\nAuthority: when API authorization is enabled, a bearer token with the `api` or `api.project-structure.write` scope. Send `leaseToken` to work under your own project lease. Without it the operation uses the project lease your identity already holds, or else takes a five-minute project lease for its own duration; if another identity holds the lease, it waits when that lease ends within 30 seconds and otherwise fails with HTTP 409 `LeaseConflict`.\n\nA body the framework cannot bind (malformed JSON or a member of the wrong JSON type) is rejected with HTTP 400 before the operation runs and has no envelope.",
+        "description": "Stores the new content as a new asset node of the same type under the original asset and links it to the original with DerivedFrom; the result's `revisionParentNodeId` names the original. The original node and its content stay unchanged. Omitted subtype and metadata are copied from the original. The API validates the required `media` payload before creating the revision. Repeating a successful request creates another revision.\n\nAuthority: when API authorization is enabled, a bearer token with the `api` or `api.project-structure.write` scope. Send `leaseToken` to work under your own project lease. Without it the operation uses the project lease your identity already holds, or else takes a five-minute project lease for its own duration; if another identity holds the lease, it waits when that lease ends within 30 seconds and otherwise fails with HTTP 409 `LeaseConflict`.\n\nA body the framework cannot bind (malformed JSON or a member of the wrong JSON type) is rejected with HTTP 400 before the operation runs and has no envelope.",
         "parameters": [
           {
             "name": "projectId",
@@ -27781,7 +27781,7 @@
             }
           },
           "400": {
-            "description": "An invalid `media` payload (`FileNameRequired`, `MediaPayloadRequired`, `InvalidBase64Payload`, `InvalidSvgRoot`, `InvalidSvgXml`; nothing was created) or `AssetRequired` (the node is not an asset, or `media` was null and a content-less revision node was created).",
+            "description": "Missing or invalid `media` produces `MediaPayloadRequired`, `FileNameRequired`, `InvalidBase64Payload`, `InvalidSvgRoot` or `InvalidSvgXml`. Revising a node that lacks an asset produces `AssetRequired`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -81680,7 +81680,7 @@
             "description": "Free-text notes; may be empty."
           },
           "media": {
-            "description": "Inline content of the revision; always send it. A null value is not rejected up front: the revision node is created without content and the request then fails with HTTP 400 `AssetRequired`, leaving that node in the structure.",
+            "description": "Inline content of the revision. A missing payload is rejected before the revision is created.",
             "$ref": "#/components/schemas/ProjectObjectMediaPayload"
           },
           "objectSubtype": {

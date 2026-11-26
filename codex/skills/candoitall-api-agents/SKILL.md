@@ -273,9 +273,9 @@ A message or run can attach at most 8 images. Use only the returned `relativePat
 - When a process proof claims real automation dispatch, verify at least one execution run is
   bound to the claimed process run and step, has relevant tool receipts, and reports
   `usageTotals.observationCount > 0` when a provider response was produced. Judge each receipt by
-  `effectState` (3 Committed, 2 NotCommitted, 1 None, 0 Unknown), not by the command's HTTP
-  status; workspace file, workspace process and MCP receipts currently report 0 Unknown, and an
-  unknown effect needs reconciliation, not a blind retry. A provider test route or detached chat
+  `effectState` (3 Committed, 2 NotCommitted, 1 None, 0 Unknown). A successful workspace
+  spreadsheet write can report Committed. Read back the workbook to verify the requested
+  change. Reconcile any Unknown receipt before retrying. A provider test route or detached chat
   session proves provider health only, not process execution.
 
 ## Execution DTOs
